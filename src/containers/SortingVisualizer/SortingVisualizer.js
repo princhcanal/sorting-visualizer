@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import classes from "./SortingVisualizer.module.css";
 import Bars from "./Bars/Bars";
+import Button from "../../components/UI/Button/Button";
 
 const SortingVisualizer = (props) => {
 	const [randomHeights, setRandomHeights] = useState([]);
@@ -21,9 +22,9 @@ const SortingVisualizer = (props) => {
 	return (
 		<div className={classes.SortingVisualizer}>
 			<Bars heights={randomHeights}></Bars>
-			<button onClick={handleGenerateNewArray}>
+			<Button clicked={handleGenerateNewArray}>
 				Generate New Random Array
-			</button>
+			</Button>
 		</div>
 	);
 };

@@ -1,0 +1,23 @@
+.Button {
+	padding: 1rem 1.5rem;
+	color: #fff;
+	background-color: #577590;
+	border: none;
+	font-family: inherit;
+	font-size: 1.2rem;
+	border-radius: 0.5rem;
+	cursor: pointer;
+	outline: none;
+	margin: 1rem;
+	transition: all 0.2s;
+}
+
+.Button:hover {
+	transform: translateY(-0.2rem);
+	box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
+}
+
+.Button:active {
+	transform: translateY(0);
+	box-shadow: none;
+}
