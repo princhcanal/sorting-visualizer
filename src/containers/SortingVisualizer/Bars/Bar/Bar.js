@@ -4,8 +4,9 @@ import classes from "./Bar.module.css";
 
 const Bar = (props) => {
 	const height = `${props.height}px`;
+	const classNames = [classes.Bar, "bar"];
 	return (
-		<div className={classes.Bar} style={{ height: height }}>
+		<div className={classNames.join(" ")} style={{ height: height }}>
 			{/* {props.height} */}
 		</div>
 	);
