@@ -6,6 +6,7 @@ let Bars = (props, ref) => {
 	const barsContainer = useRef();
 	useImperativeHandle(ref, () => ({
 		children: barsContainer.current.children,
+		classList: barsContainer.current.classList,
 	}));
 
 	const bars = props.heights.map((randHeight, i) => {

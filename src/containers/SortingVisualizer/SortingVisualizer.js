@@ -6,18 +6,35 @@ import Button from "../../components/UI/Button/Button";
 import { bubbleSort } from "../../sortingAlgorithms/bubbleSort";
 import { getRandomNum, arraysAreEqual } from "../../utilities";
 
-const SortingVisualizer = (props, ref) => {
-	const [randomHeights, setRandomHeights] = useState([]);
+const COLOR_DEFAULT = "#43aa8b";
+const COLOR_COMPARING = "#f9c74f";
+const COLOR_SWAP = "#f94144";
+const COLOR_SORTED = "#90be6d";
+let NUM_BARS = 100;
+
+const getRandomArray = () => {
+	const newRandomHeights = [];
+	for (let i = 0; i < NUM_BARS; i++) {
+		newRandomHeights.push(getRandomNum(5, 450));
+	}
+	return newRandomHeights;
+};
+
+const SortingVisualizer = (props) => {
+	const [randomHeights, setRandomHeights] = useState(getRandomArray());
 	const barsContainer = useRef();
 
 	useEffect(() => {
-		handleGenerateNewArray();
+		// handleGenerateNewArray();
+		// console.log(barsContainer.current.classList);
 	}, []);
 
 	const handleGenerateNewArray = () => {
 		const newRandomHeights = [];
-		for (let i = 0; i < 100; i++) {
+		const bars = barsContainer.current.children;
+		for (let i = 0; i < NUM_BARS; i++) {
 			newRandomHeights.push(getRandomNum(5, 450));
+			bars[i].style.backgroundColor = COLOR_DEFAULT;
 		}
 		setRandomHeights(newRandomHeights);
 	};
@@ -29,20 +46,42 @@ const SortingVisualizer = (props, ref) => {
 				[...randomHeights].sort((a, b) => a - b)
 			)
 		) {
-			console.log("SORTED");
+			// barsContainer.current.classList.remove("sorted");
+			barsContainer.current.classList.toggle("sorted");
+			console.log(barsContainer.current.classList);
 			return;
 		}
 		let swapOrderArray = bubbleSort(randomHeights);
 		let bars = barsContainer.current.children;
-		for (let i = 0; i < swapOrderArray.length; i++) {
-			setTimeout(() => {
-				let swapIdx1 = swapOrderArray[i][1];
-				let swapIdx2 = swapOrderArray[i][2];
 
-				bars[swapIdx1].style.height =
-					swapOrderArray[i][0][swapIdx1] + "px";
-				bars[swapIdx2].style.height =
-					swapOrderArray[i][0][swapIdx2] + "px";
+		for (let i = 0; i < swapOrderArray.length; i++) {
+			let state = swapOrderArray[i][3];
+			let swapIdx1 = swapOrderArray[i][1];
+			let swapIdx2 = swapOrderArray[i][2];
+			setTimeout(() => {
+				if (state === "COMPARING") {
+					bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
+					bars[swapIdx2].style.backgroundColor = COLOR_COMPARING;
+					if (swapIdx1 !== 0) {
+						bars[
+							swapIdx1 - 1
+						].style.backgroundColor = COLOR_DEFAULT;
+					}
+				} else if (state === "SWAPPING-1") {
+					bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
+					bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
+				} else if (state === "SWAPPING-2") {
+					bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
+					bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
+					bars[swapIdx1].style.height =
+						swapOrderArray[i][0][swapIdx1] + "px";
+					bars[swapIdx2].style.height =
+						swapOrderArray[i][0][swapIdx2] + "px";
+				} else if (state === "LAST-SORTED") {
+					bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
+					if (swapIdx1 >= 0)
+						bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
+				}
 			}, i * 1);
 		}
 	};

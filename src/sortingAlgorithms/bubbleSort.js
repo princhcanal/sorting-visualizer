@@ -1,15 +1,26 @@
 export function bubbleSort(arr) {
 	// let noSwaps;
+	let isSwap = false;
 	let swapOrderArr = [];
+	let j;
 	for (let i = arr.length - 1; i >= 0; i--) {
 		// noSwaps = true;
-		for (let j = 0; j < i; j++) {
+		for (j = 0; j < i; j++) {
 			if (arr[j] > arr[j + 1]) {
 				swap2(arr, j, j + 1);
 				// noSwaps = false;
-				swapOrderArr.push([[...arr], j, j + 1]);
+				isSwap = true;
 			}
+			swapOrderArr.push([[...arr], j, j + 1, "COMPARING"]);
+			// swapOrderArr.push([[...arr], j, j + 1, "RESET"]);
+			if (isSwap) {
+				swapOrderArr.push([[...arr], j, j + 1, "SWAPPING-1"]);
+				swapOrderArr.push([[...arr], j, j + 1, "SWAPPING-2"]);
+				// swapOrderArr.push([[...arr], j, j + 1, "SWAPPING3"]);
+			}
+			isSwap = false;
 		}
+		swapOrderArr.push([[...arr], j - 1, j, "LAST-SORTED"]);
 		// if (noSwaps) break;
 	}
 
