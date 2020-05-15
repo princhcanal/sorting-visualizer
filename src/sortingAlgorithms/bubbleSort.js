@@ -1,16 +1,16 @@
 export function bubbleSort(arr) {
-	let noSwaps;
+	// let noSwaps;
 	let swapOrderArr = [];
 	for (let i = arr.length - 1; i >= 0; i--) {
-		noSwaps = true;
+		// noSwaps = true;
 		for (let j = 0; j < i; j++) {
 			if (arr[j] > arr[j + 1]) {
 				swap2(arr, j, j + 1);
-				noSwaps = false;
+				// noSwaps = false;
 				swapOrderArr.push([[...arr], j, j + 1]);
 			}
 		}
-		if (noSwaps) break;
+		// if (noSwaps) break;
 	}
 
 	return swapOrderArr;

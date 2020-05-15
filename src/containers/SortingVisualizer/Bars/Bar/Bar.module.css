@@ -1,6 +1,7 @@
 .Bar {
 	display: inline-block;
 	width: 0.5rem;
-	border: 1px solid black;
+	/* border: 1px solid black; */
+	margin: 0 0.05rem;
 	background-color: #90be6d;
 }
