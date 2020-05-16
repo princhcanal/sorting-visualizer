@@ -28,6 +28,7 @@ const SortingVisualizer = (props) => {
 	useEffect(() => {
 		// handleGenerateNewArray();
 		// console.log(barsContainer.current.classList);
+		console.log("updated");
 	}, []);
 
 	const handleGenerateNewArray = () => {
@@ -43,7 +44,7 @@ const SortingVisualizer = (props) => {
 	const handleBubbleSort = () => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
-		let swapOrderArray = bubbleSort(randomHeights);
+		let swapOrderArray = bubbleSort([...randomHeights]);
 		let bars = barsContainer.current.children;
 
 		for (let i = 0; i < swapOrderArray.length; i++) {
@@ -77,6 +78,7 @@ const SortingVisualizer = (props) => {
 				} else if (state === "ALL-SORTED-1") {
 					barsContainer.current.classList.add("sorted");
 					setIsSorting(false);
+					setRandomHeights(swapOrderArray[i][0]);
 				}
 			}, i * 1);
 		}
@@ -86,18 +88,18 @@ const SortingVisualizer = (props) => {
 
 	const handleTestAlgorithms = () => {
 		/* CHECKS IF SORT FUNCTION WORKS */
-		// for (let i = 0; i < 100; i++) {
-		// 	const array = [];
-		// 	const length = getRandomNum(1, 1000);
-		// 	for (let i = 0; i < length; i++) {
-		// 		array.push(getRandomNum(-1000, 1000));
-		// 	}
-		// 	const javaScriptSortedArray = array.slice().sort((a, b) => a - b);
-		// 	const mergeSortedArray = bubbleSort(array.slice());
-		// 	console.log(
-		// 		arraysAreEqual(javaScriptSortedArray, mergeSortedArray)
-		// 	);
-		// }
+		for (let i = 0; i < 100; i++) {
+			const array = [];
+			const length = getRandomNum(1, 1000);
+			for (let i = 0; i < length; i++) {
+				array.push(getRandomNum(-1000, 1000));
+			}
+			const javaScriptSortedArray = array.slice().sort((a, b) => a - b);
+			const mergeSortedArray = bubbleSort(array.slice());
+			console.log(
+				arraysAreEqual(javaScriptSortedArray, mergeSortedArray)
+			);
+		}
 		/* CHECKS IF DOM HEIGHTS MATCH SORTED RANDOM HEIGHTS*/
 		const sortedRandomHeights = [...randomHeights].sort((a, b) => a - b);
 		const barsDOM = document.getElementsByClassName("bar");
@@ -120,9 +122,7 @@ const SortingVisualizer = (props) => {
 			<Button disabled={isSorting} clicked={handleBubbleSort}>
 				Bubble Sort!
 			</Button>
-			<Button disabled={isSorting} clicked={handleTestAlgorithms}>
-				Test!
-			</Button>
+			<Button clicked={handleTestAlgorithms}>Test!</Button>
 		</div>
 	);
 };
