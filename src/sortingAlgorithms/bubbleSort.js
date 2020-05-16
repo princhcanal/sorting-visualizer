@@ -16,13 +16,16 @@ export function bubbleSort(arr) {
 			if (isSwap) {
 				swapOrderArr.push([[...arr], j, j + 1, "SWAPPING-1"]);
 				swapOrderArr.push([[...arr], j, j + 1, "SWAPPING-2"]);
-				// swapOrderArr.push([[...arr], j, j + 1, "SWAPPING3"]);
+				swapOrderArr.push([[...arr], j, j + 1, "SWAPPING-3"]);
 			}
 			isSwap = false;
 		}
 		swapOrderArr.push([[...arr], j - 1, j, "LAST-SORTED"]);
 		// if (noSwaps) break;
 	}
+
+	swapOrderArr.push([[...arr], 0, 0, "ALL-SORTED-1"]);
+	swapOrderArr.push([[...arr], 0, 0, "ALL-SORTED-2"]);
 
 	return swapOrderArr;
 	// return arr;

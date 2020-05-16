@@ -22,6 +22,7 @@ const getRandomArray = () => {
 
 const SortingVisualizer = (props) => {
 	const [randomHeights, setRandomHeights] = useState(getRandomArray());
+	const [isSorting, setIsSorting] = useState(false);
 	const barsContainer = useRef();
 
 	useEffect(() => {
@@ -40,17 +41,8 @@ const SortingVisualizer = (props) => {
 	};
 
 	const handleBubbleSort = () => {
-		if (
-			arraysAreEqual(
-				randomHeights,
-				[...randomHeights].sort((a, b) => a - b)
-			)
-		) {
-			// barsContainer.current.classList.remove("sorted");
-			barsContainer.current.classList.toggle("sorted");
-			console.log(barsContainer.current.classList);
-			return;
-		}
+		setIsSorting(true);
+		barsContainer.current.classList.remove("sorted");
 		let swapOrderArray = bubbleSort(randomHeights);
 		let bars = barsContainer.current.children;
 
@@ -71,16 +63,20 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
 					bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
 				} else if (state === "SWAPPING-2") {
-					bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
-					bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
 					bars[swapIdx1].style.height =
 						swapOrderArray[i][0][swapIdx1] + "px";
 					bars[swapIdx2].style.height =
 						swapOrderArray[i][0][swapIdx2] + "px";
+				} else if (state === "SWAPPING-3") {
+					bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
+					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
 				} else if (state === "LAST-SORTED") {
 					bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
 					if (swapIdx1 >= 0)
 						bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
+				} else if (state === "ALL-SORTED-1") {
+					barsContainer.current.classList.add("sorted");
+					setIsSorting(false);
 				}
 			}, i * 1);
 		}
@@ -115,12 +111,18 @@ const SortingVisualizer = (props) => {
 	return (
 		<div className={classes.SortingVisualizer}>
 			<Bars ref={barsContainer} heights={randomHeights}></Bars>
-			<Button clicked={handleGenerateNewArray}>
+			<Button disabled={isSorting} clicked={handleGenerateNewArray}>
 				Generate New Random Array
 			</Button>
-			<Button clicked={handleMergeSort}>Merge Sort!</Button>
-			<Button clicked={handleBubbleSort}>Bubble Sort!</Button>
-			<Button clicked={handleTestAlgorithms}>Test!</Button>
+			<Button disabled={isSorting} clicked={handleMergeSort}>
+				Merge Sort!
+			</Button>
+			<Button disabled={isSorting} clicked={handleBubbleSort}>
+				Bubble Sort!
+			</Button>
+			<Button disabled={isSorting} clicked={handleTestAlgorithms}>
+				Test!
+			</Button>
 		</div>
 	);
 };

@@ -21,3 +21,8 @@
 	transform: translateY(0);
 	box-shadow: none;
 }
+
+.Button:disabled {
+	opacity: 50%;
+	cursor: not-allowed;
+}
