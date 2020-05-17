@@ -4,11 +4,11 @@ import classes from "./SortingVisualizer.module.css";
 import Bars from "./Bars/Bars";
 import Button from "../../components/UI/Button/Button";
 import { bubbleSort } from "../../sortingAlgorithms/bubbleSort";
-import { mergeSort } from "../../sortingAlgorithms/mergeSort";
+import { mergeSortIterative } from "../../sortingAlgorithms/mergeSort";
 import { selectionSort } from "../../sortingAlgorithms/selectionSort";
 import { getRandomNum, arraysAreEqual } from "../../utilities";
 
-const COLOR_DEFAULT = "#43aa8b";
+const COLOR_DEFAULT = "#577590";
 const COLOR_COMPARING = "#f9c74f";
 const COLOR_SWAP = "#f94144";
 const COLOR_SORTED = "#90be6d";
@@ -92,7 +92,6 @@ const SortingVisualizer = (props) => {
 		barsContainer.current.classList.remove("sorted");
 		let swapOrderArray = selectionSort([...randomHeights]);
 		let bars = barsContainer.current.children;
-		console.log(swapOrderArray[1]);
 
 		for (let i = 0; i < swapOrderArray.length; i++) {
 			let state = swapOrderArray[i][3];
@@ -129,12 +128,55 @@ const SortingVisualizer = (props) => {
 		}
 	};
 
-	const handleMergeSort = () => {
-		// setIsSorting(true);
-		// barsContainer.current.classList.remove("sorted");
-		// let swapOrderArray = mergeSort([...randomHeights]);
-		// let bars = barsContainer.current.children;
+	const handleInsertionSort = () => {};
+
+	const handleMergeSortIterative = () => {
+		setIsSorting(true);
+		barsContainer.current.classList.remove("sorted");
+		let swapOrderArray = mergeSortIterative([...randomHeights]);
+		let bars = barsContainer.current.children;
+
+		for (let i = 0; i < swapOrderArray.length; i++) {
+			let state = swapOrderArray[i][3];
+			let swapIdx1 = swapOrderArray[i][1];
+			let swapIdx2 = swapOrderArray[i][2];
+			setTimeout(() => {
+				if (state === "COMPARING") {
+					console.log("COMPARING", swapIdx1, swapIdx2);
+					bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
+					bars[swapIdx2].style.backgroundColor = COLOR_COMPARING;
+				} else if (state === "CASE-LEFT") {
+					console.log("CASE-LEFT", swapIdx1, swapIdx2);
+					bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
+					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+				} else if (state === "CASE-RIGHT-INIT") {
+					console.log("CASE-RIGHT-INIT", swapIdx1, swapIdx2);
+					bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
+					bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
+				} else if (state === "CASE-RIGHT-SHIFT") {
+					console.log("CASE-RIGHT-SHIFT", swapIdx1, swapIdx2);
+					for (let j = swapIdx2; j >= swapIdx1; j--) {
+						bars[j].style.height = swapOrderArray[i][0][j] + "px";
+					}
+					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+					bars[swapIdx1 + 1].style.backgroundColor = COLOR_SWAP;
+				} else if (state === "CASE-RIGHT-REVERT") {
+					console.log("CASE-RIGHT-REVERT", swapIdx1, swapIdx2);
+					bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
+					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+				} else if (state === "ALL-SORTED") {
+					console.log("ALL-SORTED", swapIdx1, swapIdx2);
+					barsContainer.current.classList.add("sorted");
+					setIsSorting(false);
+					setRandomHeights(swapOrderArray[i][0]);
+				}
+			}, i * SORTING_SPEED * 5);
+		}
 	};
+
+	const handleMergeSortRecursive = () => {};
+
+	const handleQuickSort = () => {};
 
 	const handleTestAlgorithms = () => {
 		/* CHECKS IF SORT FUNCTION WORKS */
@@ -166,14 +208,23 @@ const SortingVisualizer = (props) => {
 			<Button disabled={isSorting} clicked={handleGenerateNewArray}>
 				Generate New Random Array
 			</Button>
-			<Button disabled={isSorting} clicked={handleMergeSort}>
-				Merge Sort!
-			</Button>
 			<Button disabled={isSorting} clicked={handleBubbleSort}>
 				Bubble Sort!
 			</Button>
 			<Button disabled={isSorting} clicked={handleSelectionSort}>
 				Selection Sort!
+			</Button>
+			<Button disabled clicked={handleInsertionSort}>
+				Insertion Sort!
+			</Button>
+			<Button disabled={isSorting} clicked={handleMergeSortIterative}>
+				Merge Sort (Iterative)!
+			</Button>
+			<Button disabled clicked={handleMergeSortRecursive}>
+				Merge Sort (Recursive)!
+			</Button>
+			<Button disabled clicked={handleQuickSort}>
+				Quick Sort!
 			</Button>
 			<Button clicked={handleTestAlgorithms}>Test!</Button>
 		</div>
