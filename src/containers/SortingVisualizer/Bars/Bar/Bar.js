@@ -1,6 +1,7 @@
 import React from "react";
 
 import classes from "./Bar.module.css";
+// import { getRandomColor } from "../../../../utilities";
 
 const Bar = (props) => {
 	const height = `${props.height}px`;

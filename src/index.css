@@ -18,10 +18,12 @@ body {
 
 body {
 	font-family: Raleway;
+	background-color: #2a9d8f;
 }
 
 .sorted {
-	animation: sorted 0.3s forwards;
+	animation: sorted 0.8s forwards;
+	animation-timing-function: ease-in-out;
 }
 
 @keyframes sorted {
@@ -29,7 +31,10 @@ body {
 		transform: scale(1);
 	}
 	50% {
-		transform: scale(1.02);
+		transform: scale(0.99);
+	}
+	75% {
+		transform: scale(1.01);
 	}
 	100% {
 		transform: scale(1);

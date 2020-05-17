@@ -7,14 +7,19 @@ import { bubbleSort } from "../../sortingAlgorithms/bubbleSort";
 import { selectionSort } from "../../sortingAlgorithms/selectionSort";
 import { insertionSort } from "../../sortingAlgorithms/insertionSort";
 import { mergeSortIterative } from "../../sortingAlgorithms/mergeSort";
-import { getRandomNum, arraysAreEqual } from "../../utilities";
+import {
+	getRandomNum,
+	arraysAreEqual,
+	RANDOM_COLORS,
+	getRandomColor,
+} from "../../utilities";
 
 const COLOR_DEFAULT = "#577590";
 const COLOR_COMPARING = "#f9c74f";
 const COLOR_SWAP = "#f94144";
 const COLOR_SORTED = "#90be6d";
-let NUM_BARS = 10;
-let SORTING_SPEED = 200;
+let NUM_BARS = 100;
+let SORTING_SPEED = 1;
 
 const getRandomArray = () => {
 	const newRandomHeights = [];
@@ -41,6 +46,7 @@ const SortingVisualizer = (props) => {
 		for (let i = 0; i < NUM_BARS; i++) {
 			newRandomHeights.push(getRandomNum(5, 450));
 			bars[i].style.backgroundColor = COLOR_DEFAULT;
+			// bars[i].style.backgroundColor = getRandomColor();
 		}
 		setRandomHeights(newRandomHeights);
 	};
@@ -50,6 +56,7 @@ const SortingVisualizer = (props) => {
 		barsContainer.current.classList.remove("sorted");
 		let swapOrderArray = bubbleSort([...randomHeights]);
 		let bars = barsContainer.current.children;
+		let randomColor = getRandomColor();
 
 		for (let i = 0; i < swapOrderArray.length; i++) {
 			let state = swapOrderArray[i][3];
@@ -76,7 +83,7 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
 					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
 				} else if (state === "LAST-SORTED") {
-					bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
+					bars[swapIdx2].style.backgroundColor = randomColor;
 					if (swapIdx1 >= 0)
 						bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
 				} else if (state === "ALL-SORTED-1") {
@@ -93,6 +100,7 @@ const SortingVisualizer = (props) => {
 		barsContainer.current.classList.remove("sorted");
 		let swapOrderArray = selectionSort([...randomHeights]);
 		let bars = barsContainer.current.children;
+		let randomColor = getRandomColor();
 
 		for (let i = 0; i < swapOrderArray.length; i++) {
 			let state = swapOrderArray[i][3];
@@ -116,10 +124,10 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx2].style.height =
 						swapOrderArray[i][0][swapIdx2] + "px";
 				} else if (state === "SWAPPING-2") {
-					bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
+					bars[swapIdx1].style.backgroundColor = randomColor;
 					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
 				} else if (state === "NO-SWAP") {
-					bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
+					bars[swapIdx1].style.backgroundColor = randomColor;
 				} else if (state === "ALL-SORTED") {
 					barsContainer.current.classList.add("sorted");
 					setIsSorting(false);
@@ -159,7 +167,6 @@ const SortingVisualizer = (props) => {
 				} else if (state === "DONE-1") {
 					bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
 				} else if (state === "DONE-2") {
-					console.log(swapIdx1, swapIdx2);
 					if (swapIdx1 >= 0)
 						bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
 					bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
@@ -181,6 +188,10 @@ const SortingVisualizer = (props) => {
 		barsContainer.current.classList.remove("sorted");
 		let swapOrderArray = mergeSortIterative([...randomHeights]);
 		let bars = barsContainer.current.children;
+		let color = RANDOM_COLORS[0];
+		let count = getRandomNum(0, RANDOM_COLORS.length - 1);
+		let prevColor1 = COLOR_DEFAULT;
+		let prevColor2 = COLOR_DEFAULT;
 
 		for (let i = 0; i < swapOrderArray.length; i++) {
 			let state = swapOrderArray[i][3];
@@ -188,11 +199,13 @@ const SortingVisualizer = (props) => {
 			let swapIdx2 = swapOrderArray[i][2];
 			setTimeout(() => {
 				if (state === "COMPARING") {
+					prevColor1 = bars[swapIdx1].style.backgroundColor;
+					prevColor2 = bars[swapIdx2].style.backgroundColor;
 					bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
 					bars[swapIdx2].style.backgroundColor = COLOR_COMPARING;
 				} else if (state === "CASE-LEFT") {
-					bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
-					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+					bars[swapIdx1].style.backgroundColor = color;
+					bars[swapIdx2].style.backgroundColor = prevColor2;
 				} else if (state === "CASE-RIGHT-INIT") {
 					bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
 					bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
@@ -200,13 +213,15 @@ const SortingVisualizer = (props) => {
 					for (let j = swapIdx2; j >= swapIdx1; j--) {
 						bars[j].style.height = swapOrderArray[i][0][j] + "px";
 					}
-					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+					bars[swapIdx2].style.backgroundColor = prevColor1;
 					bars[swapIdx1 + 1].style.backgroundColor = COLOR_SWAP;
 				} else if (state === "CASE-RIGHT-REVERT") {
-					bars[swapIdx1].style.backgroundColor = "black";
-					bars[swapIdx2].style.backgroundColor = "black";
-					// bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
-					// bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+					bars[swapIdx1].style.backgroundColor = color;
+					bars[swapIdx2].style.backgroundColor = prevColor1;
+				} else if (state === "ONE-SIDE") {
+					bars[swapIdx1].style.backgroundColor = color;
+				} else if (state === "MERGED") {
+					color = RANDOM_COLORS[count++ % RANDOM_COLORS.length];
 				} else if (state === "ALL-SORTED") {
 					barsContainer.current.classList.add("sorted");
 					setIsSorting(false);
@@ -219,6 +234,12 @@ const SortingVisualizer = (props) => {
 	const handleMergeSortRecursive = () => {};
 
 	const handleQuickSort = () => {};
+
+	const handleShellSort = () => {};
+
+	const handleHeapSort = () => {};
+
+	const handleRadixSort = () => {};
 
 	const handleTestAlgorithms = () => {
 		/* CHECKS IF SORT FUNCTION WORKS */
@@ -267,6 +288,15 @@ const SortingVisualizer = (props) => {
 			</Button>
 			<Button disabled notfinished clicked={handleQuickSort}>
 				Quick Sort!
+			</Button>
+			<Button disabled notfinished clicked={handleShellSort}>
+				Shell Sort!
+			</Button>
+			<Button disabled notfinished clicked={handleHeapSort}>
+				Heap Sort!
+			</Button>
+			<Button disabled notfinished clicked={handleRadixSort}>
+				Radix Sort!
 			</Button>
 			<Button clicked={handleTestAlgorithms}>Test!</Button>
 		</div>
