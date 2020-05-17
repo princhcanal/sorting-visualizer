@@ -199,6 +199,6 @@ const getRandomArray = () => {
 };
 
 let arr = getRandomArray();
-console.log(arr, "\n");
+// console.log(arr, "\n");
 mergeSortRecursive(arr);
-console.log(arr);
+// console.log(arr);

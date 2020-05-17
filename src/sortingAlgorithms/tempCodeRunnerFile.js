@@ -1,2 +1,2 @@
-
-	let j = 0;
+ = getRandomArray();
+inserti

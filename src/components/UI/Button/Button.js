@@ -10,6 +10,11 @@ const Button = (props) => {
 			onClick={props.clicked}
 		>
 			{props.children}
+			{props.notfinished && (
+				<div>
+					<em>Coming Soon</em>
+				</div>
+			)}
 		</button>
 	);
 };
