@@ -14,7 +14,7 @@ let Bars = (props, ref) => {
 		return <Bar key={i} height={randHeight}></Bar>;
 	});
 	return (
-		<div class={classes.Bars} ref={barsContainer}>
+		<div className={classes.Bars} ref={barsContainer}>
 			{bars}
 		</div>
 	);
