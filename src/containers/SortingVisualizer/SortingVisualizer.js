@@ -6,9 +6,12 @@ import Button from "../../components/UI/Button/Button";
 import { bubbleSort } from "../../sortingAlgorithms/bubbleSort";
 import { selectionSort } from "../../sortingAlgorithms/selectionSort";
 import { insertionSort } from "../../sortingAlgorithms/insertionSort";
-import { mergeSortIterative } from "../../sortingAlgorithms/mergeSort";
-import { getQuickSortAnimations } from "../../sortingAlgorithms/quickSort";
-import { getRandomNum, RANDOM_COLORS, getRandomColor } from "../../utilities";
+import {
+	mergeSortIterative,
+	getMergeSortRecursiveSwapOrder,
+} from "../../sortingAlgorithms/mergeSort";
+import { getQuickSortSwapOrder } from "../../sortingAlgorithms/quickSort";
+import { getRandomNum, RANDOM_COLORS } from "../../utilities";
 
 const COLOR_DEFAULT = "#577590";
 const COLOR_COMPARING = "#f9c74f";
@@ -52,7 +55,6 @@ const SortingVisualizer = (props) => {
 		barsContainer.current.classList.remove("sorted");
 		let swapOrderArray = bubbleSort([...randomHeights]);
 		let bars = barsContainer.current.children;
-		let randomColor = getRandomColor();
 
 		for (let i = 0; i < swapOrderArray.length; i++) {
 			let state = swapOrderArray[i][3];
@@ -79,7 +81,7 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
 					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
 				} else if (state === "LAST-SORTED") {
-					bars[swapIdx2].style.backgroundColor = randomColor;
+					bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
 					if (swapIdx1 >= 0)
 						bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
 				} else if (state === "ALL-SORTED-1") {
@@ -96,7 +98,6 @@ const SortingVisualizer = (props) => {
 		barsContainer.current.classList.remove("sorted");
 		let swapOrderArray = selectionSort([...randomHeights]);
 		let bars = barsContainer.current.children;
-		let randomColor = getRandomColor();
 
 		for (let i = 0; i < swapOrderArray.length; i++) {
 			let state = swapOrderArray[i][3];
@@ -120,10 +121,10 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx2].style.height =
 						swapOrderArray[i][0][swapIdx2] + "px";
 				} else if (state === "SWAPPING-2") {
-					bars[swapIdx1].style.backgroundColor = randomColor;
+					bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
 					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
 				} else if (state === "NO-SWAP") {
-					bars[swapIdx1].style.backgroundColor = randomColor;
+					bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
 				} else if (state === "ALL-SORTED") {
 					barsContainer.current.classList.add("sorted");
 					setIsSorting(false);
@@ -179,10 +180,10 @@ const SortingVisualizer = (props) => {
 		}
 	};
 
-	const handleMergeSortIterative = () => {
+	const handleMergeSort = (mergeSortType) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
-		let swapOrderArray = mergeSortIterative([...randomHeights]);
+		let swapOrderArray = mergeSortType([...randomHeights]);
 		let bars = barsContainer.current.children;
 		let prevColor1 = COLOR_DEFAULT;
 		let prevColor2 = COLOR_DEFAULT;
@@ -224,16 +225,14 @@ const SortingVisualizer = (props) => {
 					setIsSorting(false);
 					setRandomHeights(swapOrderArray[i][0]);
 				}
-			}, i * SORTING_SPEED * 5);
+			}, i * SORTING_SPEED * 10);
 		}
 	};
-
-	const handleMergeSortRecursive = () => {};
 
 	const handleQuickSort = () => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
-		let swapOrderArray = getQuickSortAnimations(
+		let swapOrderArray = getQuickSortSwapOrder(
 			[...randomHeights],
 			0,
 			NUM_BARS - 1,
@@ -297,7 +296,7 @@ const SortingVisualizer = (props) => {
 					setIsSorting(false);
 					setRandomHeights(swapOrderArray[i][0]);
 				}
-			}, i * SORTING_SPEED * 5);
+			}, i * SORTING_SPEED * 10);
 		}
 	};
 
@@ -333,10 +332,16 @@ const SortingVisualizer = (props) => {
 			<Button disabled={isSorting} clicked={handleInsertionSort}>
 				Insertion Sort!
 			</Button>
-			<Button disabled={isSorting} clicked={handleMergeSortIterative}>
+			<Button
+				disabled={isSorting}
+				clicked={() => handleMergeSort(mergeSortIterative)}
+			>
 				Merge Sort (Iterative)!
 			</Button>
-			<Button disabled notfinished clicked={handleMergeSortRecursive}>
+			<Button
+				disabled={isSorting}
+				clicked={() => handleMergeSort(getMergeSortRecursiveSwapOrder)}
+			>
 				Merge Sort (Recursive)!
 			</Button>
 			<Button disabled={isSorting} clicked={handleQuickSort}>

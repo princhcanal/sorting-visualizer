@@ -1,44 +1,3 @@
-function mergeSortRecursive(arr) {
-	if (arr.length <= 1) {
-		return arr;
-	}
-	let mid = Math.floor(arr.length / 2);
-	let left = mergeSortRecursive(arr.slice(0, mid));
-	let right = mergeSortRecursive(arr.slice(mid));
-
-	return mergeRecursive(left, right);
-}
-
-function mergeRecursive(arr1, arr2) {
-	let res = [];
-	let i = 0;
-	let j = 0;
-
-	while (i < arr1.length || j < arr2.length) {
-		if (arr1[i] < arr2[j]) {
-			res.push(arr1[i]);
-			i++;
-		} else {
-			res.push(arr2[j]);
-			j++;
-		}
-
-		if (i === arr1.length) {
-			while (j < arr2.length) {
-				res.push(arr2[j]);
-				j++;
-			}
-		} else if (j === arr2.length) {
-			while (i < arr1.length) {
-				res.push(arr1[i]);
-				i++;
-			}
-		}
-	}
-
-	return res;
-}
-
 export function mergeSortIterative(arr) {
 	let swapOrderArray = [];
 	// break arr into individual arrs of single integers
@@ -163,21 +122,71 @@ function mergeIterative(arr, arr1, arr2, start, mid, end, swapOrderArray) {
 	return [res, start, end];
 }
 
-function getRandomNum(min, max) {
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min + 1)) + min;
+export function getMergeSortRecursiveSwapOrder(arr) {
+	const swapOrderArray = [];
+	if (arr.length <= 1) return arr;
+	mergeSortHelper(arr, 0, arr.length - 1, swapOrderArray);
+	swapOrderArray.push([[...arr], 0, arr.length - 1, "ALL-SORTED"]);
+	return swapOrderArray;
 }
 
-const getRandomArray = () => {
-	const newRandomHeights = [];
-	for (let i = 0; i < 6; i++) {
-		newRandomHeights.push(getRandomNum(5, 450));
-	}
-	return newRandomHeights;
-};
+function mergeSortHelper(arr, start, end, swapOrderArray) {
+	if (start === end) return;
+	const mid = Math.floor((start + end) / 2);
+	mergeSortHelper(arr, start, mid, swapOrderArray);
+	mergeSortHelper(arr, mid + 1, end, swapOrderArray);
+	mergeRecursive(arr, start, mid, end, swapOrderArray);
+}
 
-let arr = getRandomArray();
-// console.log(arr, "\n");
-mergeSortRecursive(arr);
-// console.log(arr);
+function mergeRecursive(arr, start, mid, end, swapOrderArray) {
+	let i = start;
+	let j = mid + 1;
+	let compIdx1 = start;
+	let compIdx2 = mid + 1;
+
+	while (i <= mid && j <= end) {
+		swapOrderArray.push([[...arr], compIdx1, compIdx2, "COMPARING"]);
+		if (arr[compIdx1] <= arr[compIdx2]) {
+			swapOrderArray.push([[...arr], compIdx1++, compIdx2, "CASE-LEFT"]);
+			i++;
+		} else {
+			swapOrderArray.push([
+				[...arr],
+				compIdx1,
+				compIdx2,
+				"CASE-RIGHT-INIT",
+			]);
+			let temp = arr[compIdx2];
+			for (let g = compIdx2; g > compIdx1; g--) {
+				arr[g] = arr[g - 1];
+			}
+			arr[compIdx1] = temp;
+			swapOrderArray.push([
+				[...arr],
+				compIdx1,
+				compIdx2++,
+				"CASE-RIGHT-SHIFT",
+			]);
+			swapOrderArray.push([
+				[...arr],
+				compIdx1,
+				++compIdx1,
+				"CASE-RIGHT-REVERT",
+			]);
+			j++;
+		}
+	}
+	while (i <= mid) {
+		swapOrderArray.push([[...arr], compIdx1, compIdx1, "ONE-SIDE"]);
+		compIdx1++;
+		i++;
+	}
+	while (j <= end) {
+		swapOrderArray.push([[...arr], compIdx2, compIdx2, "ONE-SIDE"]);
+		compIdx2++;
+		j++;
+		console.log(arr);
+	}
+
+	swapOrderArray.push([[...arr], start, end, "MERGED"]);
+}
