@@ -21,6 +21,9 @@
 }
 
 @media (max-width: 966px) {
+	.Bars {
+		margin-bottom: 1rem;
+	}
 	.Bars,
 	.Controls {
 		width: 100%;
