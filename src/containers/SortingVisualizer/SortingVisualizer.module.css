@@ -1,3 +1,14 @@
 .SortingVisualizer {
+	display: flex;
+}
+
+.Bars {
 	text-align: center;
+	width: 60%;
+}
+
+.Controls {
+	width: 40%;
+	height: 90vh;
+	overflow-y: scroll;
 }

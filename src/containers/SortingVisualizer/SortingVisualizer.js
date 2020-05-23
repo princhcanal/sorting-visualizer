@@ -2,12 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 
 import classes from "./SortingVisualizer.module.css";
 import Bars from "./Bars/Bars";
+import Controls from "./Controls/Controls";
 import Button from "../../components/UI/Button/Button";
 import { bubbleSort } from "../../sortingAlgorithms/bubbleSort";
 import { selectionSort } from "../../sortingAlgorithms/selectionSort";
 import { insertionSort } from "../../sortingAlgorithms/insertionSort";
 import {
-	mergeSortIterative,
+	// mergeSortIterative,
 	getMergeSortRecursiveSwapOrder,
 } from "../../sortingAlgorithms/mergeSort";
 import { getQuickSortSwapOrder } from "../../sortingAlgorithms/quickSort";
@@ -17,43 +18,81 @@ const COLOR_DEFAULT = "#577590";
 const COLOR_COMPARING = "#f9c74f";
 const COLOR_SWAP = "#f94144";
 const COLOR_SORTED = "#90be6d";
-let NUM_BARS = 100;
-let SORTING_SPEED = 1;
+let MIN_HEIGHT = 5;
+let MAX_HEIGHT = 300;
+let SORTING_SPEED = 1000;
+let NUM_BARS = 5;
 
 const getRandomArray = () => {
 	const newRandomHeights = [];
 	for (let i = 0; i < NUM_BARS; i++) {
-		newRandomHeights.push(getRandomNum(5, 450));
+		newRandomHeights.push(getRandomNum(MIN_HEIGHT, MAX_HEIGHT));
 	}
 	return newRandomHeights;
 };
 
 const SortingVisualizer = (props) => {
-	const [randomHeights, setRandomHeights] = useState(getRandomArray());
+	const [randomHeights, setRandomHeights] = useState();
 	const [isSorting, setIsSorting] = useState(false);
+	const [numBars, setNumBars] = useState(NUM_BARS);
+	const [sortingSpeed, setSortingSpeed] = useState(SORTING_SPEED);
+	const [sortingFunction, setSortingFunction] = useState();
+	const [changeToDefault, setChangeToDefault] = useState(false);
+	const [sortingConfig, setSortingConfig] = useState({});
 	const barsContainer = useRef();
 
 	useEffect(() => {
-		// handleGenerateNewArray();
-		// console.log(barsContainer.current.classList);
-		// console.log("updated");
+		setSortingFunction(() => () =>
+			handleMergeSort(getMergeSortRecursiveSwapOrder)
+		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		handleGenerateNewArray();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [numBars]);
+
+	useEffect(() => {
+		handleColorNewBars();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [randomHeights]);
+
+	useEffect(() => {
+		setSortingFunction(() => sortingFunction);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [randomHeights]);
 
 	const handleGenerateNewArray = () => {
 		const newRandomHeights = [];
-		const bars = barsContainer.current.children;
-		for (let i = 0; i < NUM_BARS; i++) {
-			newRandomHeights.push(getRandomNum(5, 450));
-			bars[i].style.backgroundColor = COLOR_DEFAULT;
-			// bars[i].style.backgroundColor = getRandomColor();
+		for (let i = 0; i < numBars; i++) {
+			newRandomHeights.push(getRandomNum(MIN_HEIGHT, MAX_HEIGHT));
 		}
+		setChangeToDefault(true);
 		setRandomHeights(newRandomHeights);
 	};
 
-	const handleBubbleSort = () => {
+	const handleColorNewBars = () => {
+		if (changeToDefault) {
+			let bars = barsContainer.current.children;
+			for (let i = 0; i < numBars; i++) {
+				bars[i].style.backgroundColor = COLOR_DEFAULT;
+			}
+		}
+	};
+
+	const handleChangeArraySize = (event) => {
+		setNumBars(event.target.value);
+	};
+
+	const handleChangeSortingSpeed = (event) => {
+		setSortingSpeed(event.target.value);
+	};
+
+	const handleBubbleSort = (config, heights, speed) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
-		let swapOrderArray = bubbleSort([...randomHeights]);
+		let swapOrderArray = bubbleSort([...heights]);
 		let bars = barsContainer.current.children;
 
 		for (let i = 0; i < swapOrderArray.length; i++) {
@@ -86,17 +125,18 @@ const SortingVisualizer = (props) => {
 						bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
 				} else if (state === "ALL-SORTED-1") {
 					barsContainer.current.classList.add("sorted");
+					setChangeToDefault(false);
 					setIsSorting(false);
 					setRandomHeights(swapOrderArray[i][0]);
 				}
-			}, i * SORTING_SPEED);
+			}, i * speed);
 		}
 	};
 
-	const handleSelectionSort = () => {
+	const handleSelectionSort = (config, heights, speed) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
-		let swapOrderArray = selectionSort([...randomHeights]);
+		let swapOrderArray = selectionSort([...heights]);
 		let bars = barsContainer.current.children;
 
 		for (let i = 0; i < swapOrderArray.length; i++) {
@@ -127,17 +167,18 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
 				} else if (state === "ALL-SORTED") {
 					barsContainer.current.classList.add("sorted");
+					setChangeToDefault(false);
 					setIsSorting(false);
 					setRandomHeights(swapOrderArray[i][0]);
 				}
-			}, i * SORTING_SPEED);
+			}, i * speed);
 		}
 	};
 
-	const handleInsertionSort = () => {
+	const handleInsertionSort = (config, heights, speed) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
-		let swapOrderArray = insertionSort([...randomHeights]);
+		let swapOrderArray = insertionSort([...heights]);
 		let bars = barsContainer.current.children;
 
 		for (let i = 0; i < swapOrderArray.length; i++) {
@@ -173,17 +214,18 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
 				} else if (state === "ALL-SORTED") {
 					barsContainer.current.classList.add("sorted");
+					setChangeToDefault(false);
 					setIsSorting(false);
 					setRandomHeights(swapOrderArray[i][0]);
 				}
-			}, i * SORTING_SPEED);
+			}, i * speed);
 		}
 	};
 
-	const handleMergeSort = (mergeSortType) => {
+	const handleMergeSort = (config, heights, speed) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
-		let swapOrderArray = mergeSortType([...randomHeights]);
+		let swapOrderArray = config.implementation([...heights]);
 		let bars = barsContainer.current.children;
 		let prevColor1 = COLOR_DEFAULT;
 		let prevColor2 = COLOR_DEFAULT;
@@ -222,20 +264,22 @@ const SortingVisualizer = (props) => {
 					color = RANDOM_COLORS[++count % RANDOM_COLORS.length];
 				} else if (state === "ALL-SORTED") {
 					barsContainer.current.classList.add("sorted");
+					setChangeToDefault(false);
 					setIsSorting(false);
 					setRandomHeights(swapOrderArray[i][0]);
 				}
-			}, i * SORTING_SPEED * 10);
+			}, i * speed);
 		}
 	};
 
-	const handleQuickSort = () => {
+	const handleQuickSort = (config, heights, speed) => {
+		console.log(heights);
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
 		let swapOrderArray = getQuickSortSwapOrder(
-			[...randomHeights],
+			[...heights],
 			0,
-			NUM_BARS - 1,
+			heights.length - 1,
 			[]
 		);
 		let bars = barsContainer.current.children;
@@ -293,70 +337,90 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
 				} else if (state === "ALL-SORTED") {
 					barsContainer.current.classList.add("sorted");
+					setChangeToDefault(false);
 					setIsSorting(false);
 					setRandomHeights(swapOrderArray[i][0]);
 				}
-			}, i * SORTING_SPEED * 10);
+			}, i * speed);
 		}
 	};
 
-	const handleShellSort = () => {};
+	const handleChangeSortingFunction = (event) => {
+		switch (event.target.value) {
+			case "BubbleSort":
+				setSortingFunction(() => handleBubbleSort);
+				break;
+			case "SelectionSort":
+				setSortingFunction(() => handleSelectionSort);
+				break;
+			case "InsertionSort":
+				setSortingFunction(() => handleInsertionSort);
+				break;
+			case "MergeSort":
+				setSortingConfig({
+					implementation: getMergeSortRecursiveSwapOrder,
+				});
+				setSortingFunction(() => handleMergeSort);
+				break;
+			case "QuickSort":
+				setSortingFunction(() => handleQuickSort);
+				break;
+			default:
+				break;
+		}
+	};
 
-	const handleHeapSort = () => {};
+	// const handleShellSort = () => {};
 
-	const handleRadixSort = () => {};
+	// const handleHeapSort = () => {};
+
+	// const handleRadixSort = () => {};
 
 	const handleTestAlgorithms = () => {
 		/* CHECKS IF DOM HEIGHTS MATCH SORTED RANDOM HEIGHTS*/
-		const sortedRandomHeights = [...randomHeights].sort((a, b) => a - b);
-		const barsDOM = document.getElementsByClassName("bar");
-		for (let i = 0; i < barsDOM.length; i++) {
-			console.log(
-				barsDOM[i].style.height === sortedRandomHeights[i] + "px"
-			);
-		}
+		// const sortedRandomHeights = [...randomHeights].sort((a, b) => a - b);
+		// const barsDOM = document.getElementsByClassName("bar");
+		// for (let i = 0; i < barsDOM.length; i++) {
+		// 	console.log(
+		// 		barsDOM[i].style.height === sortedRandomHeights[i] + "px"
+		// 	);
+		// }
+		// console.log("sorting function", sortingFunction);
+		console.log("test:", randomHeights);
+		console.log("test:", sortingFunction);
 	};
 
 	return (
 		<div className={classes.SortingVisualizer}>
-			<Bars ref={barsContainer} heights={randomHeights}></Bars>
-			<Button disabled={isSorting} clicked={handleGenerateNewArray}>
-				Generate New Random Array
-			</Button>
-			<Button disabled={isSorting} clicked={handleBubbleSort}>
-				Bubble Sort!
-			</Button>
-			<Button disabled={isSorting} clicked={handleSelectionSort}>
-				Selection Sort!
-			</Button>
-			<Button disabled={isSorting} clicked={handleInsertionSort}>
-				Insertion Sort!
-			</Button>
-			<Button
-				disabled={isSorting}
-				clicked={() => handleMergeSort(mergeSortIterative)}
-			>
-				Merge Sort (Iterative)!
-			</Button>
-			<Button
-				disabled={isSorting}
-				clicked={() => handleMergeSort(getMergeSortRecursiveSwapOrder)}
-			>
-				Merge Sort (Recursive)!
-			</Button>
-			<Button disabled={isSorting} clicked={handleQuickSort}>
-				Quick Sort!
-			</Button>
-			<Button disabled notfinished clicked={handleShellSort}>
-				Shell Sort!
-			</Button>
-			<Button disabled notfinished clicked={handleHeapSort}>
-				Heap Sort!
-			</Button>
-			<Button disabled notfinished clicked={handleRadixSort}>
-				Radix Sort!
-			</Button>
-			<Button clicked={handleTestAlgorithms}>Test!</Button>
+			<div className={classes.Bars}>
+				<Bars ref={barsContainer} heights={randomHeights}></Bars>
+				<Button clicked={handleTestAlgorithms}>Test</Button>
+			</div>
+			<div className={classes.Controls}>
+				<Controls
+					heights={randomHeights}
+					size={numBars}
+					speed={sortingSpeed}
+					sort={
+						sortingFunction
+							? sortingFunction
+							: () =>
+									handleMergeSort(
+										{
+											implementation: getMergeSortRecursiveSwapOrder,
+										},
+										randomHeights,
+										sortingSpeed
+									)
+					}
+					sortConfig={sortingConfig}
+					generateNewArray={handleGenerateNewArray}
+					disableControls={isSorting}
+					changedArraySize={handleChangeArraySize}
+					changedSortingSpeed={handleChangeSortingSpeed}
+					changedSortingFunction={handleChangeSortingFunction}
+				/>
+			</div>
 		</div>
 	);
 };

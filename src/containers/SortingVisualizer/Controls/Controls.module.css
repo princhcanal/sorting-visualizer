@@ -1,0 +1,19 @@
+.Controls {
+}
+
+.Controls select {
+	width: 100%;
+	font-family: inherit;
+	text-align-last: center;
+	margin: 1rem 0;
+	border-radius: 2rem;
+	padding: 1rem;
+}
+
+.Controls option {
+	text-align-last: center;
+}
+
+.Controls .Button {
+	text-align: center;
+}

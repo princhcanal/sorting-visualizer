@@ -10,12 +10,15 @@ let Bars = (props, ref) => {
 		classList: barsContainer.current.classList,
 	}));
 
-	const bars = props.heights.map((randHeight, i) => {
-		return <Bar key={i} height={randHeight}></Bar>;
-	});
+	let bars;
+	if (props.heights) {
+		bars = props.heights.map((randHeight, i) => {
+			return <Bar key={i} height={randHeight}></Bar>;
+		});
+	}
 	return (
 		<div className={classes.Bars} ref={barsContainer}>
-			{bars}
+			{bars && bars}
 		</div>
 	);
 };

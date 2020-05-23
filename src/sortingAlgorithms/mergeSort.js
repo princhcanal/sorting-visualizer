@@ -15,13 +15,11 @@ export function mergeSortIterative(arr) {
 			let aIndex = result[i][1];
 			let bIndex = result[i + 1][1] + result[i + 1][0].length - 1;
 			let bIndexStart = result[i + 1][1];
-			// console.log("a:", aIndex, a, "b:", bIndex, b);
 
 			// pre-merge 3 subarrs into 2 if there are odd number of subarrs
 			if (oddNumbered && i === result.length - 3) {
 				let last = result[i + 2][0];
 				let lastIndex = result[i + 2][1] + result[i + 2][0].length - 1;
-				// console.log("last:", lastIndex, last);
 				b = mergeIterative(
 					arr,
 					b,
@@ -33,7 +31,6 @@ export function mergeSortIterative(arr) {
 				)[0];
 				// bIndex += lastIndex - aIndex - 1;
 				bIndex = lastIndex;
-				// console.log("b:", bIndex, b);
 				i++;
 			}
 			// accumulate intermediate result
@@ -46,13 +43,10 @@ export function mergeSortIterative(arr) {
 				bIndex,
 				swapOrderArray
 			);
-			// console.log("merged:", merged);
 			temp.push(merged);
-			// console.log("temp:", temp, "\n");
 		}
 		// current level merged, update result
 		result = temp;
-		// console.log("result:", result, "\n");
 	}
 	// return result[0];
 	swapOrderArray.push([[...arr], 0, 0, "ALL-SORTED"]);
@@ -65,8 +59,6 @@ function mergeIterative(arr, arr1, arr2, start, mid, end, swapOrderArray) {
 	let j = 0;
 	let compIdx1 = start;
 	let compIdx2 = mid;
-	// console.log("start:", start, "end:", end);
-	// console.log("startA:", compIdx1, "startB:", compIdx2);
 
 	while (i < arr1.length && j < arr2.length) {
 		swapOrderArray.push([[...arr], compIdx1, compIdx2, "COMPARING"]);
@@ -185,7 +177,6 @@ function mergeRecursive(arr, start, mid, end, swapOrderArray) {
 		swapOrderArray.push([[...arr], compIdx2, compIdx2, "ONE-SIDE"]);
 		compIdx2++;
 		j++;
-		console.log(arr);
 	}
 
 	swapOrderArray.push([[...arr], start, end, "MERGED"]);

@@ -21,6 +21,11 @@ body {
 	background-color: #2a9d8f;
 }
 
+input,
+select {
+	outline: none;
+}
+
 .sorted {
 	animation: sorted 0.8s forwards;
 	animation-timing-function: ease-in-out;

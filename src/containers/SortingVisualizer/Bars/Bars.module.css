@@ -1,1 +1,7 @@
-
+.Bars {
+	margin: 2rem 0;
+	height: 300px;
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+}

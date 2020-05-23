@@ -11,7 +11,7 @@ export function getQuickSortSwapOrder(
 
 function quickSort(arr, left = 0, right = arr.length - 1, swapOrderArray) {
 	if (left < right) {
-		let pivotIndex = pivot(arr, left, right, swapOrderArray);
+		let pivotIndex = pivotLomuto(arr, left, right, swapOrderArray);
 		quickSort(arr, left, pivotIndex - 1, swapOrderArray);
 		quickSort(arr, pivotIndex + 1, right, swapOrderArray);
 	} else if (left === right) {
@@ -21,7 +21,7 @@ function quickSort(arr, left = 0, right = arr.length - 1, swapOrderArray) {
 	return swapOrderArray;
 }
 
-function pivot(arr, start = 0, end = arr.length - 1, swapOrderArray) {
+function pivotLomuto(arr, start = 0, end = arr.length - 1, swapOrderArray) {
 	let pivot = arr[start];
 	let pivotIndex = start;
 
@@ -61,17 +61,58 @@ function pivot(arr, start = 0, end = arr.length - 1, swapOrderArray) {
 			"REVERT-ALL-2",
 		]); // default (pivotIndex + 1) to (end)
 	}
-	// console.log(pivotIndex, "\n");
 	return pivotIndex;
+}
+
+function quickSortHoare(arr, start, end, swapOrderArray) {
+	if (start < end) {
+		let pivotIndex = pivotHoare(arr, start, end, swapOrderArray);
+		quickSortHoare(arr, start, pivotIndex, swapOrderArray);
+		quickSortHoare(arr, pivotIndex + 1, end, swapOrderArray);
+	} else {
+	}
+}
+
+function pivotHoare(arr, start = 0, end = arr.length - 1, swapOrderArray) {
+	let mid = Math.floor((start + end) / 2);
+	let pivot = arr[mid];
+	let i = start;
+	let j = end;
+
+	swapOrderArray.push([[...arr], mid, mid, "GET-PIVOT"]);
+
+	while (true) {
+		while (arr[i] < pivot) {
+			i++;
+		}
+		while (arr[j] > pivot) {
+			j--;
+		}
+		if (i >= j) {
+			return j;
+		}
+		swap(arr, i++, j--);
+	}
 }
 
 function swap(arr, i, j) {
 	[arr[i], arr[j]] = [arr[j], arr[i]];
 }
 
-// let arr = [5, 2, 1, 8];
+function getRandomNum(min, max) {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-// console.log(arr);
-// quickSort(arr, 0, arr.length - 1, []);
-// console.log(arr);
-// console.log(quickSort([4, 6, 9, 1, 2, 5]));
+const getRandomArray = () => {
+	const newRandomHeights = [];
+	for (let i = 0; i < 5; i++) {
+		newRandomHeights.push(getRandomNum(5, 450));
+	}
+	return newRandomHeights;
+};
+
+let arr = getRandomArray();
+// let sorted = [...arr].sort((a, b) => a - b);
+quickSortHoare(arr, 0, arr.length - 1, []);
