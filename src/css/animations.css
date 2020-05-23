@@ -1,0 +1,19 @@
+.sorted {
+	animation: sorted 0.8s forwards;
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes sorted {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(0.99);
+	}
+	75% {
+		transform: scale(1.01);
+	}
+	100% {
+		transform: scale(1);
+	}
+}

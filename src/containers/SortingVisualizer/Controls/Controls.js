@@ -1,12 +1,11 @@
 import React from "react";
 import Card from "../../../components/UI/Card/Card";
 
-import classes from "./Controls.module.css";
 import Button from "../../../components/UI/Button/Button";
 
 let Controls = (props, ref) => {
 	return (
-		<div className={classes.Controls}>
+		<div className="controls">
 			<Card>
 				<h2>Choose a Sorting Algorithm</h2>
 				<select
@@ -33,20 +32,6 @@ let Controls = (props, ref) => {
 			</Card>
 			<Card>
 				<h2>Controls</h2>
-				<Button
-					clicked={props.generateNewArray}
-					disabled={props.disableControls}
-				>
-					Generate New Random Array
-				</Button>
-				<Button
-					clicked={() =>
-						props.sort(props.sortConfig, props.heights, props.speed)
-					}
-					disabled={props.disableControls}
-				>
-					Sort
-				</Button>
 				<div className="input-group">
 					<label htmlFor="arrSize">Change Array Size</label>
 					<input
@@ -59,6 +44,7 @@ let Controls = (props, ref) => {
 						id="arrSize"
 						name="arrSize"
 					/>
+
 					<p>{props.size}</p>
 				</div>
 				<div className="input-group">
@@ -75,6 +61,20 @@ let Controls = (props, ref) => {
 					/>
 					<p>{props.speed}</p>
 				</div>
+				<Button
+					clicked={props.generateNewArray}
+					disabled={props.disableControls}
+				>
+					Generate New Random Array
+				</Button>
+				<Button
+					clicked={() =>
+						props.sort(props.sortConfig, props.heights, props.speed)
+					}
+					disabled={props.disableControls}
+				>
+					Sort
+				</Button>
 			</Card>
 			<Card>
 				<h2>Options</h2>

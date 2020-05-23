@@ -1,7 +1,6 @@
 import React, { useRef, useImperativeHandle, forwardRef } from "react";
 
 import Bar from "./Bar/Bar";
-import classes from "./Bars.module.css";
 
 let Bars = (props, ref) => {
 	const barsContainer = useRef();
@@ -17,7 +16,7 @@ let Bars = (props, ref) => {
 		});
 	}
 	return (
-		<div className={classes.Bars} ref={barsContainer}>
+		<div className="bars" ref={barsContainer}>
 			{bars && bars}
 		</div>
 	);

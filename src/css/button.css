@@ -1,33 +1,28 @@
-.Button {
-	padding: 1rem 1.5rem;
+.button {
+	padding: 0.5rem 1rem;
 	color: #fff;
 	background-color: #577590;
 	border: none;
 	font-family: inherit;
-	font-size: 1rem;
+	font-size: 0.8rem;
 	border-radius: 0.5rem;
 	cursor: pointer;
 	outline: none;
-	margin: 1rem;
+	margin: 0.5rem;
 	transition: all 0.2s;
 }
 
-.Button:hover {
+.button:hover {
 	transform: translateY(-0.1rem);
 	box-shadow: 0.25rem 0.25rem 1rem rgba(0, 0, 0, 0.2);
 }
 
-.Button:active {
+.button:active {
 	transform: translateY(0);
 	box-shadow: none;
 }
 
-.Button:disabled {
+.button:disabled {
 	opacity: 50%;
 	cursor: not-allowed;
-}
-
-.Button div {
-	margin-top: 0.5rem;
-	font-size: 0.7rem;
 }

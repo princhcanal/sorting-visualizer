@@ -1,47 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700&display=swap");
-
-*,
-*::after,
-*::before {
-	box-sizing: border-box;
-}
-
-html {
-	scroll-behavior: smooth;
-}
-
-html,
-body {
-	margin: 0;
-	padding: 0;
-}
-
-body {
-	font-family: Raleway;
-	background-color: #2a9d8f;
-}
-
-input,
-select {
-	outline: none;
-}
-
-.sorted {
-	animation: sorted 0.8s forwards;
-	animation-timing-function: ease-in-out;
-}
-
-@keyframes sorted {
-	0% {
-		transform: scale(1);
-	}
-	50% {
-		transform: scale(0.99);
-	}
-	75% {
-		transform: scale(1.01);
-	}
-	100% {
-		transform: scale(1);
-	}
-}
+@import url("./css/base.css");
+@import url("./css/input.css");
+@import url("./css/animations.css");
+@import url("./css/card.css");
+@import url("./css/controls.css");
+@import url("./css/bars.css");
+@import url("./css/bar.css");
+@import url("./css/button.css");

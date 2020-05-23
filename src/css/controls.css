@@ -1,7 +1,8 @@
-.Controls {
+.controls {
+	text-align: center;
 }
 
-.Controls select {
+.controls select {
 	width: 100%;
 	font-family: inherit;
 	text-align-last: center;
@@ -10,10 +11,6 @@
 	padding: 1rem;
 }
 
-.Controls option {
+.controls option {
 	text-align-last: center;
-}
-
-.Controls .Button {
-	text-align: center;
 }
