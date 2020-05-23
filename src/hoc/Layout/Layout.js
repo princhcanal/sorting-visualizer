@@ -4,10 +4,12 @@ import classes from "./Layout.module.css";
 
 const Layout = (props) => {
 	return (
-		<>
-			<header className={classes.Header}></header>
+		<div className={classes.Layout}>
+			<header>
+				<h1>Sorting Visualizer</h1>
+			</header>
 			<main className={classes.Content}>{props.children}</main>
-		</>
+		</div>
 	);
 };
 

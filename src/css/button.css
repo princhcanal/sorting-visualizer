@@ -1,7 +1,7 @@
 .button {
 	padding: 0.5rem 1rem;
-	color: #fff;
-	background-color: #577590;
+	color: #e0e0e2;
+	background-color: #0b6e4f;
 	border: none;
 	font-family: inherit;
 	font-size: 0.8rem;
@@ -14,7 +14,7 @@
 
 .button:hover {
 	transform: translateY(-0.1rem);
-	box-shadow: 0.25rem 0.25rem 1rem rgba(0, 0, 0, 0.2);
+	box-shadow: 0.1rem 0.1rem 0.5rem rgba(0, 0, 0, 0.2);
 }
 
 .button:active {
@@ -25,4 +25,8 @@
 .button:disabled {
 	opacity: 50%;
 	cursor: not-allowed;
+}
+
+.button.burgundy {
+	background-color: #721817;
 }

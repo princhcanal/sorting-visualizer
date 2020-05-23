@@ -1,10 +1,11 @@
 import React from "react";
 
 const Button = (props) => {
+	let classNames = ["button", props.classNames];
 	return (
 		<button
 			disabled={props.disabled}
-			className="button"
+			className={classNames.join(" ")}
 			onClick={props.clicked}
 		>
 			{props.children}

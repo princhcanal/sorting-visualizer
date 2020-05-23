@@ -1,3 +1,8 @@
-.Header {
-	height: 4rem;
+.Layout {
+	text-align: center;
+}
+
+.Layout h1 {
+	font-weight: 300;
+	color: #e0e0e2;
 }

@@ -1,39 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../../../components/UI/Card/Card";
 
 import Button from "../../../components/UI/Button/Button";
 
-let Controls = (props, ref) => {
+let Controls = (props) => {
 	return (
 		<div className="controls">
 			<Card>
-				<h2>Choose a Sorting Algorithm</h2>
-				<select
-					name="sorting-algorithms"
-					id="algos"
-					defaultValue={"MergeSort"}
-					onChange={props.changedSortingFunction}
-				>
-					<option value="BubbleSort">Bubble Sort</option>
-					<option value="SelectionSort">Selection Sort</option>
-					<option value="InsertionSort">Insertion Sort</option>
-					<option value="MergeSort">Merge Sort</option>
-					<option value="QuickSort">Quick Sort</option>
-					<option value="ShellSort" disabled>
-						Shell Sort (Coming Soon)
-					</option>
-					<option value="HeapSort" disabled>
-						Heap Sort (Coming Soon)
-					</option>
-					<option value="RadixSort" disabled>
-						Radix Sort (Coming Soon)
-					</option>
-				</select>
-			</Card>
-			<Card>
 				<h2>Controls</h2>
 				<div className="input-group">
-					<label htmlFor="arrSize">Change Array Size</label>
+					<label htmlFor="arrSize">Array Size</label>
 					<input
 						type="range"
 						min="5"
@@ -45,10 +21,15 @@ let Controls = (props, ref) => {
 						name="arrSize"
 					/>
 
-					<p>{props.size}</p>
+					<input
+						type="number"
+						value={props.size}
+						onChange={props.changedArraySize}
+						disabled={props.disableControls}
+					/>
 				</div>
 				<div className="input-group">
-					<label htmlFor="sortSpeed">Change Sorting Speed</label>
+					<label htmlFor="sortSpeed">Sorting Speed</label>
 					<input
 						type="range"
 						min="5"
@@ -59,26 +40,15 @@ let Controls = (props, ref) => {
 						id="sortSpeed"
 						name="sortSpeed"
 					/>
-					<p>{props.speed}</p>
+					<div className="speed-labels">
+						<p>Extremely Fast</p>
+						<p>Extremely Slow</p>
+					</div>
 				</div>
-				<Button
-					clicked={props.generateNewArray}
-					disabled={props.disableControls}
-				>
-					Generate New Random Array
-				</Button>
-				<Button
-					clicked={() =>
-						props.sort(props.sortConfig, props.heights, props.speed)
-					}
-					disabled={props.disableControls}
-				>
-					Sort
-				</Button>
 			</Card>
-			<Card>
+			{/* <Card>
 				<h2>Options</h2>
-			</Card>
+			</Card> */}
 		</div>
 	);
 };

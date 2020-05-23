@@ -1,14 +1,28 @@
 .SortingVisualizer {
 	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	/* align-items: center; */
+	margin: auto;
 }
 
 .Bars {
 	text-align: center;
 	width: 60%;
+	margin: auto;
+	padding: 0 1rem;
 }
 
 .Controls {
 	width: 40%;
-	height: 90vh;
-	overflow-y: scroll;
+	/* margin: auto; */
+	/* height: 90vh;
+	overflow-y: scroll; */
+}
+
+@media (max-width: 966px) {
+	.Bars,
+	.Controls {
+		width: 100%;
+	}
 }

@@ -1,5 +1,5 @@
 .card {
-	background-color: #fff;
+	background-color: #e0e0e2;
 	border-radius: 0.5rem;
 	width: 80%;
 	margin: 1rem auto;
@@ -7,12 +7,6 @@
 	box-shadow: 0.7rem 0.7rem 0.5rem rgba(0, 0, 0, 0.1);
 }
 
-.card h2 {
-	text-align: center;
-	margin: 1rem 0;
-}
-
-.card .input-group {
-	display: flex;
-	flex-direction: column;
+.card:first-of-type {
+	margin-top: 0;
 }

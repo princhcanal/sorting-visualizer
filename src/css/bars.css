@@ -5,3 +5,18 @@
 	justify-content: center;
 	align-items: flex-end;
 }
+
+select {
+	width: 100%;
+	font-family: inherit;
+	text-align-last: center;
+	border-radius: 2rem;
+	border: none;
+	padding: 1rem;
+	background-color: #fa9f42;
+	color: #fff;
+}
+
+option {
+	text-align-last: center;
+}

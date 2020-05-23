@@ -20,16 +20,8 @@ const COLOR_SWAP = "#f94144";
 const COLOR_SORTED = "#90be6d";
 let MIN_HEIGHT = 5;
 let MAX_HEIGHT = 300;
-let SORTING_SPEED = 1000;
-let NUM_BARS = 5;
-
-const getRandomArray = () => {
-	const newRandomHeights = [];
-	for (let i = 0; i < NUM_BARS; i++) {
-		newRandomHeights.push(getRandomNum(MIN_HEIGHT, MAX_HEIGHT));
-	}
-	return newRandomHeights;
-};
+let SORTING_SPEED = 5;
+let NUM_BARS = 100;
 
 const SortingVisualizer = (props) => {
 	const [randomHeights, setRandomHeights] = useState();
@@ -273,7 +265,6 @@ const SortingVisualizer = (props) => {
 	};
 
 	const handleQuickSort = (config, heights, speed) => {
-		console.log(heights);
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
 		let swapOrderArray = getQuickSortSwapOrder(
@@ -393,8 +384,27 @@ const SortingVisualizer = (props) => {
 	return (
 		<div className={classes.SortingVisualizer}>
 			<div className={classes.Bars}>
-				<Bars ref={barsContainer} heights={randomHeights}></Bars>
-				<Button clicked={handleTestAlgorithms}>Test</Button>
+				<Bars
+					ref={barsContainer}
+					heights={randomHeights}
+					speed={sortingSpeed}
+					sortConfig={sortingConfig}
+					disabledControls={isSorting}
+					changedSortingFunction={handleChangeSortingFunction}
+					generateNewArray={handleGenerateNewArray}
+					sort={
+						sortingFunction
+							? sortingFunction
+							: () =>
+									handleMergeSort(
+										{
+											implementation: getMergeSortRecursiveSwapOrder,
+										},
+										randomHeights,
+										sortingSpeed
+									)
+					}
+				></Bars>
 			</div>
 			<div className={classes.Controls}>
 				<Controls

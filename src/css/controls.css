@@ -2,15 +2,30 @@
 	text-align: center;
 }
 
-.controls select {
-	width: 100%;
-	font-family: inherit;
-	text-align-last: center;
-	margin: 1rem 0;
-	border-radius: 2rem;
-	padding: 1rem;
+.controls input {
+	margin-top: 1rem;
 }
 
-.controls option {
+.controls .input-group {
+	display: flex;
+	flex-direction: column;
+}
+
+.controls .input-group:not(:last-of-type) {
+	margin-bottom: 1rem;
+}
+
+.controls .speed-labels {
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.7rem;
+}
+
+.controls input[type="number"] {
 	text-align-last: center;
+	font-family: inherit;
+	border-radius: 0.5rem;
+	border: 1px solid gray;
+	width: 20%;
+	margin-left: auto;
 }
