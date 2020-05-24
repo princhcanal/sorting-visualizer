@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useImperativeHandle, forwardRef } from "react";
 import Card from "../../../components/UI/Card/Card";
 
-import Button from "../../../components/UI/Button/Button";
-
-let Controls = (props) => {
+// TODO: style number
+let Controls = (props, ref) => {
+	const errorMessage = useRef();
+	useImperativeHandle(ref, () => ({
+		classList: errorMessage.current.classList,
+		children: errorMessage.current.children,
+	}));
 	return (
 		<div className="controls">
 			<Card>
@@ -20,6 +24,13 @@ let Controls = (props) => {
 						id="arrSize"
 						name="arrSize"
 					/>
+					<div className="range-labels">
+						<p>5</p>
+						<p>100</p>
+					</div>
+					<div className="error-message" ref={errorMessage}>
+						<p></p>
+					</div>
 
 					<input
 						type="number"
@@ -40,7 +51,7 @@ let Controls = (props) => {
 						id="sortSpeed"
 						name="sortSpeed"
 					/>
-					<div className="speed-labels">
+					<div className="range-labels">
 						<p>Extremely Fast</p>
 						<p>Extremely Slow</p>
 					</div>
@@ -52,5 +63,7 @@ let Controls = (props) => {
 		</div>
 	);
 };
+
+Controls = forwardRef(Controls);
 
 export default Controls;

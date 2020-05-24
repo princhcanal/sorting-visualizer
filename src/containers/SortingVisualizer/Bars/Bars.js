@@ -3,6 +3,7 @@ import React, { useRef, useImperativeHandle, forwardRef } from "react";
 import Bar from "./Bar/Bar";
 import Button from "../../../components/UI/Button/Button";
 
+// TODO: create custom select, change width of bars as size decreases, put numbers on bars
 let Bars = (props, ref) => {
 	const barsContainer = useRef();
 	useImperativeHandle(ref, () => ({
@@ -40,12 +41,17 @@ let Bars = (props, ref) => {
 				</option>
 			</select>
 			<div className="bars" ref={barsContainer}>
-				{bars && bars}
+				{/* {bars && bars} */}
+				{props.disableControls ? (
+					<p>Please place valid inputs</p>
+				) : (
+					bars
+				)}
 			</div>
 			<Button
 				classNames="burgundy"
 				clicked={props.generateNewArray}
-				disabled={props.disabledControls}
+				disabled={props.isSorting || props.disableControls}
 			>
 				New Array
 			</Button>
@@ -53,7 +59,7 @@ let Bars = (props, ref) => {
 				clicked={() =>
 					props.sort(props.sortConfig, props.heights, props.speed)
 				}
-				disabled={props.disabledControls}
+				disabled={props.isSorting || props.disableControls}
 			>
 				Sort
 			</Button>

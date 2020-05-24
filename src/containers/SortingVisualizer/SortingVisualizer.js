@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import classes from "./SortingVisualizer.module.css";
 import Bars from "./Bars/Bars";
 import Controls from "./Controls/Controls";
-import Button from "../../components/UI/Button/Button";
 import { bubbleSort } from "../../sortingAlgorithms/bubbleSort";
 import { selectionSort } from "../../sortingAlgorithms/selectionSort";
 import { insertionSort } from "../../sortingAlgorithms/insertionSort";
@@ -26,12 +25,14 @@ let NUM_BARS = 100;
 const SortingVisualizer = (props) => {
 	const [randomHeights, setRandomHeights] = useState();
 	const [isSorting, setIsSorting] = useState(false);
+	const [disableControls, setDisableControls] = useState(false);
 	const [numBars, setNumBars] = useState(NUM_BARS);
 	const [sortingSpeed, setSortingSpeed] = useState(SORTING_SPEED);
 	const [sortingFunction, setSortingFunction] = useState();
 	const [changeToDefault, setChangeToDefault] = useState(false);
 	const [sortingConfig, setSortingConfig] = useState({});
 	const barsContainer = useRef();
+	const errorMessage = useRef();
 
 	useEffect(() => {
 		setSortingFunction(() => () =>
@@ -41,6 +42,7 @@ const SortingVisualizer = (props) => {
 	}, []);
 
 	useEffect(() => {
+		if (disableControls) return;
 		handleGenerateNewArray();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [numBars]);
@@ -74,7 +76,29 @@ const SortingVisualizer = (props) => {
 	};
 
 	const handleChangeArraySize = (event) => {
-		setNumBars(event.target.value);
+		let value = event.target.value;
+		setNumBars(value);
+		handleShowError(value);
+	};
+
+	const handleShowError = (value) => {
+		errorMessage.current.classList.remove("show-error");
+		setDisableControls(false);
+		if (value < 5 || value > 100 || isNaN(value)) {
+			errorMessage.current.children[0].innerHTML = "INVALID: ";
+			if (value < 5) {
+				errorMessage.current.children[0].innerHTML +=
+					"input less than minimum";
+			} else if (value > 100) {
+				errorMessage.current.children[0].innerHTML +=
+					"input more than maximum";
+			} else if (isNaN(value)) {
+				errorMessage.current.children[0].innerHTML +=
+					"input not a number";
+			}
+			errorMessage.current.classList.add("show-error");
+			setDisableControls(true);
+		}
 	};
 
 	const handleChangeSortingSpeed = (event) => {
@@ -367,19 +391,16 @@ const SortingVisualizer = (props) => {
 
 	// const handleRadixSort = () => {};
 
-	const handleTestAlgorithms = () => {
-		/* CHECKS IF DOM HEIGHTS MATCH SORTED RANDOM HEIGHTS*/
-		// const sortedRandomHeights = [...randomHeights].sort((a, b) => a - b);
-		// const barsDOM = document.getElementsByClassName("bar");
-		// for (let i = 0; i < barsDOM.length; i++) {
-		// 	console.log(
-		// 		barsDOM[i].style.height === sortedRandomHeights[i] + "px"
-		// 	);
-		// }
-		// console.log("sorting function", sortingFunction);
-		console.log("test:", randomHeights);
-		console.log("test:", sortingFunction);
-	};
+	// const handleTestAlgorithms = () => {
+	// 	/* CHECKS IF DOM HEIGHTS MATCH SORTED RANDOM HEIGHTS*/
+	// 	// const sortedRandomHeights = [...randomHeights].sort((a, b) => a - b);
+	// 	// const barsDOM = document.getElementsByClassName("bar");
+	// 	// for (let i = 0; i < barsDOM.length; i++) {
+	// 	// 	console.log(
+	// 	// 		barsDOM[i].style.height === sortedRandomHeights[i] + "px"
+	// 	// 	);
+	// 	// }
+	// };
 
 	return (
 		<div className={classes.SortingVisualizer}>
@@ -389,7 +410,8 @@ const SortingVisualizer = (props) => {
 					heights={randomHeights}
 					speed={sortingSpeed}
 					sortConfig={sortingConfig}
-					disabledControls={isSorting}
+					disableControls={disableControls}
+					isSorting={isSorting}
 					changedSortingFunction={handleChangeSortingFunction}
 					generateNewArray={handleGenerateNewArray}
 					sort={
@@ -408,6 +430,7 @@ const SortingVisualizer = (props) => {
 			</div>
 			<div className={classes.Controls}>
 				<Controls
+					ref={errorMessage}
 					heights={randomHeights}
 					size={numBars}
 					speed={sortingSpeed}
