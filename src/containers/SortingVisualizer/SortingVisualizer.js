@@ -17,7 +17,7 @@ const COLOR_DEFAULT = "#577590";
 const COLOR_COMPARING = "#f9c74f";
 const COLOR_SWAP = "#f94144";
 const COLOR_SORTED = "#90be6d";
-let MIN_HEIGHT = 5;
+let MIN_HEIGHT = 25;
 let MAX_HEIGHT = 300;
 let SORTING_SPEED = 5;
 let NUM_BARS = 100;
@@ -31,6 +31,7 @@ const SortingVisualizer = (props) => {
 	const [sortingFunction, setSortingFunction] = useState();
 	const [changeToDefault, setChangeToDefault] = useState(false);
 	const [sortingConfig, setSortingConfig] = useState({});
+	const [showHeights, setShowHeights] = useState(false);
 	const barsContainer = useRef();
 	const errorMessage = useRef();
 
@@ -75,8 +76,13 @@ const SortingVisualizer = (props) => {
 		}
 	};
 
-	const handleChangeArraySize = (event) => {
-		let value = event.target.value;
+	const handleChangeArraySize = (value) => {
+		// let value = event.target.value;
+		if (value <= 20) {
+			setShowHeights(true);
+		} else {
+			setShowHeights(false);
+		}
 		setNumBars(value);
 		handleShowError(value);
 	};
@@ -360,24 +366,25 @@ const SortingVisualizer = (props) => {
 		}
 	};
 
-	const handleChangeSortingFunction = (event) => {
-		switch (event.target.value) {
-			case "BubbleSort":
+	const handleChangeSortingFunction = (sort) => {
+		// switch (event.target.value) {
+		switch (sort) {
+			case "Bubble Sort":
 				setSortingFunction(() => handleBubbleSort);
 				break;
-			case "SelectionSort":
+			case "Selection Sort":
 				setSortingFunction(() => handleSelectionSort);
 				break;
-			case "InsertionSort":
+			case "Insertion Sort":
 				setSortingFunction(() => handleInsertionSort);
 				break;
-			case "MergeSort":
+			case "Merge Sort":
 				setSortingConfig({
 					implementation: getMergeSortRecursiveSwapOrder,
 				});
 				setSortingFunction(() => handleMergeSort);
 				break;
-			case "QuickSort":
+			case "Quick Sort":
 				setSortingFunction(() => handleQuickSort);
 				break;
 			default:
@@ -409,6 +416,7 @@ const SortingVisualizer = (props) => {
 					ref={barsContainer}
 					heights={randomHeights}
 					speed={sortingSpeed}
+					showHeights={showHeights}
 					sortConfig={sortingConfig}
 					disableControls={disableControls}
 					isSorting={isSorting}

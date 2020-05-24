@@ -4,10 +4,20 @@ import Card from "../../../components/UI/Card/Card";
 // TODO: style number
 let Controls = (props, ref) => {
 	const errorMessage = useRef();
+	const numBars = useRef();
 	useImperativeHandle(ref, () => ({
 		classList: errorMessage.current.classList,
 		children: errorMessage.current.children,
 	}));
+
+	const handleChangeNum = (operation) => {
+		if (operation === "-") {
+			numBars.current.value = Number(numBars.current.value) - 1;
+		} else if (operation === "+") {
+			numBars.current.value = Number(numBars.current.value) + 1;
+		}
+		props.changedArraySize(numBars.current.value);
+	};
 	return (
 		<div className="controls">
 			<Card>
@@ -32,12 +42,29 @@ let Controls = (props, ref) => {
 						<p></p>
 					</div>
 
-					<input
-						type="number"
-						value={props.size}
-						onChange={props.changedArraySize}
-						disabled={props.disableControls}
-					/>
+					<div className="change-num">
+						<button
+							className="decrement"
+							onClick={() => handleChangeNum("-")}
+						>
+							-
+						</button>
+						<input
+							ref={numBars}
+							type="number"
+							value={props.size}
+							onChange={() =>
+								props.changedArraySize(numBars.current.value)
+							}
+							disabled={props.disableControls}
+						/>
+						<button
+							className="increment"
+							onClick={() => handleChangeNum("+")}
+						>
+							+
+						</button>
+					</div>
 				</div>
 				<div className="input-group">
 					<label htmlFor="sortSpeed">Sorting Speed</label>

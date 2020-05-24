@@ -30,7 +30,7 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%, -70%);
 	opacity: 0;
 	transition: all 0.3s;
 	color: #721817;
@@ -43,16 +43,37 @@
 	opacity: 1;
 }
 
+.change-num {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 50%;
+	margin-left: auto;
+	margin-top: 1rem;
+}
+
+.increment,
+.decrement {
+	width: 20%;
+	background-color: #2b4162;
+	color: #e0e0e2;
+	border-radius: 0.5rem;
+	border: 2px solid #fa9f42;
+	cursor: pointer;
+	outline: none;
+	padding: 0.2rem 0;
+}
+
 .controls input[type="number"] {
 	text-align-last: center;
 	font-family: inherit;
 	border-radius: 0.5rem;
-	border: none;
+	border: 2px solid #fa9f42;
 	color: #e0e0e2;
 	background-color: #2b4162;
-	width: 20%;
-	margin-left: auto;
+	width: 30%;
 	padding: 0.25rem 0.5rem;
+	margin-top: 0;
 }
 
 /* range styles stolen from https://codepen.io/joshbader/pen/MZMzjr */
@@ -66,6 +87,7 @@
 	background-color: #2b4162;
 	border-radius: 1em;
 	outline: none;
+	border: 1px solid #fa9f42;
 	cursor: pointer;
 }
 
@@ -94,8 +116,4 @@
 
 .controls input[type="range"]::-moz-range-track {
 	background-color: transparent;
-}
-
-input[type="range"]::-moz-focus-outer {
-	border: 0;
 }

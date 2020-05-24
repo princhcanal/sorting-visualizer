@@ -4,6 +4,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: flex-end;
+	position: relative;
 }
 
 select {
@@ -14,9 +15,130 @@ select {
 	border: none;
 	padding: 1rem;
 	background-color: #fa9f42;
-	color: #fff;
+	color: #e0e0e2;
+}
+
+select:-moz-focusring {
+	color: transparent;
+	text-shadow: 0 0 0 #e0e0e2;
 }
 
 option {
 	text-align-last: center;
+}
+
+.select {
+	width: 100%;
+	background-color: #fa9f42;
+	color: #e0e0e2;
+	border-radius: 2rem;
+	padding: 0.6rem 0 0rem;
+	margin-bottom: 2rem;
+	cursor: pointer;
+}
+
+.select h2 {
+	margin: 0;
+	font-weight: 400;
+	position: relative;
+}
+
+.select ul {
+	width: 100%;
+	background-color: #721817;
+	border-bottom-left-radius: 2rem;
+	border-bottom-right-radius: 2rem;
+	overflow: hidden;
+	height: 16.5rem;
+	transition: height 0.3s ease-out;
+}
+
+.select i {
+	position: absolute;
+	top: 5%;
+	right: 5%;
+	color: #721817;
+}
+
+.select ul li:not(:last-of-type) {
+	border-bottom: 1px solid #829191;
+}
+
+.select ul li button {
+	padding: 1rem 0;
+	background-color: transparent;
+	border: none;
+	width: 100%;
+	cursor: pointer;
+	color: inherit;
+	font-family: inherit;
+	font-size: 1rem;
+	transition: all 0.2s;
+}
+
+.select ul li button:hover {
+	color: #fa9f42;
+}
+
+.select .collapsed {
+	height: 0;
+}
+
+.invalid-inputs {
+	position: absolute;
+	top: 60%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	transition: all 0.2s ease-out;
+}
+
+.invalid-inputs h1 {
+	position: absolute;
+	top: 27%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-transform: uppercase;
+	color: #721817 !important;
+	font-weight: 700 !important;
+	font-size: 2rem;
+	width: 200% !important;
+}
+
+.svg {
+	width: 100%;
+	margin: auto;
+}
+
+/* .hide-invalid {
+	top: 50%;
+	opacity: 0;
+} */
+
+@media (max-width: 480px) {
+	.invalid-inputs h1 {
+		top: 30%;
+		font-size: 1.7rem;
+	}
+}
+@media (max-width: 413px) {
+	.invalid-inputs h1 {
+		top: 33%;
+		font-size: 1.6rem;
+	}
+}
+@media (max-width: 390px) {
+	.invalid-inputs h1 {
+		font-size: 1.5rem;
+	}
+}
+@media (max-width: 368px) {
+	.invalid-inputs h1 {
+		font-size: 1.4rem;
+	}
+}
+@media (max-width: 346px) {
+	.invalid-inputs h1 {
+		top: 36%;
+		font-size: 1.3rem;
+	}
 }
