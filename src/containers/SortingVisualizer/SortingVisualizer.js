@@ -11,18 +11,30 @@ import {
 	getMergeSortRecursiveSwapOrder,
 } from "../../sortingAlgorithms/mergeSort";
 import { getQuickSortSwapOrder } from "../../sortingAlgorithms/quickSort";
-import { getRandomNum, RANDOM_COLORS } from "../../utilities";
+import { getRandomNum } from "../../utilities/numbers";
+import {
+	RANDOM_COLORS,
+	COLOR_DEFAULT,
+	COLOR_COMPARING,
+	COLOR_SWAP,
+	COLOR_SORTED,
+	COLOR_GREATER,
+	COLOR_LESSER,
+	COLOR_SWAP_LESSER,
+} from "../../utilities/colors";
+import {
+	bubbleSortLegend,
+	selectionSortLegend,
+	insertionSortLegend,
+	mergeSortLegend,
+	quickSortLegend,
+} from "../../utilities/legends";
 
-const COLOR_DEFAULT = "#577590";
-const COLOR_COMPARING = "#f9c74f";
-const COLOR_SWAP = "#f94144";
-const COLOR_SORTED = "#90be6d";
-let MIN_HEIGHT = 25;
-let MAX_HEIGHT = 300;
+const MIN_HEIGHT = 25;
+const MAX_HEIGHT = 300;
 let SORTING_SPEED = 5;
-let NUM_BARS = 100;
+const NUM_BARS = 100;
 
-// TODO: create color legend
 // TODO: add pause and step functionality
 // TODO: add change speed while sorting functionality
 // TODO: add sorting configurations
@@ -38,6 +50,7 @@ const SortingVisualizer = (props) => {
 	const [changeToDefault, setChangeToDefault] = useState(false);
 	const [sortingConfig, setSortingConfig] = useState({});
 	const [showHeights, setShowHeights] = useState(false);
+	const [legend, setLegend] = useState([{}]);
 	const barsContainer = useRef();
 	const errorMessage = useRef();
 
@@ -45,6 +58,7 @@ const SortingVisualizer = (props) => {
 		setSortingFunction(() => () =>
 			handleMergeSort(getMergeSortRecursiveSwapOrder)
 		);
+		setLegend(bubbleSortLegend);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -348,7 +362,6 @@ const SortingVisualizer = (props) => {
 			[]
 		);
 		let bars = barsContainer.current.children;
-		let randomColor = "#EFD6AC";
 
 		for (let i = 0; i < swapOrderArray.length; i++) {
 			let state = swapOrderArray[i][3];
@@ -360,14 +373,14 @@ const SortingVisualizer = (props) => {
 				} else if (state === "COMPARE") {
 					bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
 				} else if (state === "REVERT") {
-					bars[swapIdx1].style.backgroundColor = randomColor;
+					bars[swapIdx1].style.backgroundColor = COLOR_GREATER;
 				} else if (state === "SWAP-1") {
-					// bars[swapIdx1].style.backgroundColor = "#FF784F";
-					bars[swapIdx2].style.backgroundColor = "#FF784F";
+					// bars[swapIdx1].style.backgroundColor = COLOR_SWAP_LESSER;
+					bars[swapIdx2].style.backgroundColor = COLOR_SWAP_LESSER;
 				} else if (state === "SAME-INDEX") {
-					bars[swapIdx1].style.backgroundColor = "#1B5299";
+					bars[swapIdx1].style.backgroundColor = COLOR_LESSER;
 				} else if (state === "SWAP-2") {
-					bars[swapIdx1].style.backgroundColor = "#FF784F";
+					bars[swapIdx1].style.backgroundColor = COLOR_SWAP_LESSER;
 				} else if (state === "SWAP-3") {
 					bars[swapIdx1].style.height =
 						swapOrderArray[i][0][swapIdx1] + "px";
@@ -380,8 +393,8 @@ const SortingVisualizer = (props) => {
 							swapOrderArray[i][0][swapIdx2];
 					}
 				} else if (state === "SWAP-4") {
-					bars[swapIdx1].style.backgroundColor = "#1B5299";
-					bars[swapIdx2].style.backgroundColor = randomColor;
+					bars[swapIdx1].style.backgroundColor = COLOR_LESSER;
+					bars[swapIdx2].style.backgroundColor = COLOR_GREATER;
 				} else if (state === "SWAP-PIVOT-1") {
 					bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
 				} else if (state === "SWAP-PIVOT-2") {
@@ -396,7 +409,7 @@ const SortingVisualizer = (props) => {
 							swapOrderArray[i][0][swapIdx2];
 					}
 				} else if (state === "SWAP-PIVOT-3") {
-					bars[swapIdx1].style.backgroundColor = "#1B5299";
+					bars[swapIdx1].style.backgroundColor = COLOR_LESSER;
 					bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
 				} else if (state === "NO-CHANGE") {
 					bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
@@ -427,21 +440,26 @@ const SortingVisualizer = (props) => {
 		switch (sort) {
 			case "Bubble Sort":
 				setSortingFunction(() => handleBubbleSort);
+				setLegend(bubbleSortLegend);
 				break;
 			case "Selection Sort":
 				setSortingFunction(() => handleSelectionSort);
+				setLegend(selectionSortLegend);
 				break;
 			case "Insertion Sort":
 				setSortingFunction(() => handleInsertionSort);
+				setLegend(insertionSortLegend);
 				break;
 			case "Merge Sort":
 				setSortingConfig({
 					implementation: getMergeSortRecursiveSwapOrder,
 				});
 				setSortingFunction(() => handleMergeSort);
+				setLegend(mergeSortLegend);
 				break;
 			case "Quick Sort":
 				setSortingFunction(() => handleQuickSort);
+				setLegend(quickSortLegend);
 				break;
 			default:
 				break;
@@ -472,6 +490,7 @@ const SortingVisualizer = (props) => {
 					ref={barsContainer}
 					heights={randomHeights}
 					speed={sortingSpeed}
+					statuses={legend}
 					showHeights={showHeights}
 					sortConfig={sortingConfig}
 					disableControls={disableControls}

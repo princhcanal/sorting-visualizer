@@ -1,3 +1,5 @@
+const { getRandomArray } = require("../utilities/numbers");
+
 export function getQuickSortSwapOrder(
 	arr,
 	left = 0,
@@ -98,20 +100,6 @@ function pivotHoare(arr, start = 0, end = arr.length - 1, swapOrderArray) {
 function swap(arr, i, j) {
 	[arr[i], arr[j]] = [arr[j], arr[i]];
 }
-
-function getRandomNum(min, max) {
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-const getRandomArray = () => {
-	const newRandomHeights = [];
-	for (let i = 0; i < 5; i++) {
-		newRandomHeights.push(getRandomNum(5, 450));
-	}
-	return newRandomHeights;
-};
 
 let arr = getRandomArray();
 // let sorted = [...arr].sort((a, b) => a - b);

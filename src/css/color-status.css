@@ -1,0 +1,17 @@
+.color-status {
+	display: flex;
+	align-items: center;
+	margin-bottom: 0.5rem;
+}
+
+.color-square {
+	height: 10px;
+	width: 10px;
+	margin-right: 0.5rem;
+}
+
+.color-desc {
+	color: #fff;
+	font-size: 0.7rem;
+	margin-right: 0.5rem;
+}

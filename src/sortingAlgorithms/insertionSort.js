@@ -1,3 +1,5 @@
+const { getRandomArray } = require("../utilities/numbers");
+
 export function insertionSort(arr) {
 	let swapOrderArray = [];
 	// console.log(arr, "\n");
@@ -36,20 +38,6 @@ export function insertionSort(arr) {
 function swap(arr, i, j) {
 	[arr[i], arr[j]] = [arr[j], arr[i]];
 }
-
-function getRandomNum(min, max) {
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-const getRandomArray = () => {
-	const newRandomHeights = [];
-	for (let i = 0; i < 20; i++) {
-		newRandomHeights.push(getRandomNum(5, 450));
-	}
-	return newRandomHeights;
-};
 
 let arr = getRandomArray();
 insertionSort(arr);

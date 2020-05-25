@@ -1,0 +1,10 @@
+.play-controls {
+	display: flex;
+	width: 20%;
+	margin: auto;
+	justify-content: space-around;
+}
+
+.play-controls i {
+	cursor: pointer;
+}

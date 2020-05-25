@@ -7,7 +7,8 @@ import React, {
 
 import Bar from "./Bar/Bar";
 import Button from "../../../components/UI/Button/Button";
-// import ColorLegend from "../../../components/ColorLegend/ColorLegend";
+import ColorLegend from "../../../components/ColorLegend/ColorLegend";
+import PlayControls from "../../../components/PlayControls/PlayControls";
 
 let Bars = (props, ref) => {
 	const barsContainer = useRef();
@@ -253,7 +254,8 @@ let Bars = (props, ref) => {
 					bars
 				)}
 			</div>
-			{/* <ColorLegend></ColorLegend> */}
+			<ColorLegend statuses={props.statuses} />
+			<PlayControls pause={true} />
 
 			<Button
 				classNames="burgundy"

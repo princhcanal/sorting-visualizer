@@ -46,7 +46,7 @@ input[type="number"] {
 }
 
 :disabled {
-	opacity: 50%;
+	opacity: 80%;
 	cursor: not-allowed;
 }
 
