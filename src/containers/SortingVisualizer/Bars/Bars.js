@@ -14,6 +14,7 @@ let Bars = (props, ref) => {
 	const select = useRef();
 	const dropdown = useRef();
 	const invalid = useRef();
+	const caret = useRef();
 	useImperativeHandle(ref, () => ({
 		children: barsContainer.current.children,
 		classList: barsContainer.current.classList,
@@ -29,18 +30,12 @@ let Bars = (props, ref) => {
 
 	const handleDropdownClicked = () => {
 		dropdown.current.classList.toggle("collapsed");
+		caret.current.classList.toggle("flip");
 	};
 
 	const handleChangedSort = (sort) => {
 		props.changedSortingFunction(sort);
 		select.current.children[0].children[0].innerHTML = sort;
-	};
-
-	const handleShowInvalidMessage = () => {
-		invalid.current.classList.add("hide-invalid");
-		if (!props.showHeights) {
-			invalid.current.classList.remove("hide-invalid");
-		}
 	};
 
 	useEffect(() => {
@@ -67,7 +62,7 @@ let Bars = (props, ref) => {
 			>
 				<h2>
 					<span>Merge Sort</span>{" "}
-					<i className="fas fa-caret-down"></i>
+					<i className="fas fa-caret-down" ref={caret}></i>
 				</h2>
 
 				<ul className="collapsed" ref={dropdown}>

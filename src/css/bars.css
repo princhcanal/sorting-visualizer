@@ -1,5 +1,5 @@
 .bars {
-	margin: 2rem 0;
+	margin: 3rem 0 2rem;
 	height: 300px;
 	display: flex;
 	justify-content: center;
@@ -31,14 +31,16 @@ option {
 	width: 100%;
 	background-color: #fa9f42;
 	color: #e0e0e2;
-	border-radius: 2rem;
+	border-radius: 1rem;
 	padding: 0.6rem 0 0rem;
 	margin-bottom: 2rem;
 	cursor: pointer;
+	box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
 }
 
 .select h2 {
 	margin: 0;
+	margin-top: 0.2rem;
 	font-weight: 400;
 	position: relative;
 }
@@ -46,18 +48,24 @@ option {
 .select ul {
 	width: 100%;
 	background-color: #721817;
-	border-bottom-left-radius: 2rem;
-	border-bottom-right-radius: 2rem;
+	border-bottom-left-radius: 1rem;
+	border-bottom-right-radius: 1rem;
 	overflow: hidden;
 	height: 16.5rem;
-	transition: height 0.3s ease-out;
+	transition: all 0.3s ease-out;
 }
 
 .select i {
+	transform: rotate(0);
 	position: absolute;
 	top: 5%;
 	right: 5%;
 	color: #721817;
+	transition: transform 0.3s ease-out;
+}
+
+.select .flip {
+	transform: rotate(180deg);
 }
 
 .select ul li:not(:last-of-type) {
@@ -65,7 +73,7 @@ option {
 }
 
 .select ul li button {
-	padding: 1rem 0;
+	margin: 1rem 0;
 	background-color: transparent;
 	border: none;
 	width: 100%;
@@ -74,6 +82,10 @@ option {
 	font-family: inherit;
 	font-size: 1rem;
 	transition: all 0.2s;
+}
+
+.select ul li button:focus {
+	outline: none;
 }
 
 .select ul li button:hover {
@@ -89,7 +101,7 @@ option {
 	top: 60%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	transition: all 0.2s ease-out;
+	transition: all 0.4s ease-out 0.2s;
 }
 
 .invalid-inputs h1 {
@@ -109,10 +121,10 @@ option {
 	margin: auto;
 }
 
-/* .hide-invalid {
+.hide-invalid {
 	top: 50%;
 	opacity: 0;
-} */
+}
 
 @media (max-width: 480px) {
 	.invalid-inputs h1 {

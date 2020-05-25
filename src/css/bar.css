@@ -5,9 +5,7 @@
 	margin: 0.5rem 0.05rem;
 	background-color: #577590;
 	box-shadow: 0.3rem 0.5rem 0.5rem rgba(0, 0, 0, 0.2);
-	display: flex;
-	justify-content: center;
-	align-items: flex-end;
+	position: relative;
 }
 
 .bar p {
@@ -15,7 +13,12 @@
 	/* font-size: 70%; */
 	margin: 0 0 0.5rem;
 	color: #e0e0e2;
-	color: #2f3e46;
+	/* color: #2f3e46; */
+	position: absolute;
+	top: -1.5rem;
+	left: 50%;
+	transform: translateX(-50%);
+	text-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.5);
 }
 
 @media (max-width: 520px) {

@@ -45,6 +45,11 @@ input[type="number"] {
 	-moz-appearance: textfield;
 }
 
+:disabled {
+	opacity: 50%;
+	cursor: not-allowed;
+}
+
 ::-moz-selection {
 	/* Code for Firefox */
 	color: #2b4162;

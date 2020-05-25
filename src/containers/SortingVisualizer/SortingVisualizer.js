@@ -43,6 +43,7 @@ const SortingVisualizer = (props) => {
 	}, []);
 
 	useEffect(() => {
+		if (barsContainer.current.children[0]) handleShowInvalid(numBars);
 		if (disableControls) return;
 		handleGenerateNewArray();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,6 +63,7 @@ const SortingVisualizer = (props) => {
 		const newRandomHeights = [];
 		for (let i = 0; i < numBars; i++) {
 			newRandomHeights.push(getRandomNum(MIN_HEIGHT, MAX_HEIGHT));
+			// newRandomHeights.push(MAX_HEIGHT);
 		}
 		setChangeToDefault(true);
 		setRandomHeights(newRandomHeights);
@@ -76,15 +78,27 @@ const SortingVisualizer = (props) => {
 		}
 	};
 
-	const handleChangeArraySize = (value) => {
-		// let value = event.target.value;
-		if (value <= 20) {
+	const handleChangeArraySize = (event, value) => {
+		let val;
+		if (event === null) {
+			val = value;
+		} else {
+			val = event.target.value;
+		}
+		if (val <= 20) {
 			setShowHeights(true);
 		} else {
 			setShowHeights(false);
 		}
-		setNumBars(value);
-		handleShowError(value);
+		setNumBars(val);
+		handleShowError(val);
+	};
+
+	const handleShowInvalid = (value) => {
+		barsContainer.current.children[0].classList.add("hide-invalid");
+		if (value < 5 || value > 100 || isNaN(value)) {
+			barsContainer.current.children[0].classList.remove("hide-invalid");
+		}
 	};
 
 	const handleShowError = (value) => {
@@ -94,13 +108,13 @@ const SortingVisualizer = (props) => {
 			errorMessage.current.children[0].innerHTML = "INVALID: ";
 			if (value < 5) {
 				errorMessage.current.children[0].innerHTML +=
-					"input less than minimum";
+					"Input less than minimum";
 			} else if (value > 100) {
 				errorMessage.current.children[0].innerHTML +=
-					"input more than maximum";
+					"Input more than maximum";
 			} else if (isNaN(value)) {
 				errorMessage.current.children[0].innerHTML +=
-					"input not a number";
+					"Input not a number";
 			}
 			errorMessage.current.classList.add("show-error");
 			setDisableControls(true);
@@ -138,6 +152,12 @@ const SortingVisualizer = (props) => {
 						swapOrderArray[i][0][swapIdx1] + "px";
 					bars[swapIdx2].style.height =
 						swapOrderArray[i][0][swapIdx2] + "px";
+					if (heights.length <= 20) {
+						bars[swapIdx1].children[0].innerHTML =
+							swapOrderArray[i][0][swapIdx1];
+						bars[swapIdx2].children[0].innerHTML =
+							swapOrderArray[i][0][swapIdx2];
+					}
 				} else if (state === "SWAPPING-3") {
 					bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
 					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
@@ -182,6 +202,12 @@ const SortingVisualizer = (props) => {
 						swapOrderArray[i][0][swapIdx1] + "px";
 					bars[swapIdx2].style.height =
 						swapOrderArray[i][0][swapIdx2] + "px";
+					if (heights.length <= 20) {
+						bars[swapIdx1].children[0].innerHTML =
+							swapOrderArray[i][0][swapIdx1];
+						bars[swapIdx2].children[0].innerHTML =
+							swapOrderArray[i][0][swapIdx2];
+					}
 				} else if (state === "SWAPPING-2") {
 					bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
 					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
@@ -221,6 +247,12 @@ const SortingVisualizer = (props) => {
 						swapOrderArray[i][0][swapIdx1] + "px";
 					bars[swapIdx2].style.height =
 						swapOrderArray[i][0][swapIdx2] + "px";
+					if (heights.length <= 20) {
+						bars[swapIdx1].children[0].innerHTML =
+							swapOrderArray[i][0][swapIdx1];
+						bars[swapIdx2].children[0].innerHTML =
+							swapOrderArray[i][0][swapIdx2];
+					}
 				} else if (state === "SWAP-4") {
 					bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
 					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
@@ -274,6 +306,10 @@ const SortingVisualizer = (props) => {
 				} else if (state === "CASE-RIGHT-SHIFT") {
 					for (let j = swapIdx2; j >= swapIdx1; j--) {
 						bars[j].style.height = swapOrderArray[i][0][j] + "px";
+						if (heights.length <= 20) {
+							bars[j].children[0].innerHTML =
+								swapOrderArray[i][0][j];
+						}
 					}
 					bars[swapIdx2].style.backgroundColor = prevColor1;
 					bars[swapIdx1 + 1].style.backgroundColor = COLOR_SWAP;
@@ -329,6 +365,12 @@ const SortingVisualizer = (props) => {
 						swapOrderArray[i][0][swapIdx1] + "px";
 					bars[swapIdx2].style.height =
 						swapOrderArray[i][0][swapIdx2] + "px";
+					if (heights.length <= 20) {
+						bars[swapIdx1].children[0].innerHTML =
+							swapOrderArray[i][0][swapIdx1];
+						bars[swapIdx2].children[0].innerHTML =
+							swapOrderArray[i][0][swapIdx2];
+					}
 				} else if (state === "SWAP-4") {
 					bars[swapIdx1].style.backgroundColor = "#1B5299";
 					bars[swapIdx2].style.backgroundColor = randomColor;
@@ -339,6 +381,12 @@ const SortingVisualizer = (props) => {
 						swapOrderArray[i][0][swapIdx1] + "px";
 					bars[swapIdx2].style.height =
 						swapOrderArray[i][0][swapIdx2] + "px";
+					if (heights.length <= 20) {
+						bars[swapIdx1].children[0].innerHTML =
+							swapOrderArray[i][0][swapIdx1];
+						bars[swapIdx2].children[0].innerHTML =
+							swapOrderArray[i][0][swapIdx2];
+					}
 				} else if (state === "SWAP-PIVOT-3") {
 					bars[swapIdx1].style.backgroundColor = "#1B5299";
 					bars[swapIdx2].style.backgroundColor = COLOR_SORTED;

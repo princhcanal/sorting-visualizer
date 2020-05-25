@@ -1,7 +1,6 @@
 import React, { useRef, useImperativeHandle, forwardRef } from "react";
 import Card from "../../../components/UI/Card/Card";
 
-// TODO: style number
 let Controls = (props, ref) => {
 	const errorMessage = useRef();
 	const numBars = useRef();
@@ -16,7 +15,7 @@ let Controls = (props, ref) => {
 		} else if (operation === "+") {
 			numBars.current.value = Number(numBars.current.value) + 1;
 		}
-		props.changedArraySize(numBars.current.value);
+		props.changedArraySize(null, numBars.current.value);
 	};
 	return (
 		<div className="controls">
@@ -46,6 +45,7 @@ let Controls = (props, ref) => {
 						<button
 							className="decrement"
 							onClick={() => handleChangeNum("-")}
+							disabled={props.disableControls}
 						>
 							-
 						</button>
@@ -53,14 +53,19 @@ let Controls = (props, ref) => {
 							ref={numBars}
 							type="number"
 							value={props.size}
-							onChange={() =>
-								props.changedArraySize(numBars.current.value)
-							}
+							onChange={(event) => {
+								props.changedArraySize(
+									event,
+									numBars.current.value
+								);
+								console.log(numBars.current.value);
+							}}
 							disabled={props.disableControls}
 						/>
 						<button
 							className="increment"
 							onClick={() => handleChangeNum("+")}
+							disabled={props.disableControls}
 						>
 							+
 						</button>
