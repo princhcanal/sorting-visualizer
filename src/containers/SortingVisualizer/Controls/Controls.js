@@ -4,21 +4,31 @@ import Card from "../../../components/UI/Card/Card";
 let Controls = (props, ref) => {
 	const errorMessage = useRef();
 	const numBars = useRef();
+	const controls = useRef();
 	useImperativeHandle(ref, () => ({
 		classList: errorMessage.current.classList,
 		children: errorMessage.current.children,
 	}));
 
 	const handleChangeNum = (operation) => {
-		if (operation === "-") {
-			numBars.current.value = Number(numBars.current.value) - 1;
-		} else if (operation === "+") {
-			numBars.current.value = Number(numBars.current.value) + 1;
+		controls.current.classList.remove("shake");
+		let currentVal = Number(numBars.current.value);
+
+		if (operation === "-" && currentVal > 5) {
+			numBars.current.value = currentVal - 1;
+			props.changedArraySize(null, numBars.current.value);
+		} else if (operation === "+" && currentVal < 100) {
+			numBars.current.value = currentVal + 1;
+			props.changedArraySize(null, numBars.current.value);
+		} else {
+			// shake animation
+			setTimeout(() => {
+				controls.current.classList.add("shake");
+			}, 10);
 		}
-		props.changedArraySize(null, numBars.current.value);
 	};
 	return (
-		<div className="controls">
+		<div className="controls" ref={controls}>
 			<Card>
 				<h2>Controls</h2>
 				<div className="input-group">

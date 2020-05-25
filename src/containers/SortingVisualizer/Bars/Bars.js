@@ -7,8 +7,8 @@ import React, {
 
 import Bar from "./Bar/Bar";
 import Button from "../../../components/UI/Button/Button";
+// import ColorLegend from "../../../components/ColorLegend/ColorLegend";
 
-// TODO: create custom select
 let Bars = (props, ref) => {
 	const barsContainer = useRef();
 	const select = useRef();
@@ -253,6 +253,7 @@ let Bars = (props, ref) => {
 					bars
 				)}
 			</div>
+			{/* <ColorLegend></ColorLegend> */}
 
 			<Button
 				classNames="burgundy"

@@ -22,6 +22,12 @@ let MAX_HEIGHT = 300;
 let SORTING_SPEED = 5;
 let NUM_BARS = 100;
 
+// TODO: create color legend
+// TODO: add pause and step functionality
+// TODO: add change speed while sorting functionality
+// TODO: add sorting configurations
+// TODO: add sorting info
+// TODO (MAYBE): add sudo code functionality
 const SortingVisualizer = (props) => {
 	const [randomHeights, setRandomHeights] = useState();
 	const [isSorting, setIsSorting] = useState(false);
