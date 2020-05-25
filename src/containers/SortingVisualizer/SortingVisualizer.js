@@ -95,9 +95,11 @@ const SortingVisualizer = (props) => {
 	};
 
 	const handleShowInvalid = (value) => {
-		barsContainer.current.children[0].classList.add("hide-invalid");
+		if (barsContainer.current.children[0].classList[0] === "bar") return;
 		if (value < 5 || value > 100 || isNaN(value)) {
 			barsContainer.current.children[0].classList.remove("hide-invalid");
+		} else {
+			barsContainer.current.children[0].classList.add("hide-invalid");
 		}
 	};
 

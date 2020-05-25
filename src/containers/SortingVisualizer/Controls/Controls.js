@@ -58,7 +58,6 @@ let Controls = (props, ref) => {
 									event,
 									numBars.current.value
 								);
-								console.log(numBars.current.value);
 							}}
 							disabled={props.disableControls}
 						/>

@@ -22,12 +22,6 @@ let Bars = (props, ref) => {
 		childrenSelect: select.current.children,
 	}));
 
-	useEffect(() => {
-		// select.current.addEventListener("click", () => {
-		// 	dropdown.current.classList.toggle("collapsed");
-		// });
-	}, [select]);
-
 	const handleDropdownClicked = () => {
 		dropdown.current.classList.toggle("collapsed");
 		caret.current.classList.toggle("flip");

@@ -36,12 +36,16 @@
 	transition: all 0.4s ease-out 0.2s;
 	color: #721817;
 	font-size: 0.7rem;
-	width: 100%;
+	font-weight: 700;
+	width: 70%;
+	height: 2rem;
+	border-radius: 0.5rem;
+	background-color: #fa9f42;
 }
 
 .controls .show-error {
 	z-index: 0;
-	top: 75%;
+	top: 70%;
 	opacity: 1;
 }
 
@@ -50,7 +54,7 @@
 	justify-content: space-around;
 	align-items: center;
 	width: 50%;
-	margin: 0.7rem auto 0;
+	margin: 1.3rem auto 0;
 }
 
 .increment,
