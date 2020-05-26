@@ -1,8 +1,14 @@
 .play-controls {
 	display: flex;
-	width: 20%;
-	margin: auto;
+	width: 50%;
+	margin: 1rem auto;
+	padding: 0.5rem 1rem;
+	border-radius: 1rem;
 	justify-content: space-around;
+	align-items: center;
+	font-size: 2rem;
+	background-color: #fa9f42;
+	color: #721817;
 }
 
 .play-controls i {

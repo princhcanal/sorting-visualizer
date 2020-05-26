@@ -29,6 +29,7 @@ import {
 	mergeSortLegend,
 	quickSortLegend,
 } from "../../utilities/legends";
+import Button from "../../components/UI/Button/Button";
 
 const MIN_HEIGHT = 25;
 const MAX_HEIGHT = 300;
@@ -51,14 +52,15 @@ const SortingVisualizer = (props) => {
 	const [sortingConfig, setSortingConfig] = useState({});
 	const [showHeights, setShowHeights] = useState(false);
 	const [legend, setLegend] = useState([{}]);
+	const [swapOrder, setSwapOrder] = useState([]);
+	const [setTimeouts, setSetTimeouts] = useState([]);
+	const [paused, setPaused] = useState(true);
+	const [indexPaused, setIndexPaused] = useState(0);
 	const barsContainer = useRef();
 	const errorMessage = useRef();
 
 	useEffect(() => {
-		setSortingFunction(() => () =>
-			handleMergeSort(getMergeSortRecursiveSwapOrder)
-		);
-		setLegend(bubbleSortLegend);
+		handleChangeSortingFunction("Merge Sort");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -79,6 +81,18 @@ const SortingVisualizer = (props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [randomHeights]);
 
+	useEffect(() => {
+		if (!paused && sortingFunction) {
+			sortingFunction(
+				swapOrder,
+				randomHeights.length,
+				sortingSpeed,
+				setTimeouts
+			);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [paused]);
+
 	const handleGenerateNewArray = () => {
 		const newRandomHeights = [];
 		for (let i = 0; i < numBars; i++) {
@@ -87,6 +101,8 @@ const SortingVisualizer = (props) => {
 		}
 		setChangeToDefault(true);
 		setRandomHeights(newRandomHeights);
+		setSetTimeouts([]);
+		setSwapOrder([]);
 	};
 
 	const handleColorNewBars = () => {
@@ -147,17 +163,43 @@ const SortingVisualizer = (props) => {
 		setSortingSpeed(event.target.value);
 	};
 
-	const handleBubbleSort = (config, heights, speed) => {
+	const handlePause = (swapOrderArray, timeouts, indexPaused) => {
+		for (let i = indexPaused; i < timeouts.length; i++) {
+			clearTimeout(timeouts[i]);
+		}
+		setIsSorting(false);
+		setPaused(true);
+		setSwapOrder(swapOrderArray.slice(indexPaused));
+	};
+
+	const handleSort = (config, heights) => {
+		if (!sortingFunction) {
+			handleChangeSortingFunction("Merge Sort");
+		}
+		if (!paused || swapOrder.length === 0) {
+			let swapOrderArray = config.implementation(
+				[...heights],
+				...config.args
+			);
+			setSwapOrder(swapOrderArray);
+		}
+		setPaused(false);
+	};
+
+	const handleBubbleSort = (animations, numOfBars, speed, timeouts) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
-		let swapOrderArray = bubbleSort([...heights]);
 		let bars = barsContainer.current.children;
+		let callbacks = [];
+		// handleColorNewBars();
 
-		for (let i = 0; i < swapOrderArray.length; i++) {
-			let state = swapOrderArray[i][3];
-			let swapIdx1 = swapOrderArray[i][1];
-			let swapIdx2 = swapOrderArray[i][2];
-			setTimeout(() => {
+		for (let i = 0; i < animations.length; i++) {
+			let state = animations[i][3];
+			let swapIdx1 = animations[i][1];
+			let swapIdx2 = animations[i][2];
+
+			callbacks.push(() => {
+				setIndexPaused(i); // find a better way
 				if (state === "COMPARING") {
 					bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
 					bars[swapIdx2].style.backgroundColor = COLOR_COMPARING;
@@ -171,14 +213,14 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
 				} else if (state === "SWAPPING-2") {
 					bars[swapIdx1].style.height =
-						swapOrderArray[i][0][swapIdx1] + "px";
+						animations[i][0][swapIdx1] + "px";
 					bars[swapIdx2].style.height =
-						swapOrderArray[i][0][swapIdx2] + "px";
-					if (heights.length <= 20) {
+						animations[i][0][swapIdx2] + "px";
+					if (numOfBars <= 20) {
 						bars[swapIdx1].children[0].innerHTML =
-							swapOrderArray[i][0][swapIdx1];
+							animations[i][0][swapIdx1];
 						bars[swapIdx2].children[0].innerHTML =
-							swapOrderArray[i][0][swapIdx2];
+							animations[i][0][swapIdx2];
 					}
 				} else if (state === "SWAPPING-3") {
 					bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
@@ -191,23 +233,49 @@ const SortingVisualizer = (props) => {
 					barsContainer.current.classList.add("sorted");
 					setChangeToDefault(false);
 					setIsSorting(false);
-					setRandomHeights(swapOrderArray[i][0]);
+					setRandomHeights(animations[i][0]);
+					setSetTimeouts([]);
+					setPaused(true);
+					setSwapOrder([]);
 				}
-			}, i * speed);
+			});
 		}
+
+		// // when sorted is clicked, set sorting function to handlePause
+		// pass handlePause to pause button
+		// in handlePause, clear all setTimeouts, then change swapOrderArray to begin at paused index
+		// when sorted is clicked again, call handleSort with the new swapOrderArray
+		// keep original swapOrderArray for forward and backward functionality
+		// when forward or backward is called, call handleSort only on one index of swapOrderArray with 0 as speed
+		console.log("bubbleSort 1:", timeouts);
+		for (let i = 0; i < animations.length; i++) {
+			timeouts.push(setTimeout(callbacks[i], i * speed));
+		}
+		console.log("bubbleSort 2:", timeouts);
 	};
 
-	const handleSelectionSort = (config, heights, speed) => {
+	const handleStep = (indexPaused, speed = 0) => {
+		// sortingFunction(
+		// 	sortingConfig,
+		// 	swapOrder.slice(indexPaused, indexPaused + 1),
+		// 	speed
+		// );
+		// setSwapOrder();
+	};
+
+	const handleSelectionSort = (animations, numOfBars, speed, timeouts) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
-		let swapOrderArray = selectionSort([...heights]);
 		let bars = barsContainer.current.children;
+		let callbacks = [];
 
-		for (let i = 0; i < swapOrderArray.length; i++) {
-			let state = swapOrderArray[i][3];
-			let swapIdx1 = swapOrderArray[i][1];
-			let swapIdx2 = swapOrderArray[i][2];
-			setTimeout(() => {
+		for (let i = 0; i < animations.length; i++) {
+			let state = animations[i][3];
+			let swapIdx1 = animations[i][1];
+			let swapIdx2 = animations[i][2];
+
+			callbacks.push(() => {
+				setIndexPaused(i);
 				if (state === "GET-INITIAL") {
 					bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
 				} else if (state === "CHECK-MIN") {
@@ -221,14 +289,14 @@ const SortingVisualizer = (props) => {
 					}
 				} else if (state === "SWAPPING-1") {
 					bars[swapIdx1].style.height =
-						swapOrderArray[i][0][swapIdx1] + "px";
+						animations[i][0][swapIdx1] + "px";
 					bars[swapIdx2].style.height =
-						swapOrderArray[i][0][swapIdx2] + "px";
-					if (heights.length <= 20) {
+						animations[i][0][swapIdx2] + "px";
+					if (numOfBars <= 20) {
 						bars[swapIdx1].children[0].innerHTML =
-							swapOrderArray[i][0][swapIdx1];
+							animations[i][0][swapIdx1];
 						bars[swapIdx2].children[0].innerHTML =
-							swapOrderArray[i][0][swapIdx2];
+							animations[i][0][swapIdx2];
 					}
 				} else if (state === "SWAPPING-2") {
 					bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
@@ -239,23 +307,32 @@ const SortingVisualizer = (props) => {
 					barsContainer.current.classList.add("sorted");
 					setChangeToDefault(false);
 					setIsSorting(false);
-					setRandomHeights(swapOrderArray[i][0]);
+					setRandomHeights(animations[i][0]);
+					setSetTimeouts([]);
+					setPaused(true);
+					setSwapOrder([]);
 				}
-			}, i * speed);
+			});
+		}
+
+		for (let i = 0; i < animations.length; i++) {
+			timeouts.push(setTimeout(callbacks[i], i * speed));
 		}
 	};
 
-	const handleInsertionSort = (config, heights, speed) => {
+	const handleInsertionSort = (animations, numOfBars, speed, timeouts) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
-		let swapOrderArray = insertionSort([...heights]);
 		let bars = barsContainer.current.children;
+		let callbacks = [];
 
-		for (let i = 0; i < swapOrderArray.length; i++) {
-			let state = swapOrderArray[i][3];
-			let swapIdx1 = swapOrderArray[i][1];
-			let swapIdx2 = swapOrderArray[i][2];
-			setTimeout(() => {
+		for (let i = 0; i < animations.length; i++) {
+			let state = animations[i][3];
+			let swapIdx1 = animations[i][1];
+			let swapIdx2 = animations[i][2];
+
+			callbacks.push(() => {
+				setIndexPaused(i);
 				if (state === "START") {
 					bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
 				} else if (state === "SWAP-1") {
@@ -266,14 +343,14 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
 				} else if (state === "SWAP-3") {
 					bars[swapIdx1].style.height =
-						swapOrderArray[i][0][swapIdx1] + "px";
+						animations[i][0][swapIdx1] + "px";
 					bars[swapIdx2].style.height =
-						swapOrderArray[i][0][swapIdx2] + "px";
-					if (heights.length <= 20) {
+						animations[i][0][swapIdx2] + "px";
+					if (numOfBars <= 20) {
 						bars[swapIdx1].children[0].innerHTML =
-							swapOrderArray[i][0][swapIdx1];
+							animations[i][0][swapIdx1];
 						bars[swapIdx2].children[0].innerHTML =
-							swapOrderArray[i][0][swapIdx2];
+							animations[i][0][swapIdx2];
 					}
 				} else if (state === "SWAP-4") {
 					bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
@@ -292,28 +369,37 @@ const SortingVisualizer = (props) => {
 					barsContainer.current.classList.add("sorted");
 					setChangeToDefault(false);
 					setIsSorting(false);
-					setRandomHeights(swapOrderArray[i][0]);
+					setRandomHeights(animations[i][0]);
+					setSetTimeouts([]);
+					setPaused(true);
+					setSwapOrder([]);
 				}
-			}, i * speed);
+			});
+		}
+
+		for (let i = 0; i < animations.length; i++) {
+			timeouts.push(setTimeout(callbacks[i], i * speed));
 		}
 	};
 
-	const handleMergeSort = (config, heights, speed) => {
+	const handleMergeSort = (animations, numOfBars, speed, timeouts) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
-		let swapOrderArray = config.implementation([...heights]);
 		let bars = barsContainer.current.children;
 		let prevColor1 = COLOR_DEFAULT;
 		let prevColor2 = COLOR_DEFAULT;
 		let count = getRandomNum(0, RANDOM_COLORS.length - 1);
 		let color = RANDOM_COLORS[count];
+		let callbacks = [];
 
-		for (let i = 0; i < swapOrderArray.length; i++) {
-			let state = swapOrderArray[i][3];
-			let swapIdx1 = swapOrderArray[i][1];
-			let swapIdx2 = swapOrderArray[i][2];
+		for (let i = 0; i < animations.length; i++) {
+			let state = animations[i][3];
+			let swapIdx1 = animations[i][1];
+			let swapIdx2 = animations[i][2];
+
 			// eslint-disable-next-line no-loop-func
-			setTimeout(() => {
+			callbacks.push(() => {
+				setIndexPaused(i);
 				if (state === "COMPARING") {
 					prevColor1 = bars[swapIdx1].style.backgroundColor;
 					prevColor2 = bars[swapIdx2].style.backgroundColor;
@@ -327,10 +413,9 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
 				} else if (state === "CASE-RIGHT-SHIFT") {
 					for (let j = swapIdx2; j >= swapIdx1; j--) {
-						bars[j].style.height = swapOrderArray[i][0][j] + "px";
-						if (heights.length <= 20) {
-							bars[j].children[0].innerHTML =
-								swapOrderArray[i][0][j];
+						bars[j].style.height = animations[i][0][j] + "px";
+						if (numOfBars <= 20) {
+							bars[j].children[0].innerHTML = animations[i][0][j];
 						}
 					}
 					bars[swapIdx2].style.backgroundColor = prevColor1;
@@ -346,28 +431,32 @@ const SortingVisualizer = (props) => {
 					barsContainer.current.classList.add("sorted");
 					setChangeToDefault(false);
 					setIsSorting(false);
-					setRandomHeights(swapOrderArray[i][0]);
+					setRandomHeights(animations[i][0]);
+					setSetTimeouts([]);
+					setPaused(true);
+					setSwapOrder([]);
 				}
-			}, i * speed);
+			});
+		}
+
+		for (let i = 0; i < animations.length; i++) {
+			timeouts.push(setTimeout(callbacks[i], i * speed));
 		}
 	};
 
-	const handleQuickSort = (config, heights, speed) => {
+	const handleQuickSort = (animations, numOfBars, speed, timeouts) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
-		let swapOrderArray = getQuickSortSwapOrder(
-			[...heights],
-			0,
-			heights.length - 1,
-			[]
-		);
 		let bars = barsContainer.current.children;
+		let callbacks = [];
 
-		for (let i = 0; i < swapOrderArray.length; i++) {
-			let state = swapOrderArray[i][3];
-			let swapIdx1 = swapOrderArray[i][1];
-			let swapIdx2 = swapOrderArray[i][2];
-			setTimeout(() => {
+		for (let i = 0; i < animations.length; i++) {
+			let state = animations[i][3];
+			let swapIdx1 = animations[i][1];
+			let swapIdx2 = animations[i][2];
+
+			callbacks.push(() => {
+				setIndexPaused(i);
 				if (state === "GET-PIVOT") {
 					bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
 				} else if (state === "COMPARE") {
@@ -383,14 +472,14 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx1].style.backgroundColor = COLOR_SWAP_LESSER;
 				} else if (state === "SWAP-3") {
 					bars[swapIdx1].style.height =
-						swapOrderArray[i][0][swapIdx1] + "px";
+						animations[i][0][swapIdx1] + "px";
 					bars[swapIdx2].style.height =
-						swapOrderArray[i][0][swapIdx2] + "px";
-					if (heights.length <= 20) {
+						animations[i][0][swapIdx2] + "px";
+					if (numOfBars <= 20) {
 						bars[swapIdx1].children[0].innerHTML =
-							swapOrderArray[i][0][swapIdx1];
+							animations[i][0][swapIdx1];
 						bars[swapIdx2].children[0].innerHTML =
-							swapOrderArray[i][0][swapIdx2];
+							animations[i][0][swapIdx2];
 					}
 				} else if (state === "SWAP-4") {
 					bars[swapIdx1].style.backgroundColor = COLOR_LESSER;
@@ -399,14 +488,14 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
 				} else if (state === "SWAP-PIVOT-2") {
 					bars[swapIdx1].style.height =
-						swapOrderArray[i][0][swapIdx1] + "px";
+						animations[i][0][swapIdx1] + "px";
 					bars[swapIdx2].style.height =
-						swapOrderArray[i][0][swapIdx2] + "px";
-					if (heights.length <= 20) {
+						animations[i][0][swapIdx2] + "px";
+					if (numOfBars <= 20) {
 						bars[swapIdx1].children[0].innerHTML =
-							swapOrderArray[i][0][swapIdx1];
+							animations[i][0][swapIdx1];
 						bars[swapIdx2].children[0].innerHTML =
-							swapOrderArray[i][0][swapIdx2];
+							animations[i][0][swapIdx2];
 					}
 				} else if (state === "SWAP-PIVOT-3") {
 					bars[swapIdx1].style.backgroundColor = COLOR_LESSER;
@@ -429,36 +518,59 @@ const SortingVisualizer = (props) => {
 					barsContainer.current.classList.add("sorted");
 					setChangeToDefault(false);
 					setIsSorting(false);
-					setRandomHeights(swapOrderArray[i][0]);
+					setRandomHeights(animations[i][0]);
+					setSetTimeouts([]);
+					setPaused(true);
+					setSwapOrder([]);
 				}
-			}, i * speed);
+			});
+		}
+
+		for (let i = 0; i < animations.length; i++) {
+			timeouts.push(setTimeout(callbacks[i], i * speed));
 		}
 	};
 
 	const handleChangeSortingFunction = (sort) => {
-		// switch (event.target.value) {
 		switch (sort) {
 			case "Bubble Sort":
 				setSortingFunction(() => handleBubbleSort);
+				setSortingConfig({
+					implementation: bubbleSort,
+					args: [],
+				});
 				setLegend(bubbleSortLegend);
 				break;
 			case "Selection Sort":
 				setSortingFunction(() => handleSelectionSort);
+				setSortingConfig({
+					implementation: selectionSort,
+					args: [],
+				});
 				setLegend(selectionSortLegend);
 				break;
 			case "Insertion Sort":
 				setSortingFunction(() => handleInsertionSort);
+				setSortingConfig({
+					implementation: insertionSort,
+					args: [],
+				});
 				setLegend(insertionSortLegend);
 				break;
 			case "Merge Sort":
+				setSortingFunction(() => handleMergeSort);
 				setSortingConfig({
 					implementation: getMergeSortRecursiveSwapOrder,
+					args: [],
 				});
-				setSortingFunction(() => handleMergeSort);
 				setLegend(mergeSortLegend);
 				break;
 			case "Quick Sort":
 				setSortingFunction(() => handleQuickSort);
+				setSortingConfig({
+					implementation: getQuickSortSwapOrder,
+					args: [],
+				});
 				setLegend(quickSortLegend);
 				break;
 			default:
@@ -472,16 +584,18 @@ const SortingVisualizer = (props) => {
 
 	// const handleRadixSort = () => {};
 
-	// const handleTestAlgorithms = () => {
-	// 	/* CHECKS IF DOM HEIGHTS MATCH SORTED RANDOM HEIGHTS*/
-	// 	// const sortedRandomHeights = [...randomHeights].sort((a, b) => a - b);
-	// 	// const barsDOM = document.getElementsByClassName("bar");
-	// 	// for (let i = 0; i < barsDOM.length; i++) {
-	// 	// 	console.log(
-	// 	// 		barsDOM[i].style.height === sortedRandomHeights[i] + "px"
-	// 	// 	);
-	// 	// }
-	// };
+	const handleTestAlgorithms = () => {
+		/* CHECKS IF DOM HEIGHTS MATCH SORTED RANDOM HEIGHTS*/
+		// const sortedRandomHeights = [...randomHeights].sort((a, b) => a - b);
+		// const barsDOM = document.getElementsByClassName("bar");
+		// for (let i = 0; i < barsDOM.length; i++) {
+		// 	console.log(
+		// 		barsDOM[i].style.height === sortedRandomHeights[i] + "px"
+		// 	);
+		// }
+		console.log(sortingFunction);
+		console.log(sortingConfig);
+	};
 
 	return (
 		<div className={classes.SortingVisualizer}>
@@ -491,6 +605,12 @@ const SortingVisualizer = (props) => {
 					heights={randomHeights}
 					speed={sortingSpeed}
 					statuses={legend}
+					pause={handlePause}
+					swapOrder={swapOrder}
+					paused={paused}
+					setTimeouts={setTimeouts}
+					indexPaused={indexPaused}
+					stepped={handleStep}
 					showHeights={showHeights}
 					sortConfig={sortingConfig}
 					disableControls={disableControls}
@@ -498,16 +618,17 @@ const SortingVisualizer = (props) => {
 					changedSortingFunction={handleChangeSortingFunction}
 					generateNewArray={handleGenerateNewArray}
 					sort={
-						sortingFunction
-							? sortingFunction
-							: () =>
-									handleMergeSort(
-										{
-											implementation: getMergeSortRecursiveSwapOrder,
-										},
-										randomHeights,
-										sortingSpeed
-									)
+						// sortingFunction
+						// 	? sortingFunction
+						// 	: () =>
+						// 			handleMergeSort(
+						// 				{
+						// 					implementation: getMergeSortRecursiveSwapOrder,
+						// 				},
+						// 				randomHeights,
+						// 				sortingSpeed
+						// 			)
+						handleSort
 					}
 				></Bars>
 			</div>
@@ -537,6 +658,7 @@ const SortingVisualizer = (props) => {
 					changedSortingFunction={handleChangeSortingFunction}
 				/>
 			</div>
+			<Button clicked={handleTestAlgorithms}>Test</Button>
 		</div>
 	);
 };

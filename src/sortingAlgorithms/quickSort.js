@@ -4,7 +4,7 @@ export function getQuickSortSwapOrder(
 	arr,
 	left = 0,
 	right = arr.length - 1,
-	swapOrderArray
+	swapOrderArray = []
 ) {
 	quickSort(arr, left, right, swapOrderArray);
 	swapOrderArray.push([[...arr], left, right, "ALL-SORTED"]);

@@ -7,6 +7,10 @@
 	position: relative;
 }
 
+.bars-container .button-group {
+	margin: 1rem 0;
+}
+
 select {
 	width: 100%;
 	font-family: inherit;

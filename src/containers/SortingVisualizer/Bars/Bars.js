@@ -49,7 +49,7 @@ let Bars = (props, ref) => {
 		});
 	}
 	return (
-		<>
+		<div className="bars-container">
 			<div
 				className="select"
 				ref={select}
@@ -255,24 +255,38 @@ let Bars = (props, ref) => {
 				)}
 			</div>
 			<ColorLegend statuses={props.statuses} />
-			<PlayControls pause={true} />
-
-			<Button
-				classNames="burgundy"
-				clicked={props.generateNewArray}
-				disabled={props.isSorting || props.disableControls}
-			>
-				New Array
-			</Button>
-			<Button
-				clicked={() =>
-					props.sort(props.sortConfig, props.heights, props.speed)
+			<PlayControls
+				playClicked={() => {
+					props.sort(props.sortConfig, props.heights);
+				}}
+				pauseClicked={() =>
+					props.pause(
+						props.swapOrder,
+						props.setTimeouts,
+						props.indexPaused
+					)
 				}
-				disabled={props.isSorting || props.disableControls}
-			>
-				Sort
-			</Button>
-		</>
+				stepClicked={() => props.handleStep(props.indexPaused)}
+				paused={props.paused}
+			/>
+			<div className="button-group">
+				<Button
+					classNames="burgundy"
+					clicked={props.generateNewArray}
+					disabled={props.isSorting || props.disableControls}
+				>
+					New Array
+				</Button>
+				<Button
+					clicked={() =>
+						props.sort(props.sortConfig, props.heights, props.speed)
+					}
+					disabled={props.isSorting || props.disableControls}
+				>
+					Sort
+				</Button>
+			</div>
+		</div>
 	);
 };
 
