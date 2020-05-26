@@ -266,7 +266,7 @@ let Bars = (props, ref) => {
 						props.indexPaused
 					)
 				}
-				stepClicked={() => props.handleStep(props.indexPaused)}
+				stepClicked={() => props.handleStep()}
 				paused={props.paused}
 			/>
 			<div className="button-group">

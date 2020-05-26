@@ -60,3 +60,7 @@ input[type="number"] {
 	color: #2b4162;
 	background-color: #fa9f42;
 }
+
+.hide {
+	display: none;
+}

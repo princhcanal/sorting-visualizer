@@ -33,8 +33,9 @@ import Button from "../../components/UI/Button/Button";
 
 const MIN_HEIGHT = 25;
 const MAX_HEIGHT = 300;
-let SORTING_SPEED = 5;
-const NUM_BARS = 100;
+let SORTING_SPEED = 2000;
+const NUM_BARS = 5;
+const randomNum = getRandomNum(0, RANDOM_COLORS.length - 1);
 
 // TODO: add pause and step functionality
 // TODO: add change speed while sorting functionality
@@ -53,11 +54,13 @@ const SortingVisualizer = (props) => {
 	const [showHeights, setShowHeights] = useState(false);
 	const [legend, setLegend] = useState([{}]);
 	const [swapOrder, setSwapOrder] = useState([]);
+	const [originalSwapOrder, setOriginalSwapOrder] = useState([]);
 	const [setTimeouts, setSetTimeouts] = useState([]);
 	const [paused, setPaused] = useState(true);
-	const [indexPaused, setIndexPaused] = useState(0);
 	const barsContainer = useRef();
 	const errorMessage = useRef();
+	const indexPaused = useRef();
+	const colorCount = useRef();
 
 	useEffect(() => {
 		handleChangeSortingFunction("Merge Sort");
@@ -163,27 +166,33 @@ const SortingVisualizer = (props) => {
 		setSortingSpeed(event.target.value);
 	};
 
-	const handlePause = (swapOrderArray, timeouts, indexPaused) => {
-		for (let i = indexPaused; i < timeouts.length; i++) {
+	const handlePause = (swapOrderArray, timeouts) => {
+		let pausedIdx = Number(indexPaused.current.innerHTML);
+		for (let i = pausedIdx; i < timeouts.length; i++) {
 			clearTimeout(timeouts[i]);
 		}
 		setIsSorting(false);
 		setPaused(true);
-		setSwapOrder(swapOrderArray.slice(indexPaused));
+		setSwapOrder(swapOrderArray.slice(pausedIdx));
 	};
 
+	// keep original swapOrderArray for forward and backward functionality
+	// when forward or backward is called, call handleSort only on one index of swapOrderArray with 0 as speed
+	const handleStep = (speed = 0) => {};
+
 	const handleSort = (config, heights) => {
+		setPaused(false);
 		if (!sortingFunction) {
 			handleChangeSortingFunction("Merge Sort");
 		}
-		if (!paused || swapOrder.length === 0) {
+		if (swapOrder.length === 0) {
 			let swapOrderArray = config.implementation(
 				[...heights],
 				...config.args
 			);
 			setSwapOrder(swapOrderArray);
+			setOriginalSwapOrder(originalSwapOrder);
 		}
-		setPaused(false);
 	};
 
 	const handleBubbleSort = (animations, numOfBars, speed, timeouts) => {
@@ -199,7 +208,7 @@ const SortingVisualizer = (props) => {
 			let swapIdx2 = animations[i][2];
 
 			callbacks.push(() => {
-				setIndexPaused(i); // find a better way
+				indexPaused.current.innerHTML = Number(i);
 				if (state === "COMPARING") {
 					bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
 					bars[swapIdx2].style.backgroundColor = COLOR_COMPARING;
@@ -241,26 +250,9 @@ const SortingVisualizer = (props) => {
 			});
 		}
 
-		// // when sorted is clicked, set sorting function to handlePause
-		// pass handlePause to pause button
-		// in handlePause, clear all setTimeouts, then change swapOrderArray to begin at paused index
-		// when sorted is clicked again, call handleSort with the new swapOrderArray
-		// keep original swapOrderArray for forward and backward functionality
-		// when forward or backward is called, call handleSort only on one index of swapOrderArray with 0 as speed
-		console.log("bubbleSort 1:", timeouts);
 		for (let i = 0; i < animations.length; i++) {
 			timeouts.push(setTimeout(callbacks[i], i * speed));
 		}
-		console.log("bubbleSort 2:", timeouts);
-	};
-
-	const handleStep = (indexPaused, speed = 0) => {
-		// sortingFunction(
-		// 	sortingConfig,
-		// 	swapOrder.slice(indexPaused, indexPaused + 1),
-		// 	speed
-		// );
-		// setSwapOrder();
 	};
 
 	const handleSelectionSort = (animations, numOfBars, speed, timeouts) => {
@@ -275,7 +267,7 @@ const SortingVisualizer = (props) => {
 			let swapIdx2 = animations[i][2];
 
 			callbacks.push(() => {
-				setIndexPaused(i);
+				indexPaused.current.innerHTML = Number(i);
 				if (state === "GET-INITIAL") {
 					bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
 				} else if (state === "CHECK-MIN") {
@@ -332,7 +324,7 @@ const SortingVisualizer = (props) => {
 			let swapIdx2 = animations[i][2];
 
 			callbacks.push(() => {
-				setIndexPaused(i);
+				indexPaused.current.innerHTML = Number(i);
 				if (state === "START") {
 					bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
 				} else if (state === "SWAP-1") {
@@ -382,14 +374,14 @@ const SortingVisualizer = (props) => {
 		}
 	};
 
+	// BUG: colors
 	const handleMergeSort = (animations, numOfBars, speed, timeouts) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
 		let bars = barsContainer.current.children;
 		let prevColor1 = COLOR_DEFAULT;
 		let prevColor2 = COLOR_DEFAULT;
-		let count = getRandomNum(0, RANDOM_COLORS.length - 1);
-		let color = RANDOM_COLORS[count];
+		let color = RANDOM_COLORS[Number(colorCount.current.innerHTML)];
 		let callbacks = [];
 
 		for (let i = 0; i < animations.length; i++) {
@@ -399,8 +391,10 @@ const SortingVisualizer = (props) => {
 
 			// eslint-disable-next-line no-loop-func
 			callbacks.push(() => {
-				setIndexPaused(i);
+				indexPaused.current.innerHTML = Number(i);
 				if (state === "COMPARING") {
+					console.log("PREVCOLORS CHANGED");
+					console.log(prevColor1, prevColor2);
 					prevColor1 = bars[swapIdx1].style.backgroundColor;
 					prevColor2 = bars[swapIdx2].style.backgroundColor;
 					bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
@@ -426,7 +420,15 @@ const SortingVisualizer = (props) => {
 				} else if (state === "ONE-SIDE") {
 					bars[swapIdx1].style.backgroundColor = color;
 				} else if (state === "MERGED") {
-					color = RANDOM_COLORS[++count % RANDOM_COLORS.length];
+					colorCount.current.innerHTML =
+						Number(colorCount.current.innerHTML) + 1;
+					color =
+						RANDOM_COLORS[
+							Number(colorCount.current.innerHTML) %
+								RANDOM_COLORS.length
+						];
+					console.log("MERGED");
+					console.log(colorCount.current.innerHTML);
 				} else if (state === "ALL-SORTED") {
 					barsContainer.current.classList.add("sorted");
 					setChangeToDefault(false);
@@ -456,7 +458,7 @@ const SortingVisualizer = (props) => {
 			let swapIdx2 = animations[i][2];
 
 			callbacks.push(() => {
-				setIndexPaused(i);
+				indexPaused.current.innerHTML = Number(i);
 				if (state === "GET-PIVOT") {
 					bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
 				} else if (state === "COMPARE") {
@@ -576,6 +578,12 @@ const SortingVisualizer = (props) => {
 			default:
 				break;
 		}
+		for (let i = 0; i < setTimeouts.length; i++) {
+			clearTimeout(setTimeouts[i]);
+		}
+
+		// omits generating new array on first sort
+		if (sortingFunction) handleGenerateNewArray();
 	};
 
 	// const handleShellSort = () => {};
@@ -593,8 +601,7 @@ const SortingVisualizer = (props) => {
 		// 		barsDOM[i].style.height === sortedRandomHeights[i] + "px"
 		// 	);
 		// }
-		console.log(sortingFunction);
-		console.log(sortingConfig);
+		console.log(colorCount.current.innerHTML);
 	};
 
 	return (
@@ -609,7 +616,6 @@ const SortingVisualizer = (props) => {
 					swapOrder={swapOrder}
 					paused={paused}
 					setTimeouts={setTimeouts}
-					indexPaused={indexPaused}
 					stepped={handleStep}
 					showHeights={showHeights}
 					sortConfig={sortingConfig}
@@ -617,19 +623,7 @@ const SortingVisualizer = (props) => {
 					isSorting={isSorting}
 					changedSortingFunction={handleChangeSortingFunction}
 					generateNewArray={handleGenerateNewArray}
-					sort={
-						// sortingFunction
-						// 	? sortingFunction
-						// 	: () =>
-						// 			handleMergeSort(
-						// 				{
-						// 					implementation: getMergeSortRecursiveSwapOrder,
-						// 				},
-						// 				randomHeights,
-						// 				sortingSpeed
-						// 			)
-						handleSort
-					}
+					sort={handleSort}
 				></Bars>
 			</div>
 			<div className={classes.Controls}>
@@ -657,6 +651,12 @@ const SortingVisualizer = (props) => {
 					changedSortingSpeed={handleChangeSortingSpeed}
 					changedSortingFunction={handleChangeSortingFunction}
 				/>
+			</div>
+			<div className="hide" ref={indexPaused}>
+				{0}
+			</div>
+			<div className="hide" ref={colorCount}>
+				{randomNum}
 			</div>
 			<Button clicked={handleTestAlgorithms}>Test</Button>
 		</div>
