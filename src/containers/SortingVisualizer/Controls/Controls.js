@@ -86,7 +86,7 @@ let Controls = (props, ref) => {
 						type="range"
 						min="5"
 						max="2000"
-						step="5"
+						step="1"
 						value={props.speed}
 						onChange={props.changedSortingSpeed}
 						id="sortSpeed"

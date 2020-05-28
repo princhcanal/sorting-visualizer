@@ -24,6 +24,11 @@
 	color: #0b6e4f;
 }
 
+.play-controls i:disabled {
+	opacity: 10%;
+	cursor: not-allowed;
+}
+
 @media (max-width: 600px) {
 	.play-controls {
 		width: 100%;

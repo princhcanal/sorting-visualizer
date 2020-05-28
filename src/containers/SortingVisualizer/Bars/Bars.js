@@ -268,6 +268,7 @@ let Bars = (props, ref) => {
 					props.stepped(props.setTimeouts, "-")
 				}
 				paused={props.paused}
+				disabled={props.disableControls}
 			/>
 			<Button
 				classNames="burgundy new-array"

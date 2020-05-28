@@ -9,26 +9,37 @@ let PlayControls = (props, ref) => {
 	}));
 	return (
 		<div className="play-controls" ref={playControls}>
-			<i
-				className="fas fa-step-backward"
-				onClick={props.backwardStepClicked}
-			></i>
+			<div className="icon">
+				<i
+					className="fas fa-step-backward"
+					onClick={props.backwardStepClicked}
+					disabled={props.disabled}
+				></i>
+			</div>
 			{props.paused ? (
-				<Button classNames="play-control" clicked={props.playClicked}>
+				<Button
+					classNames="play-control"
+					clicked={props.playClicked}
+					disabled={props.disabled}
+				>
 					Sort
 				</Button>
 			) : (
 				<Button
 					classNames="burgundy play-control"
 					clicked={props.pauseClicked}
+					disabled={props.disabled}
 				>
 					Pause
 				</Button>
 			)}
-			<i
-				className="fas fa-step-forward"
-				onClick={props.forwardStepClicked}
-			></i>
+			<div className="icon">
+				<i
+					className="fas fa-step-forward"
+					onClick={props.forwardStepClicked}
+					disabled={props.disabled}
+				></i>
+			</div>
 		</div>
 	);
 };

@@ -33,11 +33,10 @@ import {
 
 const MIN_HEIGHT = 25;
 const MAX_HEIGHT = 300;
-let SORTING_SPEED = 5;
+let SORTING_SPEED = 2000;
 const NUM_BARS = 100; // no error when changed to invalid value
 const randomNum = getRandomNum(0, RANDOM_COLORS.length - 1);
 
-// TODO: add pause and step functionality
 // TODO: add change speed while sorting functionality
 // TODO: add sorting configurations
 // TODO: add sorting info
@@ -48,6 +47,7 @@ const SortingVisualizer = (props) => {
 	const [disableControls, setDisableControls] = useState(false);
 	const [numBars, setNumBars] = useState(NUM_BARS);
 	const [sortingSpeed, setSortingSpeed] = useState(SORTING_SPEED);
+	const [prevSortingSpeed, setPrevSortingSpeed] = useState(SORTING_SPEED);
 	const [sortingFunction, setSortingFunction] = useState();
 	const [changeToDefault, setChangeToDefault] = useState(false);
 	const [sortingConfig, setSortingConfig] = useState({});
@@ -94,10 +94,7 @@ const SortingVisualizer = (props) => {
 				indexPausedOriginal.current.innerHTML
 			);
 			if (pausedIdxOriginal < 0) pausedIdxOriginal = 0;
-			if (
-				allStates.length === 0
-				// || pausedIdxOriginal === originalSwapOrder.length - 1
-			) {
+			if (allStates.length === 0) {
 				handleRevertState(randomHeights);
 				sortingFunction(
 					originalSwapOrder.slice(pausedIdxOriginal),
@@ -117,6 +114,8 @@ const SortingVisualizer = (props) => {
 					allStates
 				);
 			}
+		} else if (paused && prevSortingSpeed !== sortingSpeed && isSorting) {
+			handleSort(sortingConfig, randomHeights);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [paused]);
@@ -191,9 +190,12 @@ const SortingVisualizer = (props) => {
 	};
 
 	const handleChangeSortingSpeed = (event) => {
-		// handlePause(setTimeouts);
-		setSortingSpeed(event.target.value);
-		// handleSort(sortingConfig, randomHeights);
+		setPrevSortingSpeed(Number(sortingSpeed));
+		setSortingSpeed(Number(event.target.value));
+		if (isSorting) {
+			handlePause(setTimeouts);
+			setIsSorting(true);
+		}
 	};
 
 	const handlePause = (timeouts) => {
@@ -243,7 +245,6 @@ const SortingVisualizer = (props) => {
 	const handleSort = (config, heights) => {
 		let pausedIdx = Number(indexPausedOriginal.current.innerHTML);
 		if (pausedIdx >= allStates.length - 1 && pausedIdx !== -1) {
-			console.log("sorting sorted");
 			setRandomHeights(heights.sort((a, b) => a - b));
 			setSetTimeouts([]);
 			setAllStates([]);
