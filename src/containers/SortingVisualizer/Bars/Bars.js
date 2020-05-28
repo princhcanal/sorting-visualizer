@@ -9,36 +9,39 @@ import Bar from "./Bar/Bar";
 import Button from "../../../components/UI/Button/Button";
 import ColorLegend from "../../../components/ColorLegend/ColorLegend";
 import PlayControls from "../../../components/PlayControls/PlayControls";
+import Dropdown from "../../../components/UI/Dropdown/Dropdown";
+import sortingFunctions from "../../../utilities/sortingFunctions";
 
 let Bars = (props, ref) => {
 	const barsContainer = useRef();
-	const select = useRef();
-	const dropdown = useRef();
 	const invalid = useRef();
-	const caret = useRef();
+	const dropdown = useRef();
 	const playControls = useRef();
 	useImperativeHandle(ref, () => ({
 		children: barsContainer.current.children,
 		classList: barsContainer.current.classList,
-		classListDropdown: dropdown.current.classList,
-		childrenSelect: select.current.children,
 		playControls: playControls.current,
 	}));
-
-	const handleDropdownClicked = () => {
-		dropdown.current.classList.toggle("collapsed");
-		caret.current.classList.toggle("flip");
-	};
-
-	const handleChangedSort = (sort) => {
-		props.changedSortingFunction(sort);
-		select.current.children[0].children[0].innerHTML = sort;
-	};
 
 	useEffect(() => {
 		if (!invalid === undefined) console.log(invalid.current);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [invalid]);
+
+	const handleChangedSort = (sort) => {
+		props.changedSortingFunction(sort);
+		dropdown.current.children[0].children[0].innerHTML = sort;
+	};
+
+	let sortingOptions = sortingFunctions.map((sortingFunction) => {
+		return (
+			<li key={sortingFunction}>
+				<button onClick={() => handleChangedSort(sortingFunction)}>
+					{sortingFunction}
+				</button>
+			</li>
+		);
+	});
 
 	let bars;
 	if (props.heights) {
@@ -52,54 +55,14 @@ let Bars = (props, ref) => {
 	}
 	return (
 		<div className="bars-container">
-			<div
-				className="select"
-				ref={select}
-				onClick={handleDropdownClicked}
-			>
-				<h2>
-					<span>Merge Sort</span>{" "}
-					<i className="fas fa-caret-down" ref={caret}></i>
-				</h2>
-
-				<ul className="collapsed" ref={dropdown}>
-					<li>
-						<button
-							onClick={() => handleChangedSort("Bubble Sort")}
-						>
-							Bubble Sort
-						</button>
-					</li>
-					<li>
-						<button
-							onClick={() => handleChangedSort("Selection Sort")}
-						>
-							Selection Sort
-						</button>
-					</li>
-					<li>
-						<button
-							onClick={() => handleChangedSort("Insertion Sort")}
-						>
-							Insertion Sort
-						</button>
-					</li>
-					<li>
-						<button onClick={() => handleChangedSort("Merge Sort")}>
-							Merge Sort
-						</button>
-					</li>
-					<li>
-						<button onClick={() => handleChangedSort("Quick Sort")}>
-							Quick Sort
-						</button>
-					</li>
-				</ul>
-			</div>
+			<Dropdown
+				ref={dropdown}
+				defaultValue={"Merge Sort"}
+				options={sortingOptions}
+				changedSortingFunction={props.changedSortingFunction}
+			></Dropdown>
 			<div className="bars" ref={barsContainer}>
-				{/* {bars && bars} */}
 				{props.disableControls ? (
-					// <p>Please place valid inputs</p>
 					<div className="invalid-inputs hide-invalid" ref={invalid}>
 						<h1>Please place valid inputs</h1>
 						<svg
@@ -269,6 +232,8 @@ let Bars = (props, ref) => {
 				}
 				paused={props.paused}
 				disabled={props.disableControls}
+				playText="Sort"
+				pauseText="Pause"
 			/>
 			<Button
 				classNames="burgundy new-array"

@@ -22,7 +22,7 @@ let PlayControls = (props, ref) => {
 					clicked={props.playClicked}
 					disabled={props.disabled}
 				>
-					Sort
+					{props.playText}
 				</Button>
 			) : (
 				<Button
@@ -30,7 +30,7 @@ let PlayControls = (props, ref) => {
 					clicked={props.pauseClicked}
 					disabled={props.disabled}
 				>
-					Pause
+					{props.pauseText}
 				</Button>
 			)}
 			<div className="icon">

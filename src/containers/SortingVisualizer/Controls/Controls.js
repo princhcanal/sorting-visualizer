@@ -1,5 +1,7 @@
 import React, { useRef, useImperativeHandle, forwardRef } from "react";
+
 import Card from "../../../components/UI/Card/Card";
+import Range from "../../../components/UI/Range/Range";
 
 let Controls = (props, ref) => {
 	const errorMessage = useRef();
@@ -31,76 +33,69 @@ let Controls = (props, ref) => {
 		<div className="controls" ref={controls}>
 			<Card>
 				<h2>Controls</h2>
-				<div className="input-group">
-					<label htmlFor="arrSize">Array Size</label>
-					<input
-						type="range"
-						min="5"
-						max="100"
-						value={props.size}
-						onChange={props.changedArraySize}
-						disabled={props.disableControls}
-						id="arrSize"
-						name="arrSize"
-					/>
-					<div className="range-labels">
-						<p>5</p>
-						<p>100</p>
-					</div>
-					<div className="error-message" ref={errorMessage}>
-						<p></p>
-					</div>
+				<Range
+					min="5"
+					max="100"
+					step="1"
+					value={props.size}
+					onChange={props.changedArraySize}
+					disabled={props.disableControls}
+					id="arrSize"
+					name="arrSize"
+					htmlFor="arrSize"
+					label="Array Size"
+					leftText="5"
+					rightText="100"
+				/>
 
-					<div className="change-num">
-						<button
-							className="decrement"
-							onClick={() => handleChangeNum("-")}
-							disabled={props.disableControls}
-						>
-							-
-						</button>
-						<input
-							ref={numBars}
-							type="number"
-							value={props.size}
-							onChange={(event) => {
-								props.changedArraySize(
-									event,
-									numBars.current.value
-								);
-							}}
-							disabled={props.disableControls}
-						/>
-						<button
-							className="increment"
-							onClick={() => handleChangeNum("+")}
-							disabled={props.disableControls}
-						>
-							+
-						</button>
-					</div>
-				</div>
-				<div className="input-group">
-					<label htmlFor="sortSpeed">Sorting Speed</label>
+				<div className="change-num">
+					<button
+						className="decrement"
+						onClick={() => handleChangeNum("-")}
+						disabled={props.disableControls}
+					>
+						-
+					</button>
 					<input
-						type="range"
-						min="5"
-						max="2000"
-						step="1"
-						value={props.speed}
-						onChange={props.changedSortingSpeed}
-						id="sortSpeed"
-						name="sortSpeed"
+						ref={numBars}
+						type="number"
+						value={props.size}
+						onChange={(event) => {
+							props.changedArraySize(
+								event,
+								numBars.current.value
+							);
+						}}
+						disabled={props.disableControls}
 					/>
-					<div className="range-labels">
-						<p>Extremely Fast</p>
-						<p>Extremely Slow</p>
-					</div>
+					<button
+						className="increment"
+						onClick={() => handleChangeNum("+")}
+						disabled={props.disableControls}
+					>
+						+
+					</button>
 				</div>
+				<Range
+					min="5"
+					max="2000"
+					step="1"
+					value={props.speed}
+					onChange={props.changedSortingSpeed}
+					id="sortSpeed"
+					name="sortSpeed"
+					htmlFor="sortSpeed"
+					label="Sorting Speed"
+					leftText="Extremely Fast"
+					rightText="Extremely Slow"
+				/>
 			</Card>
 			{/* <Card>
 				<h2>Options</h2>
 			</Card> */}
+			<div className="error-message" ref={errorMessage}>
+				<p></p>
+			</div>
 		</div>
 	);
 };

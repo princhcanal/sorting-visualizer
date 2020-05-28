@@ -33,11 +33,10 @@ import {
 
 const MIN_HEIGHT = 25;
 const MAX_HEIGHT = 300;
-let SORTING_SPEED = 2000;
+let SORTING_SPEED = 5;
 const NUM_BARS = 100; // no error when changed to invalid value
 const randomNum = getRandomNum(0, RANDOM_COLORS.length - 1);
 
-// TODO: add change speed while sorting functionality
 // TODO: add sorting configurations
 // TODO: add sorting info
 // TODO (MAYBE): add sudo code functionality
@@ -174,15 +173,15 @@ const SortingVisualizer = (props) => {
 		setDisableControls(false);
 		if (value < 5 || value > 100 || isNaN(value)) {
 			errorMessage.current.children[0].innerHTML = "INVALID: ";
-			if (value < 5) {
+			if (isNaN(value) || value === "") {
 				errorMessage.current.children[0].innerHTML +=
-					"Input less than minimum";
+					"INPUT NOT A NUMBER";
+			} else if (value < 5) {
+				errorMessage.current.children[0].innerHTML +=
+					"SIZE LESS THAN MINIMUM";
 			} else if (value > 100) {
 				errorMessage.current.children[0].innerHTML +=
-					"Input more than maximum";
-			} else if (isNaN(value)) {
-				errorMessage.current.children[0].innerHTML +=
-					"Input not a number";
+					"SIZE MORE THAN MAXIMUM";
 			}
 			errorMessage.current.classList.add("show-error");
 			setDisableControls(true);
@@ -789,15 +788,13 @@ const SortingVisualizer = (props) => {
 				<Bars
 					ref={barsContainer}
 					heights={randomHeights}
-					speed={sortingSpeed}
 					statuses={legend}
 					pause={handlePause}
-					swapOrder={swapOrder}
 					paused={paused}
+					sortConfig={sortingConfig}
 					setTimeouts={setTimeouts}
 					stepped={handleStep}
 					showHeights={showHeights}
-					sortConfig={sortingConfig}
 					disableControls={disableControls}
 					isSorting={isSorting}
 					changedSortingFunction={handleChangeSortingFunction}
@@ -808,27 +805,11 @@ const SortingVisualizer = (props) => {
 			<div className={classes.Controls}>
 				<Controls
 					ref={errorMessage}
-					heights={randomHeights}
 					size={numBars}
 					speed={sortingSpeed}
-					sort={
-						sortingFunction
-							? sortingFunction
-							: () =>
-									handleMergeSort(
-										{
-											implementation: getMergeSortRecursiveSwapOrder,
-										},
-										randomHeights,
-										sortingSpeed
-									)
-					}
-					sortConfig={sortingConfig}
-					generateNewArray={handleGenerateNewArray}
 					disableControls={isSorting}
 					changedArraySize={handleChangeArraySize}
 					changedSortingSpeed={handleChangeSortingSpeed}
-					changedSortingFunction={handleChangeSortingFunction}
 				/>
 			</div>
 			<div className="hide" ref={indexPaused}>

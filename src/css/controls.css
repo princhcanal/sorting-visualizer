@@ -1,12 +1,13 @@
 .controls {
 	text-align: center;
+	position: relative;
 }
 
 .controls input {
 	margin-top: 1rem;
 }
 
-.controls .input-group {
+/* .controls .input-group {
 	display: flex;
 	flex-direction: column;
 	position: relative;
@@ -14,30 +15,20 @@
 
 .controls .input-group:not(:last-of-type) {
 	margin-bottom: 1rem;
-}
-
-.controls .range-labels {
-	display: flex;
-	justify-content: space-between;
-	font-size: 0.7rem;
-}
-
-.controls .range-labels p {
-	margin: 0.5rem 0 0;
-}
+} */
 
 .controls .error-message {
 	position: absolute;
-	top: 50%;
+	top: 40%;
 	left: 50%;
 	transform: translate(-50%, -70%);
 	opacity: 0;
 	z-index: -1;
-	transition: all 0.4s ease-out 0.2s;
+	transition: all 0.4s ease-out;
 	color: #721817;
 	font-size: 0.7rem;
 	font-weight: 700;
-	width: 70%;
+	width: 50%;
 	height: 2rem;
 	border-radius: 0.5rem;
 	background-color: #fa9f42;
@@ -45,7 +36,7 @@
 
 .controls .show-error {
 	z-index: 0;
-	top: 70%;
+	top: 54%;
 	opacity: 1;
 }
 
@@ -54,7 +45,7 @@
 	justify-content: space-around;
 	align-items: center;
 	width: 50%;
-	margin: 1.3rem auto 0;
+	margin: 1.3rem auto 1rem;
 }
 
 .increment,
@@ -84,55 +75,4 @@
 	width: 30%;
 	padding: 0.25rem 0.5rem;
 	margin-top: 0;
-}
-
-/* range styles stolen from https://codepen.io/joshbader/pen/MZMzjr */
-.controls input[type="range"] {
-	-webkit-appearance: none;
-	appearance: none;
-	position: relative;
-	width: 100%;
-	height: 2em;
-	height: 3em;
-	padding: 0.375em;
-	background-color: #2b4162;
-	border-radius: 2em;
-	outline: none;
-	border: 2px solid #fa9f42;
-	cursor: pointer;
-}
-
-.controls input[type="range"]:disabled {
-	cursor: not-allowed;
-}
-
-.controls input[type="range"]::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	appearance: none;
-	/* position: relative; */
-	z-index: 10;
-	width: 1.5em;
-	height: 1.5em;
-	width: 2.3em;
-	height: 2.3em;
-	background-color: #fa9f42;
-	border-radius: 50%;
-	cursor: pointer;
-}
-
-.controls input[type="range"]::-moz-range-thumb {
-	/* position: relative; */
-	z-index: 10;
-	width: 1.5em;
-	height: 1.5em;
-	width: 2.3em;
-	height: 2.3em;
-	background-color: #fa9f42;
-	border: none;
-	border-radius: 50%;
-	cursor: pointer;
-}
-
-.controls input[type="range"]::-moz-range-track {
-	background-color: transparent;
 }

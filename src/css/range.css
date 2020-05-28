@@ -1,0 +1,69 @@
+.range {
+	display: flex;
+	flex-direction: column;
+}
+
+.range:not(:last-of-type) {
+	margin-bottom: 1rem;
+}
+
+/* range styles stolen from https://codepen.io/joshbader/pen/MZMzjr */
+input[type="range"] {
+	-webkit-appearance: none;
+	appearance: none;
+	position: relative;
+	width: 100%;
+	height: 2em;
+	height: 3em;
+	padding: 0.375em;
+	background-color: #2b4162;
+	border-radius: 2em;
+	outline: none;
+	border: 2px solid #fa9f42;
+	cursor: pointer;
+}
+
+input[type="range"]:disabled {
+	cursor: not-allowed;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	/* position: relative; */
+	z-index: 10;
+	width: 1.5em;
+	height: 1.5em;
+	width: 2.3em;
+	height: 2.3em;
+	background-color: #fa9f42;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+	/* position: relative; */
+	z-index: 10;
+	width: 1.5em;
+	height: 1.5em;
+	width: 2.3em;
+	height: 2.3em;
+	background-color: #fa9f42;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+input[type="range"]::-moz-range-track {
+	background-color: transparent;
+}
+
+.range-labels {
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.7rem;
+}
+
+.range-labels p {
+	margin: 0.5rem 0 0;
+}
