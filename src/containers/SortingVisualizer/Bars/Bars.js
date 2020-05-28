@@ -16,11 +16,13 @@ let Bars = (props, ref) => {
 	const dropdown = useRef();
 	const invalid = useRef();
 	const caret = useRef();
+	const playControls = useRef();
 	useImperativeHandle(ref, () => ({
 		children: barsContainer.current.children,
 		classList: barsContainer.current.classList,
 		classListDropdown: dropdown.current.classList,
 		childrenSelect: select.current.children,
+		playControls: playControls.current,
 	}));
 
 	const handleDropdownClicked = () => {
@@ -256,36 +258,24 @@ let Bars = (props, ref) => {
 			</div>
 			<ColorLegend statuses={props.statuses} />
 			<PlayControls
+				ref={playControls}
 				playClicked={() => {
 					props.sort(props.sortConfig, props.heights);
 				}}
-				pauseClicked={() =>
-					props.pause(
-						props.swapOrder,
-						props.setTimeouts,
-						props.indexPaused
-					)
+				pauseClicked={() => props.pause(props.setTimeouts)}
+				forwardStepClicked={() => props.stepped(props.setTimeouts, "+")}
+				backwardStepClicked={() =>
+					props.stepped(props.setTimeouts, "-")
 				}
-				stepClicked={() => props.handleStep()}
 				paused={props.paused}
 			/>
-			<div className="button-group">
-				<Button
-					classNames="burgundy"
-					clicked={props.generateNewArray}
-					disabled={props.isSorting || props.disableControls}
-				>
-					New Array
-				</Button>
-				<Button
-					clicked={() =>
-						props.sort(props.sortConfig, props.heights, props.speed)
-					}
-					disabled={props.isSorting || props.disableControls}
-				>
-					Sort
-				</Button>
-			</div>
+			<Button
+				classNames="burgundy new-array"
+				clicked={props.generateNewArray}
+				disabled={props.isSorting || props.disableControls}
+			>
+				New Array
+			</Button>
 		</div>
 	);
 };

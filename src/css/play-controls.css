@@ -1,7 +1,7 @@
 .play-controls {
 	display: flex;
 	width: 50%;
-	margin: 1rem auto;
+	margin: 0.5rem auto 0;
 	padding: 0.5rem 1rem;
 	border-radius: 1rem;
 	justify-content: space-around;
@@ -11,6 +11,21 @@
 	color: #721817;
 }
 
+.play-controls > * {
+	width: 30%;
+}
+
 .play-controls i {
 	cursor: pointer;
+	font-size: 2rem;
+}
+
+.play-controls i:active {
+	color: #0b6e4f;
+}
+
+@media (max-width: 600px) {
+	.play-controls {
+		width: 100%;
+	}
 }

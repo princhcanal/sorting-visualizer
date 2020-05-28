@@ -24,8 +24,7 @@ export function bubbleSort(arr) {
 		// if (noSwaps) break;
 	}
 
-	swapOrderArr.push([[...arr], 0, 0, "ALL-SORTED-1"]);
-	swapOrderArr.push([[...arr], 0, 0, "ALL-SORTED-2"]);
+	swapOrderArr.push([[...arr], 0, 0, "ALL-SORTED"]);
 
 	return swapOrderArr;
 	// return arr;

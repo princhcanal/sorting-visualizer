@@ -8,7 +8,7 @@
 	border-radius: 0.5rem;
 	cursor: pointer;
 	outline: none;
-	margin: 0.5rem;
+	margin: 0.5rem 0;
 	transition: all 0.2s;
 }
 
@@ -31,9 +31,24 @@
 	background-color: #721817;
 }
 
+.button.new-array {
+	width: 50%;
+}
+
 @media (hover: none) {
 	.button:hover {
 		transform: none;
 		box-shadow: none;
+	}
+}
+
+@media (max-width: 600px) {
+	.button.new-array {
+		width: 100%;
+	}
+	.button.play-control {
+		padding: 0.7rem 1.5rem;
+		width: 50%;
+		font-size: 1.2rem;
 	}
 }
