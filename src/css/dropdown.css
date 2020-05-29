@@ -22,17 +22,24 @@
 	border-bottom-left-radius: 1rem;
 	border-bottom-right-radius: 1rem;
 	overflow: hidden;
-	height: 16.5rem;
+	height: 16rem;
 	transition: all 0.3s ease-out;
 }
 
-.dropdown i {
+@media (hover: none) {
+	.dropdown ul {
+		height: 16.5rem;
+	}
+}
+
+.dropdown svg {
 	transform: rotate(0);
 	position: absolute;
-	top: 5%;
+	top: 0%;
 	right: 5%;
 	color: #721817;
 	transition: transform 0.3s ease-out;
+	height: 100%;
 }
 
 .dropdown .flip {
@@ -43,8 +50,8 @@
 	border-bottom: 1px solid #829191;
 }
 
-.dropdown ul li button {
-	margin: 1rem 0;
+.dropdown ul li {
+	padding: 1rem 0;
 	background-color: transparent;
 	border: none;
 	width: 100%;
@@ -55,11 +62,11 @@
 	transition: all 0.2s;
 }
 
-.dropdown ul li button:focus {
+.dropdown ul li:focus {
 	outline: none;
 }
 
-.dropdown ul li button:hover {
+.dropdown ul li:hover {
 	color: #fa9f42;
 }
 

@@ -2,11 +2,13 @@ import React, { useRef, useImperativeHandle, forwardRef } from "react";
 
 import Card from "../../../components/UI/Card/Card";
 import Range from "../../../components/UI/Range/Range";
+import Counter from "../../../components/UI/Counter/Counter";
 
 let Controls = (props, ref) => {
 	const errorMessage = useRef();
 	const numBars = useRef();
 	const controls = useRef();
+
 	useImperativeHandle(ref, () => ({
 		classList: errorMessage.current.classList,
 		children: errorMessage.current.children,
@@ -47,47 +49,24 @@ let Controls = (props, ref) => {
 					leftText="5"
 					rightText="100"
 				/>
-
-				<div className="change-num">
-					<button
-						className="decrement"
-						onClick={() => handleChangeNum("-")}
-						disabled={props.disableControls}
-					>
-						-
-					</button>
-					<input
-						ref={numBars}
-						type="number"
-						value={props.size}
-						onChange={(event) => {
-							props.changedArraySize(
-								event,
-								numBars.current.value
-							);
-						}}
-						disabled={props.disableControls}
-					/>
-					<button
-						className="increment"
-						onClick={() => handleChangeNum("+")}
-						disabled={props.disableControls}
-					>
-						+
-					</button>
-				</div>
+				<Counter
+					ref={numBars}
+					changeNum={handleChangeNum}
+					changedArray={props.changedArraySize}
+					disabled={props.disableControls}
+					value={props.size}
+				/>
 				<Range
 					min="5"
 					max="2000"
-					step="1"
 					value={props.speed}
 					onChange={props.changedSortingSpeed}
 					id="sortSpeed"
 					name="sortSpeed"
 					htmlFor="sortSpeed"
 					label="Sorting Speed"
-					leftText="Extremely Fast"
-					rightText="Extremely Slow"
+					leftText="Extremely Slow"
+					rightText="Extremely Fast"
 				/>
 			</Card>
 			{/* <Card>

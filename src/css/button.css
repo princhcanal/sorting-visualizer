@@ -35,6 +35,12 @@
 	width: 50%;
 }
 
+.button.play-control {
+	padding: 0.7rem 1.5rem;
+	width: 50%;
+	font-size: 1.2rem;
+}
+
 @media (hover: none) {
 	.button:hover {
 		transform: none;
@@ -45,10 +51,5 @@
 @media (max-width: 600px) {
 	.button.new-array {
 		width: 100%;
-	}
-	.button.play-control {
-		padding: 0.7rem 1.5rem;
-		width: 50%;
-		font-size: 1.2rem;
 	}
 }

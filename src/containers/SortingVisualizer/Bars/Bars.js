@@ -17,6 +17,7 @@ let Bars = (props, ref) => {
 	const invalid = useRef();
 	const dropdown = useRef();
 	const playControls = useRef();
+
 	useImperativeHandle(ref, () => ({
 		children: barsContainer.current.children,
 		classList: barsContainer.current.classList,
@@ -35,10 +36,11 @@ let Bars = (props, ref) => {
 
 	let sortingOptions = sortingFunctions.map((sortingFunction) => {
 		return (
-			<li key={sortingFunction}>
-				<button onClick={() => handleChangedSort(sortingFunction)}>
-					{sortingFunction}
-				</button>
+			<li
+				key={sortingFunction}
+				onClick={() => handleChangedSort(sortingFunction)}
+			>
+				{sortingFunction}
 			</li>
 		);
 	});
@@ -236,7 +238,7 @@ let Bars = (props, ref) => {
 				pauseText="Pause"
 			/>
 			<Button
-				classNames="burgundy new-array"
+				className="burgundy new-array"
 				clicked={props.generateNewArray}
 				disabled={props.isSorting || props.disableControls}
 			>

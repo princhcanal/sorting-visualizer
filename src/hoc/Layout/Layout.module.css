@@ -3,6 +3,9 @@
 }
 
 .Layout h1 {
-	font-weight: 300;
-	color: #e0e0e2;
+	font-family: "Pacifico";
+	letter-spacing: 0.3rem;
+	color: #577590;
+	color: #48bfe3;
+	text-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.2);
 }

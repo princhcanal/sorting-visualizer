@@ -1,7 +1,7 @@
 import React from "react";
 
 const Button = (props) => {
-	let classNames = ["button", props.classNames];
+	let classNames = ["button", props.className];
 	return (
 		<button
 			disabled={props.disabled}
@@ -9,11 +9,6 @@ const Button = (props) => {
 			onClick={props.clicked}
 		>
 			{props.children}
-			{props.notfinished && (
-				<div>
-					<em>Coming Soon</em>
-				</div>
-			)}
 		</button>
 	);
 };

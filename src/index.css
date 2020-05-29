@@ -1,4 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700&display=swap");
+/* FONTS */
+@import url("./css/raleway.css");
+@import url("./css/pacifico.css");
+
 @import url("./css/base.css");
 @import url("./css/input.css");
 @import url("./css/animations.css");
@@ -12,3 +15,4 @@
 @import url("./css/play-controls.css");
 @import url("./css/dropdown.css");
 @import url("./css/range.css");
+@import url("./css/counter.css");

@@ -7,6 +7,10 @@
 	margin-bottom: 1rem;
 }
 
+.range label {
+	margin-bottom: 1rem;
+}
+
 /* range styles stolen from https://codepen.io/joshbader/pen/MZMzjr */
 input[type="range"] {
 	-webkit-appearance: none;
@@ -66,4 +70,8 @@ input[type="range"]::-moz-range-track {
 
 .range-labels p {
 	margin: 0.5rem 0 0;
+}
+
+#sortSpeed {
+	direction: rtl;
 }

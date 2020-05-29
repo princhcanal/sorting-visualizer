@@ -9,22 +9,23 @@
 	font-size: 2rem;
 	background-color: #fa9f42;
 	color: #721817;
+	height: 4.5rem;
 }
 
 .play-controls > * {
 	width: 30%;
 }
 
-.play-controls i {
+.play-controls svg {
 	cursor: pointer;
-	font-size: 2rem;
+	transform: scale(0.3);
 }
 
-.play-controls i:active {
+.play-controls svg:active {
 	color: #0b6e4f;
 }
 
-.play-controls i:disabled {
+.play-controls svg:disabled {
 	opacity: 10%;
 	cursor: not-allowed;
 }
