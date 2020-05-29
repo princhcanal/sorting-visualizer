@@ -32,7 +32,8 @@ export const mergeSortLegend = [
 	{ color: COLOR_DEFAULT, desc: "Not Sorted" },
 	{ color: COLOR_COMPARING, desc: "Comparing" },
 	{ color: COLOR_SWAP, desc: "Swap Values" },
-	{ color: COLOR_SORTED, desc: "Sorted in Subarray" },
+	{ color: COLOR_SORTED, desc: "Sorted" },
+	{ color: "", desc: "Other Colors: Sorted in Subarray" },
 ];
 
 export const quickSortLegend = [

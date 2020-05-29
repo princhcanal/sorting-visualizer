@@ -3,14 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import classes from "./SortingVisualizer.module.css";
 import Bars from "./Bars/Bars";
 import Controls from "./Controls/Controls";
-import { bubbleSort } from "../../sortingAlgorithms/bubbleSort";
-import { selectionSort } from "../../sortingAlgorithms/selectionSort";
-import { insertionSort } from "../../sortingAlgorithms/insertionSort";
-import {
-	// mergeSortIterative,
-	getMergeSortRecursiveSwapOrder,
-} from "../../sortingAlgorithms/mergeSort";
-import { getQuickSortSwapOrder } from "../../sortingAlgorithms/quickSort";
 import { getRandomNum } from "../../utilities/numbers";
 import {
 	RANDOM_COLORS,
@@ -29,6 +21,13 @@ import {
 	mergeSortLegend,
 	quickSortLegend,
 } from "../../utilities/legends";
+import {
+	bubbleSortConfigs,
+	selectionSortConfigs,
+	insertionSortConfigs,
+	mergeSortConfigs,
+	quickSortConfigs,
+} from "../../utilities/sortingConfigs";
 // import Button from "../../components/UI/Button/Button";
 
 const MIN_HEIGHT = 25;
@@ -37,7 +36,6 @@ let SORTING_SPEED = 5;
 const NUM_BARS = 100; // no error when changed to invalid value
 const randomNum = getRandomNum(0, RANDOM_COLORS.length - 1);
 
-// TODO: add sorting configurations
 // TODO: add sorting info
 // TODO (MAYBE): add sudo code functionality
 const SortingVisualizer = (props) => {
@@ -50,6 +48,7 @@ const SortingVisualizer = (props) => {
 	const [sortingFunction, setSortingFunction] = useState();
 	const [changeToDefault, setChangeToDefault] = useState(false);
 	const [sortingConfig, setSortingConfig] = useState({});
+	const [sortingConfigs, setSortingConfigs] = useState([]);
 	const [showHeights, setShowHeights] = useState(false);
 	const [legend, setLegend] = useState([{}]);
 	const [swapOrder, setSwapOrder] = useState([]);
@@ -125,6 +124,7 @@ const SortingVisualizer = (props) => {
 			newRandomHeights.push(getRandomNum(MIN_HEIGHT, MAX_HEIGHT));
 			// newRandomHeights.push(MAX_HEIGHT);
 		}
+		handlePause(setTimeouts);
 		setChangeToDefault(true);
 		setRandomHeights(newRandomHeights);
 		setSetTimeouts([]);
@@ -704,47 +704,38 @@ const SortingVisualizer = (props) => {
 		switch (sort) {
 			case "Bubble Sort":
 				setSortingFunction(() => handleBubbleSort);
-				setSortingConfig({
-					implementation: bubbleSort,
-					args: [],
-				});
+				setSortingConfig(bubbleSortConfigs[0]);
+				setSortingConfigs(bubbleSortConfigs);
 				setLegend(bubbleSortLegend);
 				break;
 			case "Selection Sort":
 				setSortingFunction(() => handleSelectionSort);
-				setSortingConfig({
-					implementation: selectionSort,
-					args: [],
-				});
+				setSortingConfig(selectionSortConfigs[0]);
+				setSortingConfigs(selectionSortConfigs);
 				setLegend(selectionSortLegend);
 				break;
 			case "Insertion Sort":
 				setSortingFunction(() => handleInsertionSort);
-				setSortingConfig({
-					implementation: insertionSort,
-					args: [],
-				});
+				setSortingConfig(insertionSortConfigs[0]);
+				setSortingConfigs(insertionSortConfigs);
 				setLegend(insertionSortLegend);
 				break;
 			case "Merge Sort":
 				setSortingFunction(() => handleMergeSort);
-				setSortingConfig({
-					implementation: getMergeSortRecursiveSwapOrder,
-					args: [],
-				});
+				setSortingConfig(mergeSortConfigs[0]);
+				setSortingConfigs(mergeSortConfigs);
 				setLegend(mergeSortLegend);
 				break;
 			case "Quick Sort":
 				setSortingFunction(() => handleQuickSort);
-				setSortingConfig({
-					implementation: getQuickSortSwapOrder,
-					args: [],
-				});
+				setSortingConfig(quickSortConfigs[0]);
+				setSortingConfigs(quickSortConfigs);
 				setLegend(quickSortLegend);
 				break;
 			default:
 				break;
 		}
+
 		for (let i = 0; i < setTimeouts.length; i++) {
 			clearTimeout(setTimeouts[i]);
 		}
@@ -759,6 +750,22 @@ const SortingVisualizer = (props) => {
 			setAllStates([]);
 			indexPausedOriginal.current.innerHTML = -1;
 		}
+	};
+
+	const handleChangeSortingConfig = (config) => {
+		setSortingConfig((prevConfig) => {
+			if (prevConfig !== config) {
+				handlePause(setTimeouts);
+				handleGenerateNewArray();
+				setIsSorting(false);
+				setSetTimeouts([]);
+				setPaused(true);
+				setSwapOrder([]);
+				setAllStates([]);
+				indexPausedOriginal.current.innerHTML = -1;
+			}
+			return config;
+		});
 	};
 
 	// const handleShellSort = () => {};
@@ -776,10 +783,8 @@ const SortingVisualizer = (props) => {
 	// 	// 		barsDOM[i].style.height === sortedRandomHeights[i] + "px"
 	// 	// 	);
 	// 	// }
-	// 	console.log(
-	// 		Number(indexPausedOriginal.current.innerHTML),
-	// 		allStates.length
-	// 	);
+	// 	console.log(sortingFunction);
+	// 	console.log(sortingConfigs);
 	// };
 
 	return (
@@ -807,9 +812,11 @@ const SortingVisualizer = (props) => {
 					ref={errorMessage}
 					size={numBars}
 					speed={sortingSpeed}
-					disableControls={isSorting}
+					// disableControls={isSorting}
+					configs={sortingConfigs}
 					changedArraySize={handleChangeArraySize}
 					changedSortingSpeed={handleChangeSortingSpeed}
+					changedSortingConfig={handleChangeSortingConfig}
 				/>
 			</div>
 			<div className="hide" ref={indexPaused}>

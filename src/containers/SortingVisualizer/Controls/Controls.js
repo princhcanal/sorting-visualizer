@@ -3,11 +3,13 @@ import React, { useRef, useImperativeHandle, forwardRef } from "react";
 import Card from "../../../components/UI/Card/Card";
 import Range from "../../../components/UI/Range/Range";
 import Counter from "../../../components/UI/Counter/Counter";
+import Dropdown from "../../../components/UI/Dropdown/Dropdown";
 
 let Controls = (props, ref) => {
 	const errorMessage = useRef();
 	const numBars = useRef();
 	const controls = useRef();
+	const dropdown = useRef();
 
 	useImperativeHandle(ref, () => ({
 		classList: errorMessage.current.classList,
@@ -28,9 +30,34 @@ let Controls = (props, ref) => {
 			// shake animation
 			setTimeout(() => {
 				controls.current.classList.add("shake");
-			}, 10);
+			}, 100);
 		}
 	};
+
+	const handleChangedConfig = (config) => {
+		props.changedSortingConfig(config);
+		dropdown.current.children[0].children[0].innerHTML = config.label;
+	};
+
+	let configurations;
+	if (props.configs) {
+		configurations = props.configs.map((config) => {
+			return (
+				<li
+					key={config.label}
+					onClick={() => handleChangedConfig(config)}
+				>
+					{config.label}
+				</li>
+			);
+		});
+	}
+
+	let defaultValue;
+	if (props.configs.length > 0) {
+		defaultValue = props.configs[0].label;
+	}
+
 	return (
 		<div className="controls" ref={controls}>
 			<Card>
@@ -68,6 +95,16 @@ let Controls = (props, ref) => {
 					leftText="Extremely Slow"
 					rightText="Extremely Fast"
 				/>
+
+				<h2>Options</h2>
+				<Dropdown
+					className="small"
+					ref={dropdown}
+					label="Implementation"
+					defaultValue={defaultValue}
+					options={configurations}
+					height={props.configs.length * 3.2 + "rem"}
+				></Dropdown>
 			</Card>
 			{/* <Card>
 				<h2>Options</h2>

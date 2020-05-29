@@ -6,26 +6,8 @@
 	margin: 1.3rem auto 1rem;
 }
 
-.counter .increment,
-.counter .decrement {
-	width: 20%;
-	background-color: #2b4162;
-	color: #e0e0e2;
-	border-radius: 0.5rem;
-	border: 3px solid #fa9f42;
-	cursor: pointer;
-	outline: none;
-	padding: 0.2rem 0;
-}
-
-.counter .increment:active,
-.counter .decrement:active {
+.counter .counter-clicked {
 	color: #721817;
-}
-
-.counter .increment:disabled,
-.counter .decrement:disabled {
-	cursor: not-allowed;
 }
 
 input[type="number"] {

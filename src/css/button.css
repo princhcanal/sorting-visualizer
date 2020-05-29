@@ -41,6 +41,34 @@
 	font-size: 1.2rem;
 }
 
+.button.increment,
+.button.decrement {
+	width: 20%;
+	background-color: #2b4162;
+	color: #e0e0e2;
+	border-radius: 0.5rem;
+	border: 3px solid #fa9f42;
+	cursor: pointer;
+	outline: none;
+	padding: 0.2rem 0;
+}
+
+.button.increment:hover,
+.button.decrement:hover {
+	transform: none;
+	box-shadow: none;
+}
+
+.button.increment:active,
+.button.decrement:active {
+	color: #721817;
+}
+
+.button.increment:disabled,
+.button.decrement:disabled {
+	cursor: not-allowed;
+}
+
 @media (hover: none) {
 	.button:hover {
 		transform: none;

@@ -5,7 +5,7 @@
 
 .controls .error-message {
 	position: absolute;
-	top: 45%;
+	top: 30%;
 	left: 50%;
 	transform: translate(-50%, -70%);
 	opacity: 0;
@@ -22,6 +22,6 @@
 
 .controls .show-error {
 	z-index: 0;
-	top: 51%;
+	top: 33.6%;
 	opacity: 1;
 }

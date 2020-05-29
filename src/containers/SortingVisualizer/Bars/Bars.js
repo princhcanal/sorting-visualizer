@@ -58,6 +58,7 @@ let Bars = (props, ref) => {
 	return (
 		<div className="bars-container">
 			<Dropdown
+				height={sortingFunctions.length * 3.2 + "rem"}
 				ref={dropdown}
 				defaultValue={"Merge Sort"}
 				options={sortingOptions}
@@ -240,7 +241,7 @@ let Bars = (props, ref) => {
 			<Button
 				className="burgundy new-array"
 				clicked={props.generateNewArray}
-				disabled={props.isSorting || props.disableControls}
+				disabled={props.disableControls}
 			>
 				New Array
 			</Button>

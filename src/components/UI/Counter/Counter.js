@@ -1,5 +1,7 @@
 import React, { useRef, useImperativeHandle, forwardRef } from "react";
 
+import Button from "../../UI/Button/Button";
+
 let Counter = (props, ref) => {
 	const numBars = useRef();
 
@@ -9,13 +11,13 @@ let Counter = (props, ref) => {
 
 	return (
 		<div className="counter">
-			<div
+			<Button
 				className="decrement"
-				onClick={() => props.changeNum("-")}
+				clicked={() => props.changeNum("-")}
 				disabled={props.disabled}
 			>
 				-
-			</div>
+			</Button>
 			<input
 				ref={numBars}
 				type="number"
@@ -25,13 +27,13 @@ let Counter = (props, ref) => {
 				}}
 				disabled={props.disabled}
 			/>
-			<div
+			<Button
 				className="increment"
-				onClick={() => props.changeNum("+")}
+				clicked={() => props.changeNum("+")}
 				disabled={props.disabled}
 			>
 				+
-			</div>
+			</Button>
 		</div>
 	);
 };
