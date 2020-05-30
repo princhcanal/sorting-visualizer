@@ -1,7 +1,8 @@
 .card {
 	background-color: #e0e0e2;
 	border-radius: 0.5rem;
-	width: 80%;
+	width: 100%;
+	height: 100%;
 	margin: 1rem auto;
 	padding: 0.5rem;
 	box-shadow: 0.7rem 0.7rem 0.5rem rgba(0, 0, 0, 0.1);
@@ -9,4 +10,10 @@
 
 .card:first-of-type {
 	margin-top: 0;
+}
+
+.card h2.title {
+	font-family: "Pacifico";
+	letter-spacing: 0.3rem;
+	color: #577590;
 }

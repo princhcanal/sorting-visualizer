@@ -9,6 +9,7 @@ const ColorLegend = (props) => {
 				key={i}
 				color={status.color !== "" ? status.color : "none"}
 			>
+				{status.color === "" && <div className="color-wheel"></div>}
 				{status.desc}
 			</ColorStatus>
 		);

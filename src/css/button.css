@@ -12,6 +12,10 @@
 	transition: all 0.2s;
 }
 
+.button:last-child {
+	margin-bottom: 0;
+}
+
 .button:hover {
 	transform: translateY(-0.1rem);
 	box-shadow: 0.1rem 0.1rem 0.5rem rgba(0, 0, 0, 0.2);
@@ -32,13 +36,15 @@
 }
 
 .button.new-array {
-	width: 50%;
+	width: 100%;
+	padding: 1rem;
+	font-size: 1rem;
 }
 
 .button.play-control {
-	padding: 0.7rem 1.5rem;
+	padding: 1rem 1.5rem;
 	width: 50%;
-	font-size: 1.2rem;
+	font-size: 1.4rem;
 }
 
 .button.increment,
@@ -76,8 +82,9 @@
 	}
 }
 
-@media (max-width: 600px) {
-	.button.new-array {
-		width: 100%;
+@media (max-width: 425px) {
+	.button.play-control {
+		padding: 0.7rem 1.5rem;
+		font-size: 1.2rem;
 	}
 }

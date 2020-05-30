@@ -60,6 +60,10 @@ function mergeIterative(arr, arr1, arr2, start, mid, end, swapOrderArray) {
 	let compIdx1 = start;
 	let compIdx2 = mid;
 
+	if (start === 0 && end === arr.length - 1) {
+		swapOrderArray.push([[...arr], start, end, "LAST-MERGED"]);
+	}
+
 	while (i < arr1.length && j < arr2.length) {
 		swapOrderArray.push([[...arr], compIdx1, compIdx2, "COMPARING"]);
 		if (arr1[i] < arr2[j]) {
@@ -109,7 +113,8 @@ function mergeIterative(arr, arr1, arr2, start, mid, end, swapOrderArray) {
 		compIdx2++;
 	}
 
-	swapOrderArray.push([[...arr], start, end, "MERGED"]);
+	if (start !== 0 && end !== arr.length - 1)
+		swapOrderArray.push([[...arr], start, end, "MERGED"]);
 
 	return [res, start, end];
 }
@@ -135,6 +140,9 @@ function mergeRecursive(arr, start, mid, end, swapOrderArray) {
 	let j = mid + 1;
 	let compIdx1 = start;
 	let compIdx2 = mid + 1;
+	if (start === 0 && end === arr.length - 1) {
+		swapOrderArray.push([[...arr], start, end, "LAST-MERGED"]);
+	}
 
 	while (i <= mid && j <= end) {
 		swapOrderArray.push([[...arr], compIdx1, compIdx2, "COMPARING"]);
@@ -179,5 +187,6 @@ function mergeRecursive(arr, start, mid, end, swapOrderArray) {
 		j++;
 	}
 
-	swapOrderArray.push([[...arr], start, end, "MERGED"]);
+	if (start !== 0 && end !== arr.length - 1)
+		swapOrderArray.push([[...arr], start, end, "MERGED"]);
 }

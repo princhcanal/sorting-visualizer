@@ -1,24 +1,33 @@
 .play-controls {
 	display: flex;
-	width: 50%;
-	margin: 0.5rem auto 0;
-	padding: 0.5rem 1rem;
+	background-color: #fa9f42;
+	flex-wrap: wrap;
 	border-radius: 1rem;
+	margin: 0.5rem auto 0;
+	padding: 3rem 1rem 0.5rem;
+	width: 100%;
+}
+
+.play-controls > * {
+	width: 100%;
+}
+
+.play-controls .buttons {
+	display: flex;
 	justify-content: space-around;
 	align-items: center;
 	font-size: 2rem;
-	background-color: #fa9f42;
 	color: #721817;
 	height: 4.5rem;
 }
 
-.play-controls > * {
+.play-controls .buttons > * {
 	width: 30%;
 }
 
 .play-controls svg {
 	cursor: pointer;
-	transform: scale(0.3);
+	transform: scale(0.2);
 }
 
 .play-controls svg:active {

@@ -9,3 +9,9 @@
 	color: #48bfe3;
 	text-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.2);
 }
+
+.Layout header > h1 {
+	display: inline-block;
+	border-bottom: 5px groove #bf4e30;
+	padding-bottom: 0.3rem;
+}

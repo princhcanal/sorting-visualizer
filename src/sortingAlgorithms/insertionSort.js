@@ -30,6 +30,9 @@ export function insertionSort(arr) {
 		// arr[j + 1] = current;
 		// console.log(arr, "\n");
 	}
+	for (let i = 0; i < arr.length; i++) {
+		swapOrderArray.push([[...arr], i, i, "COLOR-SORTED"]);
+	}
 	swapOrderArray.push([[...arr], null, null, "ALL-SORTED"]);
 	return swapOrderArray;
 	// return arr;

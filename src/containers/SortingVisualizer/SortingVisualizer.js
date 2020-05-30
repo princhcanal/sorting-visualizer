@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import classes from "./SortingVisualizer.module.css";
 import Bars from "./Bars/Bars";
 import Controls from "./Controls/Controls";
 import { getRandomNum } from "../../utilities/numbers";
@@ -10,9 +9,10 @@ import {
 	COLOR_COMPARING,
 	COLOR_SWAP,
 	COLOR_SORTED,
+	COLOR_PIVOT,
+	COLOR_PIVOT_INDEX,
 	COLOR_GREATER,
 	COLOR_LESSER,
-	COLOR_SWAP_LESSER,
 } from "../../utilities/colors";
 import {
 	bubbleSortLegend,
@@ -33,11 +33,15 @@ import {
 const MIN_HEIGHT = 25;
 const MAX_HEIGHT = 300;
 let SORTING_SPEED = 5;
-const NUM_BARS = 100; // no error when changed to invalid value
+const NUM_BARS = 100;
 const randomNum = getRandomNum(0, RANDOM_COLORS.length - 1);
 
-// TODO: add sorting info
-// TODO (MAYBE): add sudo code functionality
+// TODO: add range to play controls
+// TODO: try to optimize sorts by removing array
+// TODO: shell sort
+// TODO: radix sort
+// TODO: heap sort
+// TODO: quick sort variations
 const SortingVisualizer = (props) => {
 	const [randomHeights, setRandomHeights] = useState();
 	const [isSorting, setIsSorting] = useState(false);
@@ -60,11 +64,13 @@ const SortingVisualizer = (props) => {
 	const barsContainer = useRef();
 	const errorMessage = useRef();
 	const indexPaused = useRef();
-	const indexPausedOriginal = useRef();
+	const indexPausedOriginal = useRef(0);
 	const colorCount = useRef();
+	const range = useRef();
 
 	useEffect(() => {
 		handleChangeSortingFunction("Merge Sort");
+		handleShowError(NUM_BARS);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -88,10 +94,10 @@ const SortingVisualizer = (props) => {
 
 	useEffect(() => {
 		if (!paused && sortingFunction) {
-			let pausedIdxOriginal = Number(
-				indexPausedOriginal.current.innerHTML
-			);
-			if (pausedIdxOriginal < 0) pausedIdxOriginal = 0;
+			let pausedIdxOriginal = indexPausedOriginal.current;
+			if (pausedIdxOriginal < 0) {
+				pausedIdxOriginal = 0;
+			}
 			if (allStates.length === 0) {
 				handleRevertState(randomHeights);
 				sortingFunction(
@@ -108,7 +114,6 @@ const SortingVisualizer = (props) => {
 					sortingSpeed,
 					setTimeouts,
 					randomHeights,
-					originalSwapOrder,
 					allStates
 				);
 			}
@@ -131,11 +136,12 @@ const SortingVisualizer = (props) => {
 		setSwapOrder([]);
 		setOriginalSwapOrder([]);
 		setAllStates([]);
-		indexPausedOriginal.current.innerHTML = -1;
+		indexPausedOriginal.current = -1;
+		range.current.value = 0;
 	};
 
 	const handleColorNewBars = () => {
-		if (changeToDefault) {
+		if (changeToDefault && !disableControls) {
 			let bars = barsContainer.current.children;
 			for (let i = 0; i < numBars; i++) {
 				bars[i].style.backgroundColor = COLOR_DEFAULT;
@@ -198,7 +204,7 @@ const SortingVisualizer = (props) => {
 	};
 
 	const handlePause = (timeouts) => {
-		let pausedIdxOriginal = Number(indexPausedOriginal.current.innerHTML);
+		let pausedIdxOriginal = indexPausedOriginal.current;
 		for (let i = pausedIdxOriginal; i < timeouts.length; i++) {
 			clearTimeout(timeouts[i]);
 		}
@@ -208,7 +214,7 @@ const SortingVisualizer = (props) => {
 
 	const handleStep = (timeouts, direction) => {
 		handlePause(timeouts);
-		let pausedIdx = Number(indexPausedOriginal.current.innerHTML);
+		let pausedIdx = indexPausedOriginal.current;
 		let idx1, idx2;
 		if (
 			direction === "+" &&
@@ -222,7 +228,8 @@ const SortingVisualizer = (props) => {
 				barsContainer.current.classList.remove("sorted");
 			idx1 = pausedIdx - 1;
 			idx2 = pausedIdx;
-			indexPausedOriginal.current.innerHTML = pausedIdx - 2;
+			indexPausedOriginal.current = pausedIdx - 1;
+			range.current.value = pausedIdx - 1;
 		} else {
 			barsContainer.current.playControls.classList.remove("shake");
 			setTimeout(() => {
@@ -236,18 +243,48 @@ const SortingVisualizer = (props) => {
 			0,
 			timeouts,
 			randomHeights,
-			originalSwapOrder,
-			allStates
+			allStates,
+			direction
 		);
 	};
 
+	const handleSliderChange = (event) => {
+		if (isSorting) {
+			handlePause(setTimeouts);
+			indexPausedOriginal.current = Number(event.target.value);
+			let pausedIdx = indexPausedOriginal.current;
+			setIsSorting(true);
+			handleAnimateStates(
+				pausedIdx,
+				allStates.length,
+				sortingSpeed,
+				setTimeouts,
+				randomHeights,
+				allStates
+			);
+			setPaused(false);
+		} else {
+			indexPausedOriginal.current = Number(event.target.value);
+			let pausedIdx = indexPausedOriginal.current;
+			handleAnimateStates(
+				pausedIdx,
+				pausedIdx + 1,
+				0,
+				setTimeouts,
+				randomHeights,
+				allStates
+			);
+		}
+	};
+
 	const handleSort = (config, heights) => {
-		let pausedIdx = Number(indexPausedOriginal.current.innerHTML);
+		let pausedIdx = indexPausedOriginal.current;
 		if (pausedIdx >= allStates.length - 1 && pausedIdx !== -1) {
 			setRandomHeights(heights.sort((a, b) => a - b));
 			setSetTimeouts([]);
 			setAllStates([]);
-			indexPausedOriginal.current.innerHTML = -1;
+			indexPausedOriginal.current = -1;
+			range.current.value = 0;
 			let swapOrderArray = config.implementation(
 				[...heights],
 				...config.args
@@ -296,8 +333,8 @@ const SortingVisualizer = (props) => {
 		speed,
 		timeouts,
 		heights,
-		animations,
-		states
+		states,
+		direction = "+"
 	) => {
 		if (start !== end - 1) setIsSorting(true);
 		let bars = barsContainer.current.children;
@@ -307,8 +344,9 @@ const SortingVisualizer = (props) => {
 				timeouts.push(
 					setTimeout(() => {
 						indexPaused.current.innerHTML = Number(i);
-						indexPausedOriginal.current.innerHTML =
-							Number(indexPausedOriginal.current.innerHTML) + 1;
+						if (direction === "+") {
+							range.current.value = ++indexPausedOriginal.current;
+						}
 						for (let j = 0; j < bars.length; j++) {
 							let height = states[i][j].height;
 							bars[j].style.height = height;
@@ -329,8 +367,9 @@ const SortingVisualizer = (props) => {
 			timeouts.push(
 				setTimeout(() => {
 					indexPaused.current.innerHTML = Number(i);
-					indexPausedOriginal.current.innerHTML =
-						Number(indexPausedOriginal.current.innerHTML) + 1;
+					if (direction === "+") {
+						range.current.value = ++indexPausedOriginal.current;
+					}
 					for (let j = 0; j < bars.length; j++) {
 						let height = states[i][j].height;
 						bars[j].style.height = height;
@@ -390,13 +429,23 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx2].children[0].innerHTML =
 						animations[i][0][swapIdx2];
 				}
-			} else if (state === "SWAPPING-3") {
-				bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
-				bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
-			} else if (state === "LAST-SORTED") {
-				bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
-				if (swapIdx1 >= 0)
-					bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
+			}
+			// else if (state === "SWAPPING-3") {
+			// 	bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
+			// 	bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+			// }
+			else if (state === "LAST-SORTED") {
+				if (animations[i + 1][3] === "NO-SWAPS") {
+					if (swapIdx1 >= 0)
+						bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
+					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+				} else {
+					bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
+					if (swapIdx1 >= 0)
+						bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
+				}
+			} else if (state === "NO-SWAPS") {
+				bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
 			} else if (state === "ALL-SORTED") {
 			}
 			handleStoreAllStates(i, states);
@@ -405,15 +454,7 @@ const SortingVisualizer = (props) => {
 		states.unshift([]);
 		handleStoreAllStates(0, states);
 
-		handleAnimateStates(
-			0,
-			states.length,
-			speed,
-			timeouts,
-			heights,
-			animations,
-			states
-		);
+		handleAnimateStates(0, states.length, speed, timeouts, heights, states);
 	};
 
 	const handleSelectionSort = (
@@ -443,11 +484,13 @@ const SortingVisualizer = (props) => {
 			} else if (state === "CHANGE-BACK") {
 				bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
 			} else if (state === "CHANGE-MIN") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
+				bars[swapIdx1].style.backgroundColor = COLOR_PIVOT;
 				if (swapIdx2) {
 					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
 				}
 			} else if (state === "SWAPPING-1") {
+				bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
+			} else if (state === "SWAPPING-2") {
 				bars[swapIdx1].style.height = animations[i][0][swapIdx1] + "px";
 				bars[swapIdx2].style.height = animations[i][0][swapIdx2] + "px";
 				if (heights.length <= 20) {
@@ -456,7 +499,7 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx2].children[0].innerHTML =
 						animations[i][0][swapIdx2];
 				}
-			} else if (state === "SWAPPING-2") {
+			} else if (state === "SWAPPING-3") {
 				bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
 				bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
 			} else if (state === "NO-SWAP") {
@@ -469,15 +512,7 @@ const SortingVisualizer = (props) => {
 		states.unshift([]);
 		handleStoreAllStates(0, states);
 
-		handleAnimateStates(
-			0,
-			states.length,
-			speed,
-			timeouts,
-			heights,
-			animations,
-			states
-		);
+		handleAnimateStates(0, states.length, speed, timeouts, heights, states);
 	};
 
 	const handleInsertionSort = (
@@ -525,11 +560,13 @@ const SortingVisualizer = (props) => {
 			} else if (state === "DONE-2") {
 				if (swapIdx1 >= 0)
 					bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
-				bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
+				bars[swapIdx2].style.backgroundColor = COLOR_LESSER;
 			} else if (state === "DONE-3") {
 				bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
 			} else if (state === "SORTED") {
 				bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+			} else if (state === "COLOR-SORTED") {
+				bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
 			} else if (state === "ALL-SORTED") {
 			}
 			handleStoreAllStates(i, states);
@@ -538,15 +575,7 @@ const SortingVisualizer = (props) => {
 		states.unshift([]);
 		handleStoreAllStates(0, states);
 
-		handleAnimateStates(
-			0,
-			states.length,
-			speed,
-			timeouts,
-			heights,
-			animations,
-			states
-		);
+		handleAnimateStates(0, states.length, speed, timeouts, heights, states);
 	};
 
 	const handleMergeSort = (animations, heights, speed, timeouts, states) => {
@@ -593,6 +622,8 @@ const SortingVisualizer = (props) => {
 				bars[swapIdx2].style.backgroundColor = prevColor1;
 			} else if (state === "ONE-SIDE") {
 				bars[swapIdx1].style.backgroundColor = color;
+			} else if (state === "LAST-MERGED") {
+				color = COLOR_SORTED;
 			} else if (state === "MERGED") {
 				color = RANDOM_COLORS[++count % RANDOM_COLORS.length];
 			} else if (state === "ALL-SORTED") {
@@ -603,15 +634,7 @@ const SortingVisualizer = (props) => {
 		states.unshift([]);
 		handleStoreAllStates(0, states);
 
-		handleAnimateStates(
-			0,
-			states.length,
-			speed,
-			timeouts,
-			heights,
-			animations,
-			states
-		);
+		handleAnimateStates(0, states.length, speed, timeouts, heights, states);
 	};
 
 	const handleQuickSort = (animations, heights, speed, timeouts, states) => {
@@ -629,18 +652,24 @@ const SortingVisualizer = (props) => {
 			let swapIdx2 = animations[i][2];
 
 			if (state === "GET-PIVOT") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
+				bars[swapIdx1].style.backgroundColor = COLOR_PIVOT;
 			} else if (state === "COMPARE") {
 				bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
-			} else if (state === "REVERT") {
+			} else if (state === "GREATER") {
 				bars[swapIdx1].style.backgroundColor = COLOR_GREATER;
 			} else if (state === "SWAP-1") {
 				// bars[swapIdx1].style.backgroundColor = COLOR_SWAP_LESSER;
-				bars[swapIdx2].style.backgroundColor = COLOR_SWAP_LESSER;
-			} else if (state === "SAME-INDEX") {
-				bars[swapIdx1].style.backgroundColor = COLOR_LESSER;
+				bars[swapIdx2].style.backgroundColor = COLOR_LESSER;
+			} else if (state === "SAME-INDEX-1") {
+				bars[swapIdx2].style.backgroundColor = COLOR_LESSER;
+			} else if (state === "SAME-INDEX-2") {
+				bars[swapIdx2].style.backgroundColor = COLOR_PIVOT_INDEX;
+				if (swapIdx2 - 1 !== swapIdx1) {
+					bars[swapIdx2 - 1].style.backgroundColor = COLOR_LESSER;
+				}
 			} else if (state === "SWAP-2") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SWAP_LESSER;
+				bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
+				bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
 			} else if (state === "SWAP-3") {
 				bars[swapIdx1].style.height = animations[i][0][swapIdx1] + "px";
 				bars[swapIdx2].style.height = animations[i][0][swapIdx2] + "px";
@@ -651,9 +680,13 @@ const SortingVisualizer = (props) => {
 						animations[i][0][swapIdx2];
 				}
 			} else if (state === "SWAP-4") {
-				bars[swapIdx1].style.backgroundColor = COLOR_LESSER;
+				if (swapIdx1[1] - 1 !== swapIdx1[0]) {
+					bars[swapIdx1[1] - 1].style.backgroundColor = COLOR_LESSER;
+				}
+				bars[swapIdx1[1]].style.backgroundColor = COLOR_PIVOT_INDEX;
 				bars[swapIdx2].style.backgroundColor = COLOR_GREATER;
 			} else if (state === "SWAP-PIVOT-1") {
+				bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
 				bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
 			} else if (state === "SWAP-PIVOT-2") {
 				bars[swapIdx1].style.height = animations[i][0][swapIdx1] + "px";
@@ -669,11 +702,12 @@ const SortingVisualizer = (props) => {
 				bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
 			} else if (state === "NO-CHANGE") {
 				bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
-			} else if (state === "REVERT-ALL-1") {
-				for (let j = swapIdx1; j < swapIdx2; j++) {
+			} else if (state === "REVERT-BOTH") {
+				for (let j = swapIdx1[0]; j < swapIdx2; j++) {
+					if (j === swapIdx1[1]) continue;
 					bars[j].style.backgroundColor = COLOR_DEFAULT;
 				}
-			} else if (state === "REVERT-ALL-2") {
+			} else if (state === "REVERT-LEFT") {
 				for (let j = swapIdx1; j < swapIdx2; j++) {
 					bars[j].style.backgroundColor = COLOR_DEFAULT;
 				}
@@ -689,15 +723,7 @@ const SortingVisualizer = (props) => {
 		states.unshift([]);
 		handleStoreAllStates(0, states);
 
-		handleAnimateStates(
-			0,
-			states.length,
-			speed,
-			timeouts,
-			heights,
-			animations,
-			states
-		);
+		handleAnimateStates(0, states.length, speed, timeouts, heights, states);
 	};
 
 	const handleChangeSortingFunction = (sort) => {
@@ -748,7 +774,8 @@ const SortingVisualizer = (props) => {
 			setPaused(true);
 			setSwapOrder([]);
 			setAllStates([]);
-			indexPausedOriginal.current.innerHTML = -1;
+			indexPausedOriginal.current = -1;
+			range.current.value = 0;
 		}
 	};
 
@@ -762,7 +789,8 @@ const SortingVisualizer = (props) => {
 				setPaused(true);
 				setSwapOrder([]);
 				setAllStates([]);
-				indexPausedOriginal.current.innerHTML = -1;
+				indexPausedOriginal.current = -1;
+				range.current.value = 0;
 			}
 			return config;
 		});
@@ -783,13 +811,18 @@ const SortingVisualizer = (props) => {
 	// 	// 		barsDOM[i].style.height === sortedRandomHeights[i] + "px"
 	// 	// 	);
 	// 	// }
-	// 	console.log(sortingFunction);
-	// 	console.log(sortingConfigs);
+	// 	console.log(
+	// 		indexPausedOriginal.current,
+	// 		range.current.value,
+	// 		allStates.length
+	// 	);
 	// };
 
 	return (
-		<div className={classes.SortingVisualizer}>
-			<div className={classes.Bars}>
+		// <div className={classes.SortingVisualizer}
+		<div className="SortingVisualizer">
+			{/* <div className={classes.Bars}> */}
+			<div className="Bars">
 				<Bars
 					ref={barsContainer}
 					heights={randomHeights}
@@ -798,6 +831,7 @@ const SortingVisualizer = (props) => {
 					paused={paused}
 					sortConfig={sortingConfig}
 					setTimeouts={setTimeouts}
+					states={allStates}
 					stepped={handleStep}
 					showHeights={showHeights}
 					disableControls={disableControls}
@@ -805,9 +839,25 @@ const SortingVisualizer = (props) => {
 					changedSortingFunction={handleChangeSortingFunction}
 					generateNewArray={handleGenerateNewArray}
 					sort={handleSort}
+					sliderChanged={handleSliderChange}
+					index={indexPausedOriginal.current}
 				></Bars>
+				<input
+					type="range"
+					ref={range}
+					className="play-controls-range"
+					min={0}
+					max={allStates.length - 1}
+					step={1}
+					value={indexPausedOriginal.current}
+					disabled={allStates.length === 0}
+					id="playRange"
+					name="playRange"
+					onChange={(e) => handleSliderChange(e)}
+				/>
 			</div>
-			<div className={classes.Controls}>
+			{/* <div className={classes.Controls}> */}
+			<div className="Controls">
 				<Controls
 					ref={errorMessage}
 					size={numBars}
@@ -821,9 +871,6 @@ const SortingVisualizer = (props) => {
 			</div>
 			<div className="hide" ref={indexPaused}>
 				{0}
-			</div>
-			<div className="hide" ref={indexPausedOriginal}>
-				{-1}
 			</div>
 			<div className="hide" ref={colorCount}>
 				{randomNum}

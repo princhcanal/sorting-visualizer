@@ -1,7 +1,7 @@
 .color-status {
 	display: flex;
 	align-items: center;
-	margin-bottom: 0.5rem;
+	margin-bottom: 1rem;
 }
 
 .color-square {
@@ -13,5 +13,6 @@
 .color-desc {
 	color: #fff;
 	font-size: 0.7rem;
-	margin-right: 0.5rem;
+	display: flex;
+	align-items: center;
 }

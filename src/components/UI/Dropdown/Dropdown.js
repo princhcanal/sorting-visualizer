@@ -4,6 +4,7 @@ let Dropdown = (props, ref) => {
 	const dropdown = useRef();
 	const options = useRef();
 	const caret = useRef();
+	const defaultValue = useRef();
 
 	let classNames = ["dropdown", props.className];
 
@@ -32,7 +33,7 @@ let Dropdown = (props, ref) => {
 				ref={dropdown}
 				onClick={handleDropdownClicked}
 			>
-				<h2>
+				<h2 className="default-value" ref={defaultValue}>
 					<span>{props.defaultValue}</span>
 					<svg
 						ref={caret}

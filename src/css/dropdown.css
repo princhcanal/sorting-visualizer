@@ -9,8 +9,13 @@
 	box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
 }
 
+.dropdown:last-child {
+	margin-bottom: 0;
+}
+
 .dropdown.small {
 	background-color: #2b4162;
+	box-shadow: none;
 }
 
 label {

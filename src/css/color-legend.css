@@ -3,3 +3,10 @@
 	justify-content: space-evenly;
 	flex-wrap: wrap;
 }
+
+.color-wheel {
+	background: url("../img/color-wheel.PNG") no-repeat center / cover;
+	height: 10px;
+	width: 10px;
+	margin-right: 0.5rem;
+}

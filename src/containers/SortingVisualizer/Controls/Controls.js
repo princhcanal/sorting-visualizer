@@ -61,7 +61,7 @@ let Controls = (props, ref) => {
 	return (
 		<div className="controls" ref={controls}>
 			<Card>
-				<h2>Controls</h2>
+				<h2 className="title">Controls</h2>
 				<Range
 					min="5"
 					max="100"
@@ -96,7 +96,7 @@ let Controls = (props, ref) => {
 					rightText="Extremely Fast"
 				/>
 
-				<h2>Options</h2>
+				<h2 className="title">Options</h2>
 				<Dropdown
 					className="small"
 					ref={dropdown}

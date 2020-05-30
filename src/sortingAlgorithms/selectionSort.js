@@ -19,9 +19,10 @@ export function selectionSort(arr) {
 			}
 		}
 		if (min !== i) {
-			swap(arr, i, min);
 			swapOrderArr.push([[...arr], i, min, "SWAPPING-1"]);
+			swap(arr, i, min);
 			swapOrderArr.push([[...arr], i, min, "SWAPPING-2"]);
+			swapOrderArr.push([[...arr], i, min, "SWAPPING-3"]);
 		} else {
 			swapOrderArr.push([[...arr], i, min, "NO-SWAP"]);
 		}

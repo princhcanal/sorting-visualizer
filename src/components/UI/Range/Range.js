@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useRef, useImperativeHandle, forwardRef } from "react";
 
-const Range = (props) => {
+let Range = (props, ref) => {
+	const range = useRef();
+
+	useImperativeHandle(ref, () => ({
+		value: range.current.value,
+	}));
+
+	let classNames = ["range", props.className];
+
 	return (
-		<div className="range">
+		<div className={classNames.join(" ")}>
 			<label htmlFor={props.htmlFor}>{props.label}</label>
 			<input
+				ref={range}
 				type="range"
 				min={props.min}
 				max={props.max}
@@ -22,5 +31,7 @@ const Range = (props) => {
 		</div>
 	);
 };
+
+Range = forwardRef(Range);
 
 export default Range;

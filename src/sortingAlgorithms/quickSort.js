@@ -33,17 +33,23 @@ function pivotLomuto(arr, start = 0, end = arr.length - 1, swapOrderArray) {
 		swapOrderArray.push([[...arr], i, pivotIndex, "COMPARE"]); // yellow i
 		if (pivot > arr[i]) {
 			pivotIndex++;
-			swapOrderArray.push([[...arr], pivotIndex, i, "SWAP-1"]); // orange i
 			if (pivotIndex !== i) {
+				swapOrderArray.push([[...arr], pivotIndex, i, "SWAP-1"]); // orange i
 				swapOrderArray.push([[...arr], pivotIndex, i, "SWAP-2"]); // orange pivotIndex
 				swap(arr, pivotIndex, i);
 				swapOrderArray.push([[...arr], pivotIndex, i, "SWAP-3"]); // swap
-				swapOrderArray.push([[...arr], pivotIndex, i, "SWAP-4"]); // blue, white
+				swapOrderArray.push([
+					[...arr],
+					[start, pivotIndex],
+					i,
+					"SWAP-4",
+				]); // blue, white
 			} else {
-				swapOrderArray.push([[...arr], pivotIndex, i, "SAME-INDEX"]); // blue pivotIndex
+				swapOrderArray.push([[...arr], start, i, "SAME-INDEX-1"]); // blue pivotIndex
+				swapOrderArray.push([[...arr], start, i, "SAME-INDEX-2"]); // blue pivotIndex
 			}
 		} else {
-			swapOrderArray.push([[...arr], i, pivotIndex, "REVERT"]); // white i
+			swapOrderArray.push([[...arr], i, pivotIndex, "GREATER"]); // white i
 		}
 	}
 	if (pivotIndex !== start) {
@@ -51,17 +57,18 @@ function pivotLomuto(arr, start = 0, end = arr.length - 1, swapOrderArray) {
 		swap(arr, start, pivotIndex);
 		swapOrderArray.push([[...arr], start, pivotIndex, "SWAP-PIVOT-2"]); // swap
 		swapOrderArray.push([[...arr], start, pivotIndex, "SWAP-PIVOT-3"]); // blue, green
-		swapOrderArray.push([[...arr], start, pivotIndex, "REVERT-ALL-1"]); // default start to (pivotIndex - 1)
 	} else {
 		swapOrderArray.push([[...arr], start, pivotIndex, "NO-CHANGE"]); // green start
 	}
 	if (pivotIndex !== end) {
 		swapOrderArray.push([
 			[...arr],
-			pivotIndex + 1,
+			[start, pivotIndex],
 			end + 1,
-			"REVERT-ALL-2",
-		]); // default (pivotIndex + 1) to (end)
+			"REVERT-BOTH",
+		]);
+	} else {
+		swapOrderArray.push([[...arr], start, pivotIndex, "REVERT-LEFT"]);
 	}
 	return pivotIndex;
 }
