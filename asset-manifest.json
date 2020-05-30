@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/sorting-visualizer/static/css/main.89c44010.chunk.css",
-    "main.js": "/sorting-visualizer/static/js/main.a6764aff.chunk.js",
-    "main.js.map": "/sorting-visualizer/static/js/main.a6764aff.chunk.js.map",
+    "main.css": "/sorting-visualizer/static/css/main.e2a04d8f.chunk.css",
+    "main.js": "/sorting-visualizer/static/js/main.1aa65a4b.chunk.js",
+    "main.js.map": "/sorting-visualizer/static/js/main.1aa65a4b.chunk.js.map",
     "runtime-main.js": "/sorting-visualizer/static/js/runtime-main.11247d14.js",
     "runtime-main.js.map": "/sorting-visualizer/static/js/runtime-main.11247d14.js.map",
-    "static/js/2.4a38b21f.chunk.js": "/sorting-visualizer/static/js/2.4a38b21f.chunk.js",
-    "static/js/2.4a38b21f.chunk.js.map": "/sorting-visualizer/static/js/2.4a38b21f.chunk.js.map",
+    "static/js/2.f1d9021c.chunk.js": "/sorting-visualizer/static/js/2.f1d9021c.chunk.js",
+    "static/js/2.f1d9021c.chunk.js.map": "/sorting-visualizer/static/js/2.f1d9021c.chunk.js.map",
     "index.html": "/sorting-visualizer/index.html",
-    "precache-manifest.c87e326ea843dc8f02b719ab34e0c4cf.js": "/sorting-visualizer/precache-manifest.c87e326ea843dc8f02b719ab34e0c4cf.js",
+    "precache-manifest.7a6983595c26aa897bfb238f865265fb.js": "/sorting-visualizer/precache-manifest.7a6983595c26aa897bfb238f865265fb.js",
     "service-worker.js": "/sorting-visualizer/service-worker.js",
-    "static/css/main.89c44010.chunk.css.map": "/sorting-visualizer/static/css/main.89c44010.chunk.css.map",
-    "static/js/2.4a38b21f.chunk.js.LICENSE.txt": "/sorting-visualizer/static/js/2.4a38b21f.chunk.js.LICENSE.txt",
-    "static/media/index.css": "/sorting-visualizer/static/media/Raleway-Regular.9942588a.ttf"
+    "static/css/main.e2a04d8f.chunk.css.map": "/sorting-visualizer/static/css/main.e2a04d8f.chunk.css.map",
+    "static/js/2.f1d9021c.chunk.js.LICENSE.txt": "/sorting-visualizer/static/js/2.f1d9021c.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/sorting-visualizer/static/media/color-wheel.8cf82dbd.PNG"
   },
   "entrypoints": [
     "static/js/runtime-main.11247d14.js",
-    "static/js/2.4a38b21f.chunk.js",
-    "static/css/main.89c44010.chunk.css",
-    "static/js/main.a6764aff.chunk.js"
+    "static/js/2.f1d9021c.chunk.js",
+    "static/css/main.e2a04d8f.chunk.css",
+    "static/js/main.1aa65a4b.chunk.js"
   ]
 }

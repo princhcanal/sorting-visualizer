@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "e302c112d107242b25ac0e93f62b9a83",
+    "revision": "a19dc2657c1dedc8f969ff81881ebb65",
     "url": "/sorting-visualizer/index.html"
   },
   {
-    "revision": "5ad3073adf08e27c197b",
-    "url": "/sorting-visualizer/static/css/main.89c44010.chunk.css"
+    "revision": "bcb996bc62cee8e12510",
+    "url": "/sorting-visualizer/static/css/main.e2a04d8f.chunk.css"
   },
   {
-    "revision": "1d0611e10663c76bc575",
-    "url": "/sorting-visualizer/static/js/2.4a38b21f.chunk.js"
+    "revision": "72f50ad48c81ccd64774",
+    "url": "/sorting-visualizer/static/js/2.f1d9021c.chunk.js"
   },
   {
     "revision": "e88a3e95b5364d46e95b35ae8c0dc27d",
-    "url": "/sorting-visualizer/static/js/2.4a38b21f.chunk.js.LICENSE.txt"
+    "url": "/sorting-visualizer/static/js/2.f1d9021c.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "5ad3073adf08e27c197b",
-    "url": "/sorting-visualizer/static/js/main.a6764aff.chunk.js"
+    "revision": "bcb996bc62cee8e12510",
+    "url": "/sorting-visualizer/static/js/main.1aa65a4b.chunk.js"
   },
   {
     "revision": "f7c8a75fcd31740bee33",
@@ -38,5 +38,9 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "9942588a6c84f959132556d99e83ded6",
     "url": "/sorting-visualizer/static/media/Raleway-Regular.9942588a.ttf"
+  },
+  {
+    "revision": "8cf82dbd281097c3f52cc86e7f1e1836",
+    "url": "/sorting-visualizer/static/media/color-wheel.8cf82dbd.PNG"
   }
 ]);
