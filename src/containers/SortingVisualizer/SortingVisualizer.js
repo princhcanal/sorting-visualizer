@@ -850,7 +850,7 @@ const SortingVisualizer = (props) => {
 					max={allStates.length - 1}
 					step={1}
 					value={indexPausedOriginal.current}
-					disabled={allStates.length === 0}
+					// disabled={allStates.length === 0}
 					id="playRange"
 					name="playRange"
 					onChange={(e) => handleSliderChange(e)}
