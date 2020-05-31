@@ -13,7 +13,8 @@
 }
 
 .card h2.title {
-	font-family: "Pacifico";
-	letter-spacing: 0.3rem;
-	color: #577590;
+	border-bottom: 2px solid #fa9f42;
+	padding-bottom: 0.8rem;
+	width: 80%;
+	margin: 1.3rem auto;
 }

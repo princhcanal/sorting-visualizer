@@ -3,7 +3,7 @@
 	justify-content: space-around;
 	align-items: flex-start;
 	width: 60%;
-	margin: 1.3rem auto 1rem;
+	margin: 1.3rem auto;
 }
 
 .counter .counter-clicked {

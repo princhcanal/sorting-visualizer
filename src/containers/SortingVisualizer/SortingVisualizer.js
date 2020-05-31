@@ -35,7 +35,6 @@ const MAX_HEIGHT = 300;
 let SORTING_SPEED = 5;
 const NUM_BARS = 100;
 
-// TODO: add range to play controls
 // TODO: shell sort
 // TODO: radix sort
 // TODO: heap sort
@@ -253,10 +252,12 @@ const SortingVisualizer = (props) => {
 		);
 	};
 
-	const handleSliderChange = (event) => {
+	const handleSliderChange = (eventTarget) => {
+		if (eventTarget.value !== allStates.length - 1)
+			barsContainer.current.classList.remove("sorted");
 		if (isSorting) {
 			handlePause(setTimeouts);
-			indexPaused.current = Number(event.target.value);
+			indexPaused.current = Number(eventTarget.value);
 			let pausedIdx = indexPaused.current;
 			setIsSorting(true);
 			handleAnimateStates(
@@ -269,7 +270,7 @@ const SortingVisualizer = (props) => {
 			);
 			setPaused(false);
 		} else {
-			indexPaused.current = Number(event.target.value);
+			indexPaused.current = Number(eventTarget.value);
 			let pausedIdx = indexPaused.current;
 			handleAnimateStates(
 				pausedIdx,
@@ -434,7 +435,7 @@ const SortingVisualizer = (props) => {
 				if (animations[i + 1][3] === "NO-SWAPS") {
 					if (swapIdx1 >= 0)
 						bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
-					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+					bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
 				} else {
 					bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
 					if (swapIdx1 >= 0)
@@ -839,10 +840,9 @@ const SortingVisualizer = (props) => {
 					min={0}
 					max={allStates.length - 1}
 					step={1}
-					value={indexPaused.current}
 					id="playRange"
 					name="playRange"
-					onChange={(e) => handleSliderChange(e)}
+					onChange={(e) => handleSliderChange(e.target)}
 					disabled={disableControls}
 				/>
 			</div>

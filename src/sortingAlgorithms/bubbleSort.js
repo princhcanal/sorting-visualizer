@@ -20,7 +20,7 @@ export function bubbleSort(arr) {
 		}
 		swapOrderArr.push([[...arr], j - 1, j, "LAST-SORTED"]);
 		if (noSwaps) {
-			for (let k = 0; k <= j; k++) {
+			for (let k = 0; k < j; k++) {
 				swapOrderArr.push([[...arr], k, j, "NO-SWAPS"]);
 			}
 			break;

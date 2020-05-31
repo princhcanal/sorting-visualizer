@@ -21,7 +21,10 @@
 
 label {
 	display: inline-block;
+	color: #721817;
+	font-weight: 700;
 	margin-bottom: 1rem;
+	font-size: 1.2rem;
 }
 
 .dropdown h2 {
@@ -50,6 +53,10 @@ label {
 
 .dropdown.small ul {
 	background-color: #fa9f42;
+	transform: scaleY(1);
+	transform-origin: bottom;
+	top: -280%;
+	transition: transform 0.3s ease-out;
 }
 
 @media (hover: none) {
@@ -111,4 +118,8 @@ label {
 
 .dropdown .collapsed {
 	height: 0;
+}
+
+.dropdown.small .collapsed {
+	transform: scaleY(0);
 }
