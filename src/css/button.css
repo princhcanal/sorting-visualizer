@@ -62,7 +62,8 @@
 	border: 3px solid #fa9f42;
 	cursor: pointer;
 	outline: none;
-	padding: 0.2rem 0;
+	padding: 0.5rem 0;
+	/* align-self: stretch; */
 }
 
 .button.increment:hover,

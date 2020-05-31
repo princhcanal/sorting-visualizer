@@ -236,8 +236,10 @@ const SortingVisualizer = (props) => {
 			range.current.value = pausedIdx - 1;
 		} else {
 			barsContainer.current.playControls.classList.remove("shake");
+			range.current.classList.remove("shake");
 			setTimeout(() => {
 				barsContainer.current.playControls.classList.add("shake");
+				range.current.classList.add("shake");
 			}, 10);
 			return;
 		}
@@ -253,8 +255,8 @@ const SortingVisualizer = (props) => {
 	};
 
 	const handleSliderChange = (eventTarget) => {
-		if (eventTarget.value !== allStates.length - 1)
-			barsContainer.current.classList.remove("sorted");
+		if (allStates.length === 0) return;
+		barsContainer.current.classList.remove("sorted");
 		if (isSorting) {
 			handlePause(setTimeouts);
 			indexPaused.current = Number(eventTarget.value);
@@ -400,6 +402,23 @@ const SortingVisualizer = (props) => {
 		// indexPaused.current.innerHTML = -1;
 	};
 
+	const handleSwap = (idx1, idx2) => {
+		let bars = barsContainer.current.children;
+		let temp = bars[idx1].style.height;
+		bars[idx1].style.height = bars[idx2].style.height;
+		bars[idx2].style.height = temp;
+		if (randomHeights.length <= 20) {
+			bars[idx1].children[0].innerHTML = bars[idx1].style.height.slice(
+				0,
+				temp.indexOf("px")
+			);
+			bars[idx2].children[0].innerHTML = bars[idx2].style.height.slice(
+				0,
+				temp.indexOf("px")
+			);
+		}
+	};
+
 	const handleBubbleSort = (animations, heights, speed, timeouts, states) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
@@ -409,40 +428,33 @@ const SortingVisualizer = (props) => {
 			states.push([]);
 		}
 		for (let i = 0; i < animations.length; i++) {
-			let state = animations[i][3];
-			let swapIdx1 = animations[i][1];
-			let swapIdx2 = animations[i][2];
+			let state = animations[i][2];
+			let idx1 = animations[i][0];
+			let idx2 = animations[i][1];
 
 			if (state === "COMPARING") {
-				bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
-				bars[swapIdx2].style.backgroundColor = COLOR_COMPARING;
-				if (swapIdx1 !== 0) {
-					bars[swapIdx1 - 1].style.backgroundColor = COLOR_DEFAULT;
+				bars[idx1].style.backgroundColor = COLOR_COMPARING;
+				bars[idx2].style.backgroundColor = COLOR_COMPARING;
+				if (idx1 !== 0) {
+					bars[idx1 - 1].style.backgroundColor = COLOR_DEFAULT;
 				}
 			} else if (state === "SWAPPING-1") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
-				bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
+				bars[idx1].style.backgroundColor = COLOR_SWAP;
+				bars[idx2].style.backgroundColor = COLOR_SWAP;
 			} else if (state === "SWAPPING-2") {
-				bars[swapIdx1].style.height = animations[i][0][swapIdx1] + "px";
-				bars[swapIdx2].style.height = animations[i][0][swapIdx2] + "px";
-				if (heights.length <= 20) {
-					bars[swapIdx1].children[0].innerHTML =
-						animations[i][0][swapIdx1];
-					bars[swapIdx2].children[0].innerHTML =
-						animations[i][0][swapIdx2];
-				}
+				handleSwap(idx1, idx2);
 			} else if (state === "LAST-SORTED") {
 				if (animations[i + 1][3] === "NO-SWAPS") {
-					if (swapIdx1 >= 0)
-						bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
-					bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
+					if (idx1 >= 0)
+						bars[idx1].style.backgroundColor = COLOR_DEFAULT;
+					bars[idx2].style.backgroundColor = COLOR_SORTED;
 				} else {
-					bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
-					if (swapIdx1 >= 0)
-						bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
+					bars[idx2].style.backgroundColor = COLOR_SORTED;
+					if (idx1 >= 0)
+						bars[idx1].style.backgroundColor = COLOR_DEFAULT;
 				}
 			} else if (state === "NO-SWAPS") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
+				bars[idx1].style.backgroundColor = COLOR_SORTED;
 			} else if (state === "ALL-SORTED") {
 			}
 			handleStoreAllStates(i, states);
@@ -470,37 +482,30 @@ const SortingVisualizer = (props) => {
 		}
 
 		for (let i = 0; i < animations.length; i++) {
-			let state = animations[i][3];
-			let swapIdx1 = animations[i][1];
-			let swapIdx2 = animations[i][2];
+			let state = animations[i][2];
+			let idx1 = animations[i][0];
+			let idx2 = animations[i][1];
 
 			if (state === "GET-INITIAL") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
+				bars[idx1].style.backgroundColor = COLOR_SWAP;
 			} else if (state === "CHECK-MIN") {
-				bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
+				bars[idx1].style.backgroundColor = COLOR_COMPARING;
 			} else if (state === "CHANGE-BACK") {
-				bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
+				bars[idx1].style.backgroundColor = COLOR_DEFAULT;
 			} else if (state === "CHANGE-MIN") {
-				bars[swapIdx1].style.backgroundColor = COLOR_PIVOT;
-				if (swapIdx2) {
-					bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+				bars[idx1].style.backgroundColor = COLOR_PIVOT;
+				if (idx2) {
+					bars[idx2].style.backgroundColor = COLOR_DEFAULT;
 				}
 			} else if (state === "SWAPPING-1") {
-				bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
+				bars[idx2].style.backgroundColor = COLOR_SWAP;
 			} else if (state === "SWAPPING-2") {
-				bars[swapIdx1].style.height = animations[i][0][swapIdx1] + "px";
-				bars[swapIdx2].style.height = animations[i][0][swapIdx2] + "px";
-				if (heights.length <= 20) {
-					bars[swapIdx1].children[0].innerHTML =
-						animations[i][0][swapIdx1];
-					bars[swapIdx2].children[0].innerHTML =
-						animations[i][0][swapIdx2];
-				}
+				handleSwap(idx1, idx2);
 			} else if (state === "SWAPPING-3") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
-				bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+				bars[idx1].style.backgroundColor = COLOR_SORTED;
+				bars[idx2].style.backgroundColor = COLOR_DEFAULT;
 			} else if (state === "NO-SWAP") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
+				bars[idx1].style.backgroundColor = COLOR_SORTED;
 			} else if (state === "ALL-SORTED") {
 			}
 			handleStoreAllStates(i, states);
@@ -528,42 +533,33 @@ const SortingVisualizer = (props) => {
 		}
 
 		for (let i = 0; i < animations.length; i++) {
-			let state = animations[i][3];
-			let swapIdx1 = animations[i][1];
-			let swapIdx2 = animations[i][2];
+			let state = animations[i][2];
+			let idx1 = animations[i][0];
+			let idx2 = animations[i][1];
 
 			if (state === "START") {
-				bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
+				bars[idx1].style.backgroundColor = COLOR_COMPARING;
 			} else if (state === "SWAP-1") {
-				bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
-				// bars[swapIdx2].style.backgroundColor = COLOR_COMPARING;
+				bars[idx1].style.backgroundColor = COLOR_COMPARING;
 			} else if (state === "SWAP-2") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
-				bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
+				bars[idx1].style.backgroundColor = COLOR_SWAP;
+				bars[idx2].style.backgroundColor = COLOR_SWAP;
 			} else if (state === "SWAP-3") {
-				bars[swapIdx1].style.height = animations[i][0][swapIdx1] + "px";
-				bars[swapIdx2].style.height = animations[i][0][swapIdx2] + "px";
-				if (heights.length <= 20) {
-					bars[swapIdx1].children[0].innerHTML =
-						animations[i][0][swapIdx1];
-					bars[swapIdx2].children[0].innerHTML =
-						animations[i][0][swapIdx2];
-				}
+				handleSwap(idx1, idx2);
 			} else if (state === "SWAP-4") {
-				bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
-				bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+				bars[idx1].style.backgroundColor = COLOR_COMPARING;
+				bars[idx2].style.backgroundColor = COLOR_DEFAULT;
 			} else if (state === "DONE-1") {
-				bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
+				bars[idx1].style.backgroundColor = COLOR_COMPARING;
 			} else if (state === "DONE-2") {
-				if (swapIdx1 >= 0)
-					bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
-				bars[swapIdx2].style.backgroundColor = COLOR_LESSER;
+				if (idx1 >= 0) bars[idx1].style.backgroundColor = COLOR_DEFAULT;
+				bars[idx2].style.backgroundColor = COLOR_LESSER;
 			} else if (state === "DONE-3") {
-				bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+				bars[idx2].style.backgroundColor = COLOR_DEFAULT;
 			} else if (state === "SORTED") {
-				bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
+				bars[idx2].style.backgroundColor = COLOR_DEFAULT;
 			} else if (state === "COLOR-SORTED") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
+				bars[idx1].style.backgroundColor = COLOR_SORTED;
 			} else if (state === "ALL-SORTED") {
 			}
 			handleStoreAllStates(i, states);
@@ -589,36 +585,44 @@ const SortingVisualizer = (props) => {
 		}
 
 		for (let i = 0; i < animations.length; i++) {
-			let state = animations[i][3];
-			let swapIdx1 = animations[i][1];
-			let swapIdx2 = animations[i][2];
+			let state = animations[i][2];
+			let idx1 = animations[i][0];
+			let idx2 = animations[i][1];
 
 			// eslint-disable-next-line no-loop-func
 			if (state === "COMPARING") {
-				prevColor1 = bars[swapIdx1].style.backgroundColor;
-				prevColor2 = bars[swapIdx2].style.backgroundColor;
-				bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
-				bars[swapIdx2].style.backgroundColor = COLOR_COMPARING;
+				prevColor1 = bars[idx1].style.backgroundColor;
+				prevColor2 = bars[idx2].style.backgroundColor;
+				bars[idx1].style.backgroundColor = COLOR_COMPARING;
+				bars[idx2].style.backgroundColor = COLOR_COMPARING;
 			} else if (state === "CASE-LEFT") {
-				bars[swapIdx1].style.backgroundColor = color;
-				bars[swapIdx2].style.backgroundColor = prevColor2;
+				bars[idx1].style.backgroundColor = color;
+				bars[idx2].style.backgroundColor = prevColor2;
 			} else if (state === "CASE-RIGHT-INIT") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
-				bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
+				bars[idx1].style.backgroundColor = COLOR_SWAP;
+				bars[idx2].style.backgroundColor = COLOR_SWAP;
 			} else if (state === "CASE-RIGHT-SHIFT") {
-				for (let j = swapIdx2; j >= swapIdx1; j--) {
-					bars[j].style.height = animations[i][0][j] + "px";
+				let temp = bars[idx2].style.height;
+				for (let g = idx2; g > idx1; g--) {
+					bars[g].style.height = bars[g - 1].style.height;
 					if (heights.length <= 20) {
-						bars[j].children[0].innerHTML = animations[i][0][j];
+						bars[g].children[0].innerHTML = bars[
+							g
+						].style.height.slice(0, temp.indexOf("px"));
 					}
 				}
-				bars[swapIdx2].style.backgroundColor = prevColor1;
-				bars[swapIdx1 + 1].style.backgroundColor = COLOR_SWAP;
+				bars[idx1].style.height = temp;
+				if (heights.length <= 20)
+					bars[idx1].children[0].innerHTML = bars[
+						idx1
+					].style.height.slice(0, temp.indexOf("px"));
+				bars[idx2].style.backgroundColor = prevColor1;
+				bars[idx1 + 1].style.backgroundColor = COLOR_SWAP;
 			} else if (state === "CASE-RIGHT-REVERT") {
-				bars[swapIdx1].style.backgroundColor = color;
-				bars[swapIdx2].style.backgroundColor = prevColor1;
+				bars[idx1].style.backgroundColor = color;
+				bars[idx2].style.backgroundColor = prevColor1;
 			} else if (state === "ONE-SIDE") {
-				bars[swapIdx1].style.backgroundColor = color;
+				bars[idx1].style.backgroundColor = color;
 			} else if (state === "LAST-MERGED") {
 				color = COLOR_SORTED;
 			} else if (state === "MERGED") {
@@ -644,74 +648,60 @@ const SortingVisualizer = (props) => {
 		}
 
 		for (let i = 0; i < animations.length; i++) {
-			let state = animations[i][3];
-			let swapIdx1 = animations[i][1];
-			let swapIdx2 = animations[i][2];
+			let state = animations[i][2];
+			let idx1 = animations[i][0];
+			let idx2 = animations[i][1];
 
 			if (state === "GET-PIVOT") {
-				bars[swapIdx1].style.backgroundColor = COLOR_PIVOT;
+				bars[idx1].style.backgroundColor = COLOR_PIVOT;
 			} else if (state === "COMPARE") {
-				bars[swapIdx1].style.backgroundColor = COLOR_COMPARING;
+				bars[idx1].style.backgroundColor = COLOR_COMPARING;
 			} else if (state === "GREATER") {
-				bars[swapIdx1].style.backgroundColor = COLOR_GREATER;
+				bars[idx1].style.backgroundColor = COLOR_GREATER;
 			} else if (state === "SWAP-1") {
-				// bars[swapIdx1].style.backgroundColor = COLOR_SWAP_LESSER;
-				bars[swapIdx2].style.backgroundColor = COLOR_LESSER;
+				// bars[idx1].style.backgroundColor = COLOR_SWAP_LESSER;
+				bars[idx2].style.backgroundColor = COLOR_LESSER;
 			} else if (state === "SAME-INDEX-1") {
-				bars[swapIdx2].style.backgroundColor = COLOR_LESSER;
+				bars[idx2].style.backgroundColor = COLOR_LESSER;
 			} else if (state === "SAME-INDEX-2") {
-				bars[swapIdx2].style.backgroundColor = COLOR_PIVOT_INDEX;
-				if (swapIdx2 - 1 !== swapIdx1) {
-					bars[swapIdx2 - 1].style.backgroundColor = COLOR_LESSER;
+				bars[idx2].style.backgroundColor = COLOR_PIVOT_INDEX;
+				if (idx2 - 1 !== idx1) {
+					bars[idx2 - 1].style.backgroundColor = COLOR_LESSER;
 				}
 			} else if (state === "SWAP-2") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
-				bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
+				bars[idx1].style.backgroundColor = COLOR_SWAP;
+				bars[idx2].style.backgroundColor = COLOR_SWAP;
 			} else if (state === "SWAP-3") {
-				bars[swapIdx1].style.height = animations[i][0][swapIdx1] + "px";
-				bars[swapIdx2].style.height = animations[i][0][swapIdx2] + "px";
-				if (heights.length <= 20) {
-					bars[swapIdx1].children[0].innerHTML =
-						animations[i][0][swapIdx1];
-					bars[swapIdx2].children[0].innerHTML =
-						animations[i][0][swapIdx2];
-				}
+				handleSwap(idx1, idx2);
 			} else if (state === "SWAP-4") {
-				if (swapIdx1[1] - 1 !== swapIdx1[0]) {
-					bars[swapIdx1[1] - 1].style.backgroundColor = COLOR_LESSER;
+				if (idx1[1] - 1 !== idx1[0]) {
+					bars[idx1[1] - 1].style.backgroundColor = COLOR_LESSER;
 				}
-				bars[swapIdx1[1]].style.backgroundColor = COLOR_PIVOT_INDEX;
-				bars[swapIdx2].style.backgroundColor = COLOR_GREATER;
+				bars[idx1[1]].style.backgroundColor = COLOR_PIVOT_INDEX;
+				bars[idx2].style.backgroundColor = COLOR_GREATER;
 			} else if (state === "SWAP-PIVOT-1") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
-				bars[swapIdx2].style.backgroundColor = COLOR_SWAP;
+				bars[idx1].style.backgroundColor = COLOR_SWAP;
+				bars[idx2].style.backgroundColor = COLOR_SWAP;
 			} else if (state === "SWAP-PIVOT-2") {
-				bars[swapIdx1].style.height = animations[i][0][swapIdx1] + "px";
-				bars[swapIdx2].style.height = animations[i][0][swapIdx2] + "px";
-				if (heights.length <= 20) {
-					bars[swapIdx1].children[0].innerHTML =
-						animations[i][0][swapIdx1];
-					bars[swapIdx2].children[0].innerHTML =
-						animations[i][0][swapIdx2];
-				}
+				handleSwap(idx1, idx2);
 			} else if (state === "SWAP-PIVOT-3") {
-				bars[swapIdx1].style.backgroundColor = COLOR_LESSER;
-				bars[swapIdx2].style.backgroundColor = COLOR_SORTED;
+				bars[idx1].style.backgroundColor = COLOR_LESSER;
+				bars[idx2].style.backgroundColor = COLOR_SORTED;
 			} else if (state === "NO-CHANGE") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
+				bars[idx1].style.backgroundColor = COLOR_SORTED;
 			} else if (state === "REVERT-BOTH") {
-				for (let j = swapIdx1[0]; j < swapIdx2; j++) {
-					if (j === swapIdx1[1]) continue;
+				for (let j = idx1[0]; j < idx2; j++) {
+					if (j === idx1[1]) continue;
 					bars[j].style.backgroundColor = COLOR_DEFAULT;
 				}
 			} else if (state === "REVERT-LEFT") {
-				for (let j = swapIdx1; j < swapIdx2; j++) {
+				for (let j = idx1; j < idx2; j++) {
 					bars[j].style.backgroundColor = COLOR_DEFAULT;
 				}
 			} else if (state === "SORTED-1") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SWAP;
+				bars[idx1].style.backgroundColor = COLOR_SWAP;
 			} else if (state === "SORTED-2") {
-				bars[swapIdx1].style.backgroundColor = COLOR_SORTED;
+				bars[idx1].style.backgroundColor = COLOR_SORTED;
 			} else if (state === "ALL-SORTED") {
 			}
 			handleStoreAllStates(i, states);

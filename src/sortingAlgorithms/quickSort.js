@@ -7,7 +7,8 @@ export function getQuickSortSwapOrder(
 	swapOrderArray = []
 ) {
 	quickSort(arr, left, right, swapOrderArray);
-	swapOrderArray.push([[...arr], left, right, "ALL-SORTED"]);
+	// swapOrderArray.push([[...arr], left, right, "ALL-SORTED"]);
+	swapOrderArray.push([left, right, "ALL-SORTED"]);
 	return swapOrderArray;
 }
 
@@ -17,8 +18,10 @@ function quickSort(arr, left = 0, right = arr.length - 1, swapOrderArray) {
 		quickSort(arr, left, pivotIndex - 1, swapOrderArray);
 		quickSort(arr, pivotIndex + 1, right, swapOrderArray);
 	} else if (left === right) {
-		swapOrderArray.push([[...arr], left, right, "SORTED-1"]); // red left
-		swapOrderArray.push([[...arr], left, right, "SORTED-2"]); // green left
+		// swapOrderArray.push([[...arr], left, right, "SORTED-1"]); // red left
+		swapOrderArray.push([left, right, "SORTED-1"]); // red left
+		// swapOrderArray.push([[...arr], left, right, "SORTED-2"]); // green left
+		swapOrderArray.push([left, right, "SORTED-2"]); // green left
 	}
 	return swapOrderArray;
 }
@@ -27,48 +30,63 @@ function pivotLomuto(arr, start = 0, end = arr.length - 1, swapOrderArray) {
 	let pivot = arr[start];
 	let pivotIndex = start;
 
-	swapOrderArray.push([[...arr], start, end, "GET-PIVOT"]); // red start
+	// swapOrderArray.push([[...arr], start, end, "GET-PIVOT"]); // red start
+	swapOrderArray.push([start, end, "GET-PIVOT"]); // red start
 
 	for (let i = start + 1; i <= end; i++) {
-		swapOrderArray.push([[...arr], i, pivotIndex, "COMPARE"]); // yellow i
+		// swapOrderArray.push([[...arr], i, pivotIndex, "COMPARE"]); // yellow i
+		swapOrderArray.push([i, pivotIndex, "COMPARE"]); // yellow i
 		if (pivot > arr[i]) {
 			pivotIndex++;
 			if (pivotIndex !== i) {
-				swapOrderArray.push([[...arr], pivotIndex, i, "SWAP-1"]); // orange i
-				swapOrderArray.push([[...arr], pivotIndex, i, "SWAP-2"]); // orange pivotIndex
+				// swapOrderArray.push([[...arr], pivotIndex, i, "SWAP-1"]); // orange i
+				swapOrderArray.push([pivotIndex, i, "SWAP-1"]); // orange i
+				// swapOrderArray.push([[...arr], pivotIndex, i, "SWAP-2"]); // orange pivotIndex
+				swapOrderArray.push([pivotIndex, i, "SWAP-2"]); // orange pivotIndex
 				swap(arr, pivotIndex, i);
-				swapOrderArray.push([[...arr], pivotIndex, i, "SWAP-3"]); // swap
-				swapOrderArray.push([
-					[...arr],
-					[start, pivotIndex],
-					i,
-					"SWAP-4",
-				]); // blue, white
+				// swapOrderArray.push([[...arr], pivotIndex, i, "SWAP-3"]); // swap
+				swapOrderArray.push([pivotIndex, i, "SWAP-3"]); // swap
+				// swapOrderArray.push([
+				// 	[...arr],
+				// 	[start, pivotIndex],
+				// 	i,
+				// 	"SWAP-4",
+				// ]); // blue, white
+				swapOrderArray.push([[start, pivotIndex], i, "SWAP-4"]); // blue, white
 			} else {
-				swapOrderArray.push([[...arr], start, i, "SAME-INDEX-1"]); // blue pivotIndex
-				swapOrderArray.push([[...arr], start, i, "SAME-INDEX-2"]); // blue pivotIndex
+				// swapOrderArray.push([[...arr], start, i, "SAME-INDEX-1"]); // blue pivotIndex
+				swapOrderArray.push([start, i, "SAME-INDEX-1"]); // blue pivotIndex
+				// swapOrderArray.push([[...arr], start, i, "SAME-INDEX-2"]); // blue pivotIndex
+				swapOrderArray.push([start, i, "SAME-INDEX-2"]); // blue pivotIndex
 			}
 		} else {
-			swapOrderArray.push([[...arr], i, pivotIndex, "GREATER"]); // white i
+			// swapOrderArray.push([[...arr], i, pivotIndex, "GREATER"]); // white i
+			swapOrderArray.push([i, pivotIndex, "GREATER"]); // white i
 		}
 	}
 	if (pivotIndex !== start) {
-		swapOrderArray.push([[...arr], start, pivotIndex, "SWAP-PIVOT-1"]); // red pivotIndex
+		// swapOrderArray.push([[...arr], start, pivotIndex, "SWAP-PIVOT-1"]); // red pivotIndex
+		swapOrderArray.push([start, pivotIndex, "SWAP-PIVOT-1"]); // red pivotIndex
 		swap(arr, start, pivotIndex);
-		swapOrderArray.push([[...arr], start, pivotIndex, "SWAP-PIVOT-2"]); // swap
-		swapOrderArray.push([[...arr], start, pivotIndex, "SWAP-PIVOT-3"]); // blue, green
+		// swapOrderArray.push([[...arr], start, pivotIndex, "SWAP-PIVOT-2"]); // swap
+		swapOrderArray.push([start, pivotIndex, "SWAP-PIVOT-2"]); // swap
+		// swapOrderArray.push([[...arr], start, pivotIndex, "SWAP-PIVOT-3"]); // blue, green
+		swapOrderArray.push([start, pivotIndex, "SWAP-PIVOT-3"]); // blue, green
 	} else {
-		swapOrderArray.push([[...arr], start, pivotIndex, "NO-CHANGE"]); // green start
+		// swapOrderArray.push([[...arr], start, pivotIndex, "NO-CHANGE"]); // green start
+		swapOrderArray.push([start, pivotIndex, "NO-CHANGE"]); // green start
 	}
 	if (pivotIndex !== end) {
-		swapOrderArray.push([
-			[...arr],
-			[start, pivotIndex],
-			end + 1,
-			"REVERT-BOTH",
-		]);
+		// swapOrderArray.push([
+		// 	[...arr],
+		// 	[start, pivotIndex],
+		// 	end + 1,
+		// 	"REVERT-BOTH",
+		// ]);
+		swapOrderArray.push([[start, pivotIndex], end + 1, "REVERT-BOTH"]);
 	} else {
-		swapOrderArray.push([[...arr], start, pivotIndex, "REVERT-LEFT"]);
+		// swapOrderArray.push([[...arr], start, pivotIndex, "REVERT-LEFT"]);
+		swapOrderArray.push([start, pivotIndex, "REVERT-LEFT"]);
 	}
 	return pivotIndex;
 }
@@ -88,7 +106,8 @@ function pivotHoare(arr, start = 0, end = arr.length - 1, swapOrderArray) {
 	let i = start;
 	let j = end;
 
-	swapOrderArray.push([[...arr], mid, mid, "GET-PIVOT"]);
+	// swapOrderArray.push([[...arr], mid, mid, "GET-PIVOT"]);
+	swapOrderArray.push([mid, mid, "GET-PIVOT"]);
 
 	while (true) {
 		while (arr[i] < pivot) {

@@ -2,6 +2,7 @@
 	display: flex;
 	justify-content: space-around;
 	align-items: flex-start;
+	/* align-items: stretch; */
 	width: 60%;
 	margin: 1.3rem auto;
 }
@@ -18,7 +19,7 @@ input[type="number"] {
 	color: #e0e0e2;
 	background-color: #2b4162;
 	width: 30%;
-	padding: 0.5rem 0.5rem;
+	padding: 0.8rem 0.5rem;
 	margin-top: 0;
 	height: 100%;
 	align-self: center;

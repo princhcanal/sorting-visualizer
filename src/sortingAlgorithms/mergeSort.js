@@ -49,7 +49,8 @@ export function mergeSortIterative(arr) {
 		result = temp;
 	}
 	// return result[0];
-	swapOrderArray.push([[...arr], 0, 0, "ALL-SORTED"]);
+	// swapOrderArray.push([[...arr], 0, 0, "ALL-SORTED"]);
+	swapOrderArray.push([0, 0, "ALL-SORTED"]);
 	return swapOrderArray;
 }
 
@@ -62,60 +63,71 @@ function mergeIterative(arr, arr1, arr2, start, mid, end, swapOrderArray) {
 	let isLast = false;
 
 	if (start === 0 && end === arr.length - 1) {
-		swapOrderArray.push([[...arr], start, end, "LAST-MERGED"]);
+		// swapOrderArray.push([[...arr], start, end, "LAST-MERGED"]);
+		swapOrderArray.push([start, end, "LAST-MERGED"]);
 		isLast = true;
 	}
 
 	while (i < arr1.length && j < arr2.length) {
-		swapOrderArray.push([[...arr], compIdx1, compIdx2, "COMPARING"]);
+		// swapOrderArray.push([[...arr], compIdx1, compIdx2, "COMPARING"]);
+		swapOrderArray.push([compIdx1, compIdx2, "COMPARING"]);
 		if (arr1[i] < arr2[j]) {
-			swapOrderArray.push([[...arr], compIdx1++, compIdx2, "CASE-LEFT"]);
+			// swapOrderArray.push([[...arr], compIdx1++, compIdx2, "CASE-LEFT"]);
+			swapOrderArray.push([compIdx1++, compIdx2, "CASE-LEFT"]);
 			res.push(arr1[i]);
 			i++;
 		} else {
-			swapOrderArray.push([
-				[...arr],
-				compIdx1,
-				compIdx2,
-				"CASE-RIGHT-INIT",
-			]);
+			// swapOrderArray.push([
+			// 	[...arr],
+			// 	compIdx1,
+			// 	compIdx2,
+			// 	"CASE-RIGHT-INIT",
+			// ]);
+			swapOrderArray.push([compIdx1, compIdx2, "CASE-RIGHT-INIT"]);
 			let temp = arr[compIdx2];
 			for (let k = compIdx2; k > compIdx1; k--) {
 				arr[k] = arr[k - 1];
 			}
 			arr[compIdx1] = temp;
-			swapOrderArray.push([
-				[...arr],
-				compIdx1,
-				compIdx2++,
-				"CASE-RIGHT-SHIFT",
-			]);
-			swapOrderArray.push([
-				[...arr],
-				compIdx1,
-				++compIdx1,
-				"CASE-RIGHT-REVERT",
-			]);
+			// swapOrderArray.push([
+			// 	[...arr],
+			// 	compIdx1,
+			// 	compIdx2++,
+			// 	"CASE-RIGHT-SHIFT",
+			// ]);
+			swapOrderArray.push([compIdx1, compIdx2++, "CASE-RIGHT-SHIFT"]);
+			// swapOrderArray.push([
+			// 	[...arr],
+			// 	compIdx1,
+			// 	++compIdx1,
+			// 	"CASE-RIGHT-REVERT",
+			// ]);
+			swapOrderArray.push([compIdx1, ++compIdx1, "CASE-RIGHT-REVERT"]);
 			res.push(arr2[j]);
 			j++;
 		}
 	}
 
 	while (i < arr1.length) {
-		swapOrderArray.push([[...arr], compIdx1, compIdx2, "ONE-SIDE"]);
+		// swapOrderArray.push([[...arr], compIdx1, compIdx2, "ONE-SIDE"]);
+		swapOrderArray.push([compIdx1, compIdx2, "ONE-SIDE"]);
 		res.push(arr1[i]);
 		i++;
 		compIdx1++;
 	}
 
 	while (j < arr2.length) {
-		swapOrderArray.push([[...arr], compIdx2, compIdx1, "ONE-SIDE"]);
+		// swapOrderArray.push([[...arr], compIdx2, compIdx1, "ONE-SIDE"]);
+		swapOrderArray.push([compIdx2, compIdx1, "ONE-SIDE"]);
 		res.push(arr2[j]);
 		j++;
 		compIdx2++;
 	}
 
-	if (!isLast) swapOrderArray.push([[...arr], start, end, "MERGED"]);
+	if (!isLast) {
+		// swapOrderArray.push([[...arr], start, end, "MERGED"]);
+		swapOrderArray.push([start, end, "MERGED"]);
+	}
 
 	return [res, start, end];
 }
@@ -124,7 +136,8 @@ export function getMergeSortRecursiveSwapOrder(arr) {
 	const swapOrderArray = [];
 	if (arr.length <= 1) return arr;
 	mergeSortHelper(arr, 0, arr.length - 1, swapOrderArray);
-	swapOrderArray.push([[...arr], 0, arr.length - 1, "ALL-SORTED"]);
+	// swapOrderArray.push([[...arr], 0, arr.length - 1, "ALL-SORTED"]);
+	swapOrderArray.push([0, arr.length - 1, "ALL-SORTED"]);
 	return swapOrderArray;
 }
 
@@ -143,52 +156,63 @@ function mergeRecursive(arr, start, mid, end, swapOrderArray) {
 	let compIdx2 = mid + 1;
 	let isLast = false;
 	if (start === 0 && end === arr.length - 1) {
-		swapOrderArray.push([[...arr], start, end, "LAST-MERGED"]);
+		// swapOrderArray.push([[...arr], start, end, "LAST-MERGED"]);
+		swapOrderArray.push([start, end, "LAST-MERGED"]);
 		isLast = true;
 	}
 
 	while (i <= mid && j <= end) {
-		swapOrderArray.push([[...arr], compIdx1, compIdx2, "COMPARING"]);
+		// swapOrderArray.push([[...arr], compIdx1, compIdx2, "COMPARING"]);
+		swapOrderArray.push([compIdx1, compIdx2, "COMPARING"]);
 		if (arr[compIdx1] <= arr[compIdx2]) {
-			swapOrderArray.push([[...arr], compIdx1++, compIdx2, "CASE-LEFT"]);
+			// swapOrderArray.push([[...arr], compIdx1++, compIdx2, "CASE-LEFT"]);
+			swapOrderArray.push([compIdx1++, compIdx2, "CASE-LEFT"]);
 			i++;
 		} else {
-			swapOrderArray.push([
-				[...arr],
-				compIdx1,
-				compIdx2,
-				"CASE-RIGHT-INIT",
-			]);
+			// swapOrderArray.push([
+			// 	[...arr],
+			// 	compIdx1,
+			// 	compIdx2,
+			// 	"CASE-RIGHT-INIT",
+			// ]);
+			swapOrderArray.push([compIdx1, compIdx2, "CASE-RIGHT-INIT"]);
 			let temp = arr[compIdx2];
 			for (let g = compIdx2; g > compIdx1; g--) {
 				arr[g] = arr[g - 1];
 			}
 			arr[compIdx1] = temp;
-			swapOrderArray.push([
-				[...arr],
-				compIdx1,
-				compIdx2++,
-				"CASE-RIGHT-SHIFT",
-			]);
-			swapOrderArray.push([
-				[...arr],
-				compIdx1,
-				++compIdx1,
-				"CASE-RIGHT-REVERT",
-			]);
+			// swapOrderArray.push([
+			// 	[...arr],
+			// 	compIdx1,
+			// 	compIdx2++,
+			// 	"CASE-RIGHT-SHIFT",
+			// ]);
+			swapOrderArray.push([compIdx1, compIdx2++, "CASE-RIGHT-SHIFT"]);
+			// swapOrderArray.push([
+			// 	[...arr],
+			// 	compIdx1,
+			// 	++compIdx1,
+			// 	"CASE-RIGHT-REVERT",
+			// ]);
+			swapOrderArray.push([compIdx1, ++compIdx1, "CASE-RIGHT-REVERT"]);
 			j++;
 		}
 	}
 	while (i <= mid) {
-		swapOrderArray.push([[...arr], compIdx1, compIdx1, "ONE-SIDE"]);
+		// swapOrderArray.push([[...arr], compIdx1, compIdx1, "ONE-SIDE"]);
+		swapOrderArray.push([compIdx1, compIdx1, "ONE-SIDE"]);
 		compIdx1++;
 		i++;
 	}
 	while (j <= end) {
-		swapOrderArray.push([[...arr], compIdx2, compIdx2, "ONE-SIDE"]);
+		// swapOrderArray.push([[...arr], compIdx2, compIdx2, "ONE-SIDE"]);
+		swapOrderArray.push([compIdx2, compIdx2, "ONE-SIDE"]);
 		compIdx2++;
 		j++;
 	}
 
-	if (!isLast) swapOrderArray.push([[...arr], start, end, "MERGED"]);
+	if (!isLast) {
+		// swapOrderArray.push([[...arr], start, end, "MERGED"]);
+		swapOrderArray.push([start, end, "MERGED"]);
+	}
 }

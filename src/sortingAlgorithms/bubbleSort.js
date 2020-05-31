@@ -11,23 +11,29 @@ export function bubbleSort(arr) {
 				noSwaps = false;
 				isSwap = true;
 			}
-			swapOrderArr.push([[...arr], j, j + 1, "COMPARING"]);
+			// swapOrderArr.push([[...arr], j, j + 1, "COMPARING"]);
+			swapOrderArr.push([j, j + 1, "COMPARING"]);
 			if (isSwap) {
-				swapOrderArr.push([[...arr], j, j + 1, "SWAPPING-1"]);
-				swapOrderArr.push([[...arr], j, j + 1, "SWAPPING-2"]);
+				// swapOrderArr.push([[...arr], j, j + 1, "SWAPPING-1"]);
+				swapOrderArr.push([j, j + 1, "SWAPPING-1"]);
+				// swapOrderArr.push([[...arr], j, j + 1, "SWAPPING-2"]);
+				swapOrderArr.push([j, j + 1, "SWAPPING-2"]);
 			}
 			isSwap = false;
 		}
-		swapOrderArr.push([[...arr], j - 1, j, "LAST-SORTED"]);
+		// swapOrderArr.push([[...arr], j - 1, j, "LAST-SORTED"]);
+		swapOrderArr.push([j - 1, j, "LAST-SORTED"]);
 		if (noSwaps) {
 			for (let k = 0; k < j; k++) {
-				swapOrderArr.push([[...arr], k, j, "NO-SWAPS"]);
+				// swapOrderArr.push([[...arr], k, j, "NO-SWAPS"]);
+				swapOrderArr.push([k, j, "NO-SWAPS"]);
 			}
 			break;
 		}
 	}
 
-	swapOrderArr.push([[...arr], 0, 0, "ALL-SORTED"]);
+	// swapOrderArr.push([[...arr], 0, 0, "ALL-SORTED"]);
+	swapOrderArr.push([0, 0, "ALL-SORTED"]);
 
 	return swapOrderArr;
 	// return arr;

@@ -49,7 +49,11 @@ let Bars = (props, ref) => {
 	if (props.heights) {
 		bars = props.heights.map((randHeight, i) => {
 			return (
-				<Bar key={i} height={randHeight}>
+				<Bar
+					key={i}
+					height={randHeight}
+					moreMargin={props.heights.length <= 50}
+				>
 					{props.showHeights && randHeight}
 				</Bar>
 			);

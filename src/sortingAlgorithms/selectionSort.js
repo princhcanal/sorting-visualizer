@@ -2,9 +2,11 @@ export function selectionSort(arr) {
 	let swapOrderArr = [];
 	for (let i = 0; i < arr.length; i++) {
 		let min = i;
-		swapOrderArr.push([[...arr], i, min, "GET-INITIAL"]);
+		// swapOrderArr.push([[...arr], i, min, "GET-INITIAL"]);
+		swapOrderArr.push([i, min, "GET-INITIAL"]);
 		for (let j = i + 1; j < arr.length; j++) {
-			swapOrderArr.push([[...arr], j, min, "CHECK-MIN"]);
+			// swapOrderArr.push([[...arr], j, min, "CHECK-MIN"]);
+			swapOrderArr.push([j, min, "CHECK-MIN"]);
 			if (arr[j] < arr[min]) {
 				let prevMin;
 				if (min === i) {
@@ -13,22 +15,29 @@ export function selectionSort(arr) {
 					prevMin = min;
 				}
 				min = j;
-				swapOrderArr.push([[...arr], j, prevMin, "CHANGE-MIN"]);
+				// swapOrderArr.push([[...arr], j, prevMin, "CHANGE-MIN"]);
+				swapOrderArr.push([j, prevMin, "CHANGE-MIN"]);
 			} else {
-				swapOrderArr.push([[...arr], j, min, "CHANGE-BACK"]);
+				// swapOrderArr.push([[...arr], j, min, "CHANGE-BACK"]);
+				swapOrderArr.push([j, min, "CHANGE-BACK"]);
 			}
 		}
 		if (min !== i) {
-			swapOrderArr.push([[...arr], i, min, "SWAPPING-1"]);
+			// swapOrderArr.push([[...arr], i, min, "SWAPPING-1"]);
+			swapOrderArr.push([i, min, "SWAPPING-1"]);
 			swap(arr, i, min);
-			swapOrderArr.push([[...arr], i, min, "SWAPPING-2"]);
-			swapOrderArr.push([[...arr], i, min, "SWAPPING-3"]);
+			// swapOrderArr.push([[...arr], i, min, "SWAPPING-2"]);
+			swapOrderArr.push([i, min, "SWAPPING-2"]);
+			// swapOrderArr.push([[...arr], i, min, "SWAPPING-3"]);
+			swapOrderArr.push([i, min, "SWAPPING-3"]);
 		} else {
-			swapOrderArr.push([[...arr], i, min, "NO-SWAP"]);
+			// swapOrderArr.push([[...arr], i, min, "NO-SWAP"]);
+			swapOrderArr.push([i, min, "NO-SWAP"]);
 		}
 	}
 
-	swapOrderArr.push([[...arr], null, null, "ALL-SORTED"]);
+	// swapOrderArr.push([[...arr], null, null, "ALL-SORTED"]);
+	swapOrderArr.push([null, null, "ALL-SORTED"]);
 	return swapOrderArr;
 	// return arr;
 }
