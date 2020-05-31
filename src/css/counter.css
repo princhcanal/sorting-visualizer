@@ -1,7 +1,7 @@
 .counter {
 	display: flex;
 	justify-content: space-around;
-	align-items: center;
+	align-items: flex-start;
 	width: 60%;
 	margin: 1.3rem auto 1rem;
 }
@@ -21,4 +21,5 @@ input[type="number"] {
 	padding: 0.5rem 0.5rem;
 	margin-top: 0;
 	height: 100%;
+	align-self: center;
 }

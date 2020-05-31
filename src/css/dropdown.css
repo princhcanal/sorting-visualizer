@@ -3,10 +3,11 @@
 	background-color: #fa9f42;
 	color: #e0e0e2;
 	border-radius: 1rem;
-	padding: 0.6rem 0 0rem;
+	padding: 0.6rem 0 1rem;
 	margin-bottom: 2rem;
 	cursor: pointer;
 	box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
+	position: relative;
 }
 
 .dropdown:last-child {
@@ -37,10 +38,14 @@ label {
 .dropdown ul {
 	width: 100%;
 	background-color: #721817;
-	border-bottom-left-radius: 1rem;
-	border-bottom-right-radius: 1rem;
+	/* border-bottom-left-radius: 1rem;
+	border-bottom-right-radius: 1rem; */
+	border-radius: 1rem;
 	overflow: hidden;
 	transition: all 0.3s ease-out;
+	position: absolute;
+	top: 80%;
+	z-index: 20;
 }
 
 .dropdown.small ul {

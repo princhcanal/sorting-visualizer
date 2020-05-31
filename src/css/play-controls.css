@@ -21,7 +21,7 @@
 	height: 4.5rem;
 }
 
-.play-controls .buttons > * {
+.play-controls .buttons svg {
 	width: 30%;
 }
 

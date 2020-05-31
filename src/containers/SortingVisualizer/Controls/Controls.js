@@ -103,7 +103,7 @@ let Controls = (props, ref) => {
 					label="Implementation"
 					defaultValue={defaultValue}
 					options={configurations}
-					height={props.configs.length * 3.2 + "rem"}
+					height={props.configs.length * 3.55 + "rem"}
 				></Dropdown>
 			</Card>
 			{/* <Card>

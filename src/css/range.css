@@ -65,7 +65,9 @@ input[type="range"]::-moz-range-track {
 .range-labels {
 	display: flex;
 	justify-content: space-between;
-	font-size: 0.7rem;
+	font-size: 1rem;
+	font-weight: 700;
+	color: #721817;
 }
 
 .range-labels p {

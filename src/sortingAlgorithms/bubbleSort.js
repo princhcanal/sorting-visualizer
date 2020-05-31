@@ -12,11 +12,9 @@ export function bubbleSort(arr) {
 				isSwap = true;
 			}
 			swapOrderArr.push([[...arr], j, j + 1, "COMPARING"]);
-			// swapOrderArr.push([[...arr], j, j + 1, "RESET"]);
 			if (isSwap) {
 				swapOrderArr.push([[...arr], j, j + 1, "SWAPPING-1"]);
 				swapOrderArr.push([[...arr], j, j + 1, "SWAPPING-2"]);
-				// swapOrderArr.push([[...arr], j, j + 1, "SWAPPING-3"]);
 			}
 			isSwap = false;
 		}

@@ -34,10 +34,8 @@ const MIN_HEIGHT = 25;
 const MAX_HEIGHT = 300;
 let SORTING_SPEED = 5;
 const NUM_BARS = 100;
-const randomNum = getRandomNum(0, RANDOM_COLORS.length - 1);
 
 // TODO: add range to play controls
-// TODO: try to optimize sorts by removing array
 // TODO: shell sort
 // TODO: radix sort
 // TODO: heap sort
@@ -56,16 +54,13 @@ const SortingVisualizer = (props) => {
 	const [showHeights, setShowHeights] = useState(false);
 	const [legend, setLegend] = useState([{}]);
 	const [swapOrder, setSwapOrder] = useState([]);
-	const [originalSwapOrder, setOriginalSwapOrder] = useState([]);
 	const [setTimeouts, setSetTimeouts] = useState([]);
 	const [paused, setPaused] = useState(true);
 	const [allStates, setAllStates] = useState([]);
 
 	const barsContainer = useRef();
 	const errorMessage = useRef();
-	const indexPaused = useRef();
-	const indexPausedOriginal = useRef(0);
-	const colorCount = useRef();
+	const indexPaused = useRef(0);
 	const range = useRef();
 
 	useEffect(() => {
@@ -94,14 +89,15 @@ const SortingVisualizer = (props) => {
 
 	useEffect(() => {
 		if (!paused && sortingFunction) {
-			let pausedIdxOriginal = indexPausedOriginal.current;
+			let pausedIdxOriginal = indexPaused.current;
 			if (pausedIdxOriginal < 0) {
 				pausedIdxOriginal = 0;
 			}
+
 			if (allStates.length === 0) {
 				handleRevertState(randomHeights);
 				sortingFunction(
-					originalSwapOrder.slice(pausedIdxOriginal),
+					swapOrder.slice(pausedIdxOriginal),
 					randomHeights,
 					sortingSpeed,
 					setTimeouts,
@@ -134,9 +130,9 @@ const SortingVisualizer = (props) => {
 		setRandomHeights(newRandomHeights);
 		setSetTimeouts([]);
 		setSwapOrder([]);
-		setOriginalSwapOrder([]);
 		setAllStates([]);
-		indexPausedOriginal.current = -1;
+		indexPaused.current = 0;
+		indexPaused.current = -1;
 		range.current.value = 0;
 	};
 
@@ -192,6 +188,15 @@ const SortingVisualizer = (props) => {
 			errorMessage.current.classList.add("show-error");
 			setDisableControls(true);
 		}
+		handlePause(setTimeouts);
+		setChangeToDefault(true);
+		setRandomHeights(randomHeights);
+		setSetTimeouts([]);
+		setSwapOrder([]);
+		setAllStates([]);
+		indexPaused.current = 0;
+		indexPaused.current = -1;
+		range.current.value = 0;
 	};
 
 	const handleChangeSortingSpeed = (event) => {
@@ -204,7 +209,7 @@ const SortingVisualizer = (props) => {
 	};
 
 	const handlePause = (timeouts) => {
-		let pausedIdxOriginal = indexPausedOriginal.current;
+		let pausedIdxOriginal = indexPaused.current;
 		for (let i = pausedIdxOriginal; i < timeouts.length; i++) {
 			clearTimeout(timeouts[i]);
 		}
@@ -214,7 +219,7 @@ const SortingVisualizer = (props) => {
 
 	const handleStep = (timeouts, direction) => {
 		handlePause(timeouts);
-		let pausedIdx = indexPausedOriginal.current;
+		let pausedIdx = indexPaused.current;
 		let idx1, idx2;
 		if (
 			direction === "+" &&
@@ -228,7 +233,7 @@ const SortingVisualizer = (props) => {
 				barsContainer.current.classList.remove("sorted");
 			idx1 = pausedIdx - 1;
 			idx2 = pausedIdx;
-			indexPausedOriginal.current = pausedIdx - 1;
+			indexPaused.current = pausedIdx - 1;
 			range.current.value = pausedIdx - 1;
 		} else {
 			barsContainer.current.playControls.classList.remove("shake");
@@ -251,8 +256,8 @@ const SortingVisualizer = (props) => {
 	const handleSliderChange = (event) => {
 		if (isSorting) {
 			handlePause(setTimeouts);
-			indexPausedOriginal.current = Number(event.target.value);
-			let pausedIdx = indexPausedOriginal.current;
+			indexPaused.current = Number(event.target.value);
+			let pausedIdx = indexPaused.current;
 			setIsSorting(true);
 			handleAnimateStates(
 				pausedIdx,
@@ -264,8 +269,8 @@ const SortingVisualizer = (props) => {
 			);
 			setPaused(false);
 		} else {
-			indexPausedOriginal.current = Number(event.target.value);
-			let pausedIdx = indexPausedOriginal.current;
+			indexPaused.current = Number(event.target.value);
+			let pausedIdx = indexPaused.current;
 			handleAnimateStates(
 				pausedIdx,
 				pausedIdx + 1,
@@ -278,19 +283,19 @@ const SortingVisualizer = (props) => {
 	};
 
 	const handleSort = (config, heights) => {
-		let pausedIdx = indexPausedOriginal.current;
+		let pausedIdx = indexPaused.current;
 		if (pausedIdx >= allStates.length - 1 && pausedIdx !== -1) {
 			setRandomHeights(heights.sort((a, b) => a - b));
 			setSetTimeouts([]);
 			setAllStates([]);
-			indexPausedOriginal.current = -1;
+			indexPaused.current = 0;
+			indexPaused.current = -1;
 			range.current.value = 0;
 			let swapOrderArray = config.implementation(
 				[...heights],
 				...config.args
 			);
 			setSwapOrder(swapOrderArray);
-			setOriginalSwapOrder(swapOrderArray);
 			setPaused(false);
 			return;
 		}
@@ -304,7 +309,6 @@ const SortingVisualizer = (props) => {
 				...config.args
 			);
 			setSwapOrder(swapOrderArray);
-			setOriginalSwapOrder(swapOrderArray);
 		}
 	};
 
@@ -343,9 +347,8 @@ const SortingVisualizer = (props) => {
 			if (i === states.length - 1) {
 				timeouts.push(
 					setTimeout(() => {
-						indexPaused.current.innerHTML = Number(i);
 						if (direction === "+") {
-							range.current.value = ++indexPausedOriginal.current;
+							range.current.value = ++indexPaused.current;
 						}
 						for (let j = 0; j < bars.length; j++) {
 							let height = states[i][j].height;
@@ -366,9 +369,8 @@ const SortingVisualizer = (props) => {
 			}
 			timeouts.push(
 				setTimeout(() => {
-					indexPaused.current.innerHTML = Number(i);
 					if (direction === "+") {
-						range.current.value = ++indexPausedOriginal.current;
+						range.current.value = ++indexPaused.current;
 					}
 					for (let j = 0; j < bars.length; j++) {
 						let height = states[i][j].height;
@@ -393,9 +395,8 @@ const SortingVisualizer = (props) => {
 		// // setRandomHeights(heights.sort((a, b) => a - b));
 		// setSetTimeouts([]);
 		setPaused(true);
-		// setSwapOrder([]);
 		// // setAllStates([]);
-		// indexPausedOriginal.current.innerHTML = -1;
+		// indexPaused.current.innerHTML = -1;
 	};
 
 	const handleBubbleSort = (animations, heights, speed, timeouts, states) => {
@@ -429,12 +430,7 @@ const SortingVisualizer = (props) => {
 					bars[swapIdx2].children[0].innerHTML =
 						animations[i][0][swapIdx2];
 				}
-			}
-			// else if (state === "SWAPPING-3") {
-			// 	bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
-			// 	bars[swapIdx2].style.backgroundColor = COLOR_DEFAULT;
-			// }
-			else if (state === "LAST-SORTED") {
+			} else if (state === "LAST-SORTED") {
 				if (animations[i + 1][3] === "NO-SWAPS") {
 					if (swapIdx1 >= 0)
 						bars[swapIdx1].style.backgroundColor = COLOR_DEFAULT;
@@ -772,9 +768,9 @@ const SortingVisualizer = (props) => {
 			setIsSorting(false);
 			setSetTimeouts([]);
 			setPaused(true);
-			setSwapOrder([]);
 			setAllStates([]);
-			indexPausedOriginal.current = -1;
+			indexPaused.current = 0;
+			indexPaused.current = -1;
 			range.current.value = 0;
 		}
 	};
@@ -787,9 +783,9 @@ const SortingVisualizer = (props) => {
 				setIsSorting(false);
 				setSetTimeouts([]);
 				setPaused(true);
-				setSwapOrder([]);
 				setAllStates([]);
-				indexPausedOriginal.current = -1;
+				indexPaused.current = 0;
+				indexPaused.current = -1;
 				range.current.value = 0;
 			}
 			return config;
@@ -811,17 +807,11 @@ const SortingVisualizer = (props) => {
 	// 	// 		barsDOM[i].style.height === sortedRandomHeights[i] + "px"
 	// 	// 	);
 	// 	// }
-	// 	console.log(
-	// 		indexPausedOriginal.current,
-	// 		range.current.value,
-	// 		allStates.length
-	// 	);
+	// 	console.log(sortingFunction, indexPaused.current);
 	// };
 
 	return (
-		// <div className={classes.SortingVisualizer}
 		<div className="SortingVisualizer">
-			{/* <div className={classes.Bars}> */}
 			<div className="Bars">
 				<Bars
 					ref={barsContainer}
@@ -840,7 +830,7 @@ const SortingVisualizer = (props) => {
 					generateNewArray={handleGenerateNewArray}
 					sort={handleSort}
 					sliderChanged={handleSliderChange}
-					index={indexPausedOriginal.current}
+					index={indexPaused.current}
 				></Bars>
 				<input
 					type="range"
@@ -849,31 +839,23 @@ const SortingVisualizer = (props) => {
 					min={0}
 					max={allStates.length - 1}
 					step={1}
-					value={indexPausedOriginal.current}
-					// disabled={allStates.length === 0}
+					value={indexPaused.current}
 					id="playRange"
 					name="playRange"
 					onChange={(e) => handleSliderChange(e)}
+					disabled={disableControls}
 				/>
 			</div>
-			{/* <div className={classes.Controls}> */}
 			<div className="Controls">
 				<Controls
 					ref={errorMessage}
 					size={numBars}
 					speed={sortingSpeed}
-					// disableControls={isSorting}
 					configs={sortingConfigs}
 					changedArraySize={handleChangeArraySize}
 					changedSortingSpeed={handleChangeSortingSpeed}
 					changedSortingConfig={handleChangeSortingConfig}
 				/>
-			</div>
-			<div className="hide" ref={indexPaused}>
-				{0}
-			</div>
-			<div className="hide" ref={colorCount}>
-				{randomNum}
 			</div>
 			{/* <Button clicked={handleTestAlgorithms}>Test</Button> */}
 		</div>

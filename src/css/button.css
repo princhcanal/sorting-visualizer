@@ -41,6 +41,11 @@
 	font-size: 1rem;
 }
 
+.button::selection {
+	color: inherit;
+	background-color: transparent;
+}
+
 .button.play-control {
 	padding: 1rem 1.5rem;
 	width: 50%;
