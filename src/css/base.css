@@ -17,6 +17,7 @@ body {
 body {
 	font-family: Raleway;
 	background-color: #2b4162;
+	padding-bottom: 3rem;
 }
 
 ul {
@@ -48,6 +49,12 @@ input[type="number"] {
 :disabled {
 	opacity: 80%;
 	cursor: not-allowed;
+}
+
+@media (hover: none) {
+	:disabled {
+		opacity: 95%;
+	}
 }
 
 ::-moz-selection {

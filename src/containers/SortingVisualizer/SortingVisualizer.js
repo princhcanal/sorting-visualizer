@@ -3,31 +3,9 @@ import React, { useState, useEffect, useRef } from "react";
 import Bars from "./Bars/Bars";
 import Controls from "./Controls/Controls";
 import { getRandomNum } from "../../utilities/numbers";
-import {
-	RANDOM_COLORS,
-	COLOR_DEFAULT,
-	COLOR_COMPARING,
-	COLOR_SWAP,
-	COLOR_SORTED,
-	COLOR_PIVOT,
-	COLOR_PIVOT_INDEX,
-	COLOR_GREATER,
-	COLOR_LESSER,
-} from "../../utilities/colors";
-import {
-	bubbleSortLegend,
-	selectionSortLegend,
-	insertionSortLegend,
-	mergeSortLegend,
-	quickSortLegend,
-} from "../../utilities/legends";
-import {
-	bubbleSortConfigs,
-	selectionSortConfigs,
-	insertionSortConfigs,
-	mergeSortConfigs,
-	quickSortConfigs,
-} from "../../utilities/sortingConfigs";
+import colors, { RANDOM_COLORS } from "../../utilities/colors";
+import Legends from "../../utilities/legends";
+import Configs from "../../utilities/sortingConfigs";
 // import Button from "../../components/UI/Button/Button";
 
 const MIN_HEIGHT = 25;
@@ -46,9 +24,8 @@ const SortingVisualizer = (props) => {
 	const [numBars, setNumBars] = useState(NUM_BARS);
 	const [sortingSpeed, setSortingSpeed] = useState(SORTING_SPEED);
 	const [prevSortingSpeed, setPrevSortingSpeed] = useState(SORTING_SPEED);
-	const [sortingFunction, setSortingFunction] = useState();
 	const [changeToDefault, setChangeToDefault] = useState(false);
-	const [sortingConfig, setSortingConfig] = useState({});
+	const [sortingConfig, setSortingConfig] = useState();
 	const [sortingConfigs, setSortingConfigs] = useState([]);
 	const [showHeights, setShowHeights] = useState(false);
 	const [legend, setLegend] = useState([{}]);
@@ -82,12 +59,7 @@ const SortingVisualizer = (props) => {
 	}, [randomHeights]);
 
 	useEffect(() => {
-		setSortingFunction(() => sortingFunction);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [randomHeights]);
-
-	useEffect(() => {
-		if (!paused && sortingFunction) {
+		if (!paused) {
 			let pausedIdxOriginal = indexPaused.current;
 			if (pausedIdxOriginal < 0) {
 				pausedIdxOriginal = 0;
@@ -95,7 +67,7 @@ const SortingVisualizer = (props) => {
 
 			if (allStates.length === 0) {
 				handleRevertState(randomHeights);
-				sortingFunction(
+				handleAnimations(
 					swapOrder.slice(pausedIdxOriginal),
 					randomHeights,
 					sortingSpeed,
@@ -139,7 +111,7 @@ const SortingVisualizer = (props) => {
 		if (changeToDefault && !disableControls) {
 			let bars = barsContainer.current.children;
 			for (let i = 0; i < numBars; i++) {
-				bars[i].style.backgroundColor = COLOR_DEFAULT;
+				bars[i].style.backgroundColor = colors.COLOR_DEFAULT;
 			}
 		}
 	};
@@ -303,7 +275,7 @@ const SortingVisualizer = (props) => {
 			return;
 		}
 		setPaused(false);
-		if (!sortingFunction) {
+		if (!sortingConfig) {
 			handleChangeSortingFunction("Merge Sort");
 		}
 		if (swapOrder.length === 0) {
@@ -329,7 +301,7 @@ const SortingVisualizer = (props) => {
 		let bars = barsContainer.current.children;
 		for (let j = 0; j < bars.length; j++) {
 			bars[j].style.height = heights[j] + "px";
-			bars[j].style.backgroundColor = COLOR_DEFAULT;
+			bars[j].style.backgroundColor = colors.COLOR_DEFAULT;
 			if (bars.length <= 20) bars[j].children[0].innerHTML = heights[j];
 		}
 	};
@@ -347,29 +319,6 @@ const SortingVisualizer = (props) => {
 		let bars = barsContainer.current.children;
 		let speedMultiplier = 0;
 		for (let i = start; i < end; i++) {
-			if (i === states.length - 1) {
-				timeouts.push(
-					setTimeout(() => {
-						if (direction === "+") {
-							range.current.value = ++indexPaused.current;
-						}
-						for (let j = 0; j < bars.length; j++) {
-							let height = states[i][j].height;
-							bars[j].style.height = height;
-							bars[j].style.backgroundColor = states[i][j].color;
-							if (bars.length <= 20)
-								bars[
-									j
-								].children[0].innerHTML = height.substring(
-									0,
-									height.indexOf("px")
-								);
-						}
-						handleAllSorted(heights);
-					}, speed * speedMultiplier++)
-				);
-				break;
-			}
 			timeouts.push(
 				setTimeout(() => {
 					if (direction === "+") {
@@ -384,6 +333,9 @@ const SortingVisualizer = (props) => {
 								0,
 								height.indexOf("px")
 							);
+					}
+					if (i === states.length - 1) {
+						handleAllSorted(heights);
 					}
 				}, speed * speedMultiplier++)
 			);
@@ -402,308 +354,33 @@ const SortingVisualizer = (props) => {
 		// indexPaused.current.innerHTML = -1;
 	};
 
-	const handleSwap = (idx1, idx2) => {
-		let bars = barsContainer.current.children;
-		let temp = bars[idx1].style.height;
-		bars[idx1].style.height = bars[idx2].style.height;
-		bars[idx2].style.height = temp;
-		if (randomHeights.length <= 20) {
-			bars[idx1].children[0].innerHTML = bars[idx1].style.height.slice(
-				0,
-				temp.indexOf("px")
-			);
-			bars[idx2].children[0].innerHTML = bars[idx2].style.height.slice(
-				0,
-				temp.indexOf("px")
-			);
-		}
-	};
-
-	const handleBubbleSort = (animations, heights, speed, timeouts, states) => {
+	const handleAnimations = (animations, heights, speed, timeouts, states) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
 		let bars = barsContainer.current.children;
-
-		for (let i = 0; i < animations.length; i++) {
-			states.push([]);
-		}
-		for (let i = 0; i < animations.length; i++) {
-			let state = animations[i][2];
-			let idx1 = animations[i][0];
-			let idx2 = animations[i][1];
-
-			if (state === "COMPARING") {
-				bars[idx1].style.backgroundColor = COLOR_COMPARING;
-				bars[idx2].style.backgroundColor = COLOR_COMPARING;
-				if (idx1 !== 0) {
-					bars[idx1 - 1].style.backgroundColor = COLOR_DEFAULT;
-				}
-			} else if (state === "SWAPPING-1") {
-				bars[idx1].style.backgroundColor = COLOR_SWAP;
-				bars[idx2].style.backgroundColor = COLOR_SWAP;
-			} else if (state === "SWAPPING-2") {
-				handleSwap(idx1, idx2);
-			} else if (state === "LAST-SORTED") {
-				if (animations[i + 1][3] === "NO-SWAPS") {
-					if (idx1 >= 0)
-						bars[idx1].style.backgroundColor = COLOR_DEFAULT;
-					bars[idx2].style.backgroundColor = COLOR_SORTED;
-				} else {
-					bars[idx2].style.backgroundColor = COLOR_SORTED;
-					if (idx1 >= 0)
-						bars[idx1].style.backgroundColor = COLOR_DEFAULT;
-				}
-			} else if (state === "NO-SWAPS") {
-				bars[idx1].style.backgroundColor = COLOR_SORTED;
-			} else if (state === "ALL-SORTED") {
-			}
-			handleStoreAllStates(i, states);
-		}
-		handleRevertState(heights);
-		states.unshift([]);
-		handleStoreAllStates(0, states);
-
-		handleAnimateStates(0, states.length, speed, timeouts, heights, states);
-	};
-
-	const handleSelectionSort = (
-		animations,
-		heights,
-		speed,
-		timeouts,
-		states
-	) => {
-		setIsSorting(true);
-		barsContainer.current.classList.remove("sorted");
-		let bars = barsContainer.current.children;
-
-		for (let i = 0; i < animations.length; i++) {
-			states.push([]);
-		}
-
-		for (let i = 0; i < animations.length; i++) {
-			let state = animations[i][2];
-			let idx1 = animations[i][0];
-			let idx2 = animations[i][1];
-
-			if (state === "GET-INITIAL") {
-				bars[idx1].style.backgroundColor = COLOR_SWAP;
-			} else if (state === "CHECK-MIN") {
-				bars[idx1].style.backgroundColor = COLOR_COMPARING;
-			} else if (state === "CHANGE-BACK") {
-				bars[idx1].style.backgroundColor = COLOR_DEFAULT;
-			} else if (state === "CHANGE-MIN") {
-				bars[idx1].style.backgroundColor = COLOR_PIVOT;
-				if (idx2) {
-					bars[idx2].style.backgroundColor = COLOR_DEFAULT;
-				}
-			} else if (state === "SWAPPING-1") {
-				bars[idx2].style.backgroundColor = COLOR_SWAP;
-			} else if (state === "SWAPPING-2") {
-				handleSwap(idx1, idx2);
-			} else if (state === "SWAPPING-3") {
-				bars[idx1].style.backgroundColor = COLOR_SORTED;
-				bars[idx2].style.backgroundColor = COLOR_DEFAULT;
-			} else if (state === "NO-SWAP") {
-				bars[idx1].style.backgroundColor = COLOR_SORTED;
-			} else if (state === "ALL-SORTED") {
-			}
-			handleStoreAllStates(i, states);
-		}
-		handleRevertState(heights);
-		states.unshift([]);
-		handleStoreAllStates(0, states);
-
-		handleAnimateStates(0, states.length, speed, timeouts, heights, states);
-	};
-
-	const handleInsertionSort = (
-		animations,
-		heights,
-		speed,
-		timeouts,
-		states
-	) => {
-		setIsSorting(true);
-		barsContainer.current.classList.remove("sorted");
-		let bars = barsContainer.current.children;
-
-		for (let i = 0; i < animations.length; i++) {
-			states.push([]);
-		}
-
-		for (let i = 0; i < animations.length; i++) {
-			let state = animations[i][2];
-			let idx1 = animations[i][0];
-			let idx2 = animations[i][1];
-
-			if (state === "START") {
-				bars[idx1].style.backgroundColor = COLOR_COMPARING;
-			} else if (state === "SWAP-1") {
-				bars[idx1].style.backgroundColor = COLOR_COMPARING;
-			} else if (state === "SWAP-2") {
-				bars[idx1].style.backgroundColor = COLOR_SWAP;
-				bars[idx2].style.backgroundColor = COLOR_SWAP;
-			} else if (state === "SWAP-3") {
-				handleSwap(idx1, idx2);
-			} else if (state === "SWAP-4") {
-				bars[idx1].style.backgroundColor = COLOR_COMPARING;
-				bars[idx2].style.backgroundColor = COLOR_DEFAULT;
-			} else if (state === "DONE-1") {
-				bars[idx1].style.backgroundColor = COLOR_COMPARING;
-			} else if (state === "DONE-2") {
-				if (idx1 >= 0) bars[idx1].style.backgroundColor = COLOR_DEFAULT;
-				bars[idx2].style.backgroundColor = COLOR_LESSER;
-			} else if (state === "DONE-3") {
-				bars[idx2].style.backgroundColor = COLOR_DEFAULT;
-			} else if (state === "SORTED") {
-				bars[idx2].style.backgroundColor = COLOR_DEFAULT;
-			} else if (state === "COLOR-SORTED") {
-				bars[idx1].style.backgroundColor = COLOR_SORTED;
-			} else if (state === "ALL-SORTED") {
-			}
-			handleStoreAllStates(i, states);
-		}
-		handleRevertState(heights);
-		states.unshift([]);
-		handleStoreAllStates(0, states);
-
-		handleAnimateStates(0, states.length, speed, timeouts, heights, states);
-	};
-
-	const handleMergeSort = (animations, heights, speed, timeouts, states) => {
-		setIsSorting(true);
-		barsContainer.current.classList.remove("sorted");
-		let bars = barsContainer.current.children;
-		let prevColor1 = COLOR_DEFAULT;
-		let prevColor2 = COLOR_DEFAULT;
+		let prevColor1 = colors.COLOR_DEFAULT;
+		let prevColor2 = colors.COLOR_DEFAULT;
 		let count = getRandomNum(0, RANDOM_COLORS.length - 1);
 		let color = RANDOM_COLORS[count];
+		let otherArgs = [prevColor1, prevColor2, count, color];
 
 		for (let i = 0; i < animations.length; i++) {
 			states.push([]);
-		}
-
-		for (let i = 0; i < animations.length; i++) {
 			let state = animations[i][2];
 			let idx1 = animations[i][0];
 			let idx2 = animations[i][1];
 
-			// eslint-disable-next-line no-loop-func
-			if (state === "COMPARING") {
-				prevColor1 = bars[idx1].style.backgroundColor;
-				prevColor2 = bars[idx2].style.backgroundColor;
-				bars[idx1].style.backgroundColor = COLOR_COMPARING;
-				bars[idx2].style.backgroundColor = COLOR_COMPARING;
-			} else if (state === "CASE-LEFT") {
-				bars[idx1].style.backgroundColor = color;
-				bars[idx2].style.backgroundColor = prevColor2;
-			} else if (state === "CASE-RIGHT-INIT") {
-				bars[idx1].style.backgroundColor = COLOR_SWAP;
-				bars[idx2].style.backgroundColor = COLOR_SWAP;
-			} else if (state === "CASE-RIGHT-SHIFT") {
-				let temp = bars[idx2].style.height;
-				for (let g = idx2; g > idx1; g--) {
-					bars[g].style.height = bars[g - 1].style.height;
-					if (heights.length <= 20) {
-						bars[g].children[0].innerHTML = bars[
-							g
-						].style.height.slice(0, temp.indexOf("px"));
-					}
-				}
-				bars[idx1].style.height = temp;
-				if (heights.length <= 20)
-					bars[idx1].children[0].innerHTML = bars[
-						idx1
-					].style.height.slice(0, temp.indexOf("px"));
-				bars[idx2].style.backgroundColor = prevColor1;
-				bars[idx1 + 1].style.backgroundColor = COLOR_SWAP;
-			} else if (state === "CASE-RIGHT-REVERT") {
-				bars[idx1].style.backgroundColor = color;
-				bars[idx2].style.backgroundColor = prevColor1;
-			} else if (state === "ONE-SIDE") {
-				bars[idx1].style.backgroundColor = color;
-			} else if (state === "LAST-MERGED") {
-				color = COLOR_SORTED;
-			} else if (state === "MERGED") {
-				color = RANDOM_COLORS[++count % RANDOM_COLORS.length];
-			} else if (state === "ALL-SORTED") {
-			}
-			handleStoreAllStates(i, states);
-		}
-		handleRevertState(heights);
-		states.unshift([]);
-		handleStoreAllStates(0, states);
-
-		handleAnimateStates(0, states.length, speed, timeouts, heights, states);
-	};
-
-	const handleQuickSort = (animations, heights, speed, timeouts, states) => {
-		setIsSorting(true);
-		barsContainer.current.classList.remove("sorted");
-		let bars = barsContainer.current.children;
-
-		for (let i = 0; i < animations.length; i++) {
-			states.push([]);
-		}
-
-		for (let i = 0; i < animations.length; i++) {
-			let state = animations[i][2];
-			let idx1 = animations[i][0];
-			let idx2 = animations[i][1];
-
-			if (state === "GET-PIVOT") {
-				bars[idx1].style.backgroundColor = COLOR_PIVOT;
-			} else if (state === "COMPARE") {
-				bars[idx1].style.backgroundColor = COLOR_COMPARING;
-			} else if (state === "GREATER") {
-				bars[idx1].style.backgroundColor = COLOR_GREATER;
-			} else if (state === "SWAP-1") {
-				// bars[idx1].style.backgroundColor = COLOR_SWAP_LESSER;
-				bars[idx2].style.backgroundColor = COLOR_LESSER;
-			} else if (state === "SAME-INDEX-1") {
-				bars[idx2].style.backgroundColor = COLOR_LESSER;
-			} else if (state === "SAME-INDEX-2") {
-				bars[idx2].style.backgroundColor = COLOR_PIVOT_INDEX;
-				if (idx2 - 1 !== idx1) {
-					bars[idx2 - 1].style.backgroundColor = COLOR_LESSER;
-				}
-			} else if (state === "SWAP-2") {
-				bars[idx1].style.backgroundColor = COLOR_SWAP;
-				bars[idx2].style.backgroundColor = COLOR_SWAP;
-			} else if (state === "SWAP-3") {
-				handleSwap(idx1, idx2);
-			} else if (state === "SWAP-4") {
-				if (idx1[1] - 1 !== idx1[0]) {
-					bars[idx1[1] - 1].style.backgroundColor = COLOR_LESSER;
-				}
-				bars[idx1[1]].style.backgroundColor = COLOR_PIVOT_INDEX;
-				bars[idx2].style.backgroundColor = COLOR_GREATER;
-			} else if (state === "SWAP-PIVOT-1") {
-				bars[idx1].style.backgroundColor = COLOR_SWAP;
-				bars[idx2].style.backgroundColor = COLOR_SWAP;
-			} else if (state === "SWAP-PIVOT-2") {
-				handleSwap(idx1, idx2);
-			} else if (state === "SWAP-PIVOT-3") {
-				bars[idx1].style.backgroundColor = COLOR_LESSER;
-				bars[idx2].style.backgroundColor = COLOR_SORTED;
-			} else if (state === "NO-CHANGE") {
-				bars[idx1].style.backgroundColor = COLOR_SORTED;
-			} else if (state === "REVERT-BOTH") {
-				for (let j = idx1[0]; j < idx2; j++) {
-					if (j === idx1[1]) continue;
-					bars[j].style.backgroundColor = COLOR_DEFAULT;
-				}
-			} else if (state === "REVERT-LEFT") {
-				for (let j = idx1; j < idx2; j++) {
-					bars[j].style.backgroundColor = COLOR_DEFAULT;
-				}
-			} else if (state === "SORTED-1") {
-				bars[idx1].style.backgroundColor = COLOR_SWAP;
-			} else if (state === "SORTED-2") {
-				bars[idx1].style.backgroundColor = COLOR_SORTED;
-			} else if (state === "ALL-SORTED") {
-			}
+			sortingConfig.manipulation(
+				bars,
+				animations,
+				heights,
+				barsContainer,
+				i,
+				idx1,
+				idx2,
+				state,
+				otherArgs
+			);
 			handleStoreAllStates(i, states);
 		}
 		handleRevertState(heights);
@@ -716,34 +393,29 @@ const SortingVisualizer = (props) => {
 	const handleChangeSortingFunction = (sort) => {
 		switch (sort) {
 			case "Bubble Sort":
-				setSortingFunction(() => handleBubbleSort);
-				setSortingConfig(bubbleSortConfigs[0]);
-				setSortingConfigs(bubbleSortConfigs);
-				setLegend(bubbleSortLegend);
+				setSortingConfig(Configs.bubbleSortConfigs[0]);
+				setSortingConfigs(Configs.bubbleSortConfigs);
+				setLegend(Legends.bubbleSortLegend);
 				break;
 			case "Selection Sort":
-				setSortingFunction(() => handleSelectionSort);
-				setSortingConfig(selectionSortConfigs[0]);
-				setSortingConfigs(selectionSortConfigs);
-				setLegend(selectionSortLegend);
+				setSortingConfig(Configs.selectionSortConfigs[0]);
+				setSortingConfigs(Configs.selectionSortConfigs);
+				setLegend(Legends.selectionSortLegend);
 				break;
 			case "Insertion Sort":
-				setSortingFunction(() => handleInsertionSort);
-				setSortingConfig(insertionSortConfigs[0]);
-				setSortingConfigs(insertionSortConfigs);
-				setLegend(insertionSortLegend);
+				setSortingConfig(Configs.insertionSortConfigs[0]);
+				setSortingConfigs(Configs.insertionSortConfigs);
+				setLegend(Legends.insertionSortLegend);
 				break;
 			case "Merge Sort":
-				setSortingFunction(() => handleMergeSort);
-				setSortingConfig(mergeSortConfigs[0]);
-				setSortingConfigs(mergeSortConfigs);
-				setLegend(mergeSortLegend);
+				setSortingConfig(Configs.mergeSortConfigs[0]);
+				setSortingConfigs(Configs.mergeSortConfigs);
+				setLegend(Legends.mergeSortLegend);
 				break;
 			case "Quick Sort":
-				setSortingFunction(() => handleQuickSort);
-				setSortingConfig(quickSortConfigs[0]);
-				setSortingConfigs(quickSortConfigs);
-				setLegend(quickSortLegend);
+				setSortingConfig(Configs.quickSortConfigs[0]);
+				setSortingConfigs(Configs.quickSortConfigs);
+				setLegend(Legends.quickSortLegend);
 				break;
 			default:
 				break;
@@ -753,17 +425,14 @@ const SortingVisualizer = (props) => {
 			clearTimeout(setTimeouts[i]);
 		}
 
-		// omits generating new array on first sort
-		if (sortingFunction) {
-			handleGenerateNewArray();
-			setIsSorting(false);
-			setSetTimeouts([]);
-			setPaused(true);
-			setAllStates([]);
-			indexPaused.current = 0;
-			indexPaused.current = -1;
-			range.current.value = 0;
-		}
+		handleGenerateNewArray();
+		setIsSorting(false);
+		setSetTimeouts([]);
+		setPaused(true);
+		setAllStates([]);
+		indexPaused.current = 0;
+		indexPaused.current = -1;
+		range.current.value = 0;
 	};
 
 	const handleChangeSortingConfig = (config) => {
@@ -775,19 +444,12 @@ const SortingVisualizer = (props) => {
 				setSetTimeouts([]);
 				setPaused(true);
 				setAllStates([]);
-				indexPaused.current = 0;
 				indexPaused.current = -1;
 				range.current.value = 0;
 			}
 			return config;
 		});
 	};
-
-	// const handleShellSort = () => {};
-
-	// const handleHeapSort = () => {};
-
-	// const handleRadixSort = () => {};
 
 	// const handleTestAlgorithms = () => {
 	// 	/* CHECKS IF DOM HEIGHTS MATCH SORTED RANDOM HEIGHTS*/
@@ -798,7 +460,8 @@ const SortingVisualizer = (props) => {
 	// 	// 		barsDOM[i].style.height === sortedRandomHeights[i] + "px"
 	// 	// 	);
 	// 	// }
-	// 	console.log(sortingFunction, indexPaused.current);
+	// 	// console.log("Sorting Function:", sortingFunction);
+	// 	// console.log("Sorting Config:", sortingConfig);
 	// };
 
 	return (

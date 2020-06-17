@@ -27,7 +27,7 @@
 }
 
 .button:disabled {
-	opacity: 50%;
+	opacity: 80%;
 	cursor: not-allowed;
 }
 
@@ -86,6 +86,9 @@
 	.button:hover {
 		transform: none;
 		box-shadow: none;
+	}
+	.button:disabled {
+		opacity: 95%;
 	}
 }
 

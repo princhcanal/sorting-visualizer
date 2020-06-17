@@ -35,7 +35,7 @@
 }
 
 .play-controls svg:disabled {
-	opacity: 10%;
+	opacity: 95%;
 	cursor: not-allowed;
 }
 

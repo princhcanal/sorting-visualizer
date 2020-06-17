@@ -4,10 +4,25 @@ export const COLOR_DEFAULT = "#577590";
 export const COLOR_COMPARING = "#f9c74f";
 export const COLOR_SWAP = "#f94144";
 export const COLOR_SORTED = "#90be6d";
+export const COLOR_SUBARRAY_1 = "#F9FBF2";
+export const COLOR_SUBARRAY_2 = "#252323";
 export const COLOR_PIVOT = "#FF784F";
 export const COLOR_PIVOT_INDEX = "#1D8A99";
 export const COLOR_GREATER = "#EFD6AC";
 export const COLOR_LESSER = "#1B5299";
+
+export default {
+	COLOR_DEFAULT,
+	COLOR_COMPARING,
+	COLOR_SWAP,
+	COLOR_SORTED,
+	COLOR_SUBARRAY_1,
+	COLOR_SUBARRAY_2,
+	COLOR_PIVOT,
+	COLOR_PIVOT_INDEX,
+	COLOR_GREATER,
+	COLOR_LESSER,
+};
 
 export function getRandomColor() {
 	return RANDOM_COLORS[getRandomNum(0, RANDOM_COLORS.length - 1)];
