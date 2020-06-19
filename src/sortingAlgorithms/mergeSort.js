@@ -137,7 +137,7 @@ function mergeIterative(arr, arr1, arr2, start, mid, end, swapOrderArray) {
 	return [res, start, end];
 }
 
-export function getMergeSortRecursiveSwapOrder(arr) {
+export function mergeSortRecursive(arr) {
 	const swapOrderArray = [];
 	if (arr.length <= 1) return arr;
 	mergeSortHelper(arr, 0, arr.length - 1, swapOrderArray);

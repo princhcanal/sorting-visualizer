@@ -14,3 +14,16 @@ export const handleSwap = (ref, heights, idx1, idx2) => {
 		);
 	}
 };
+
+export const handleColorChange = (ref, idx1, color1, idx2, color2) => {
+	let bars = ref.current.children;
+	if (color1 && color2) {
+		bars[idx1].style.backgroundColor = color1;
+		bars[idx2].style.backgroundColor = color2;
+	} else if (idx2 && !color2) {
+		bars[idx1].style.backgroundColor = color1;
+		bars[idx2].style.backgroundColor = color1;
+	} else if (!idx2 && !color2) {
+		bars[idx1].style.backgroundColor = color1;
+	}
+};

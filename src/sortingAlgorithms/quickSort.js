@@ -1,6 +1,6 @@
 const { getRandomArray } = require("../utilities/numbers");
 
-export function getQuickSortSwapOrder(
+export function quickSortLomuto(
 	arr,
 	left = 0,
 	right = arr.length - 1,

@@ -28,8 +28,8 @@ export const mergeSortLegend = [
 	{ color: Colors.COLOR_SUBARRAY_2, desc: "Subarray 2" },
 	{ color: Colors.COLOR_COMPARING, desc: "Comparing" },
 	{ color: Colors.COLOR_SWAP, desc: "Swap Values" },
-	{ color: Colors.COLOR_SORTED, desc: "Sorted" },
 	{ color: "", desc: "Sorted in Subarray" },
+	{ color: Colors.COLOR_SORTED, desc: "Sorted" },
 ];
 
 export const quickSortLegend = [
@@ -43,10 +43,21 @@ export const quickSortLegend = [
 	{ color: Colors.COLOR_SORTED, desc: "Sorted" },
 ];
 
+export const heapSortLegend = [
+	{ color: Colors.COLOR_DEFAULT, desc: "Not Sorted" },
+	{ color: "", desc: "Heap Levels" },
+	{ color: Colors.COLOR_PIVOT, desc: "Root of Sub-Heap" },
+	{ color: Colors.COLOR_PIVOT_INDEX, desc: "Children of Sub-Root" },
+	{ color: Colors.COLOR_GREATER, desc: "Largest in Sub-Heap" },
+	{ color: Colors.COLOR_SWAP, desc: "Swap Values" },
+	{ color: Colors.COLOR_SORTED, desc: "Sorted" },
+];
+
 export default {
 	bubbleSortLegend,
 	selectionSortLegend,
 	insertionSortLegend,
 	mergeSortLegend,
 	quickSortLegend,
+	heapSortLegend,
 };

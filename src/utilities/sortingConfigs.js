@@ -3,9 +3,10 @@ import { selectionSort } from "../sortingAlgorithms/selectionSort";
 import { insertionSort } from "../sortingAlgorithms/insertionSort";
 import {
 	mergeSortIterative,
-	getMergeSortRecursiveSwapOrder,
+	mergeSortRecursive,
 } from "../sortingAlgorithms/mergeSort";
-import { getQuickSortSwapOrder } from "../sortingAlgorithms/quickSort";
+import { quickSortLomuto } from "../sortingAlgorithms/quickSort";
+import { heapSort } from "../sortingAlgorithms/heapSort";
 
 import Manipulations from "./sortingManipulations";
 
@@ -37,7 +38,7 @@ const insertionSortConfig = {
 export const insertionSortConfigs = [insertionSortConfig];
 
 const mergeSortRecursiveConfig = {
-	implementation: getMergeSortRecursiveSwapOrder,
+	implementation: mergeSortRecursive,
 	args: [],
 	label: "Recursive",
 	manipulation: Manipulations.mergeSortManipulations,
@@ -55,14 +56,23 @@ export const mergeSortConfigs = [
 	mergeSortIterativeConfig,
 ];
 
-const quickSortIterativeConfig = {
-	implementation: getQuickSortSwapOrder,
+const quickSortLomutoConfig = {
+	implementation: quickSortLomuto,
 	args: [],
 	label: "Recursive",
 	manipulation: Manipulations.quickSortManipulations,
 };
 
-export const quickSortConfigs = [quickSortIterativeConfig];
+export const quickSortConfigs = [quickSortLomutoConfig];
+
+const heapSortConfig = {
+	implementation: heapSort,
+	args: [],
+	label: "Recursive",
+	manipulation: Manipulations.heapSortManipulations,
+};
+
+export const heapSortConfigs = [heapSortConfig];
 
 export default {
 	bubbleSortConfigs,
@@ -70,4 +80,5 @@ export default {
 	insertionSortConfigs,
 	mergeSortConfigs,
 	quickSortConfigs,
+	heapSortConfigs,
 };

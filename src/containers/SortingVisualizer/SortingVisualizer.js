@@ -362,7 +362,7 @@ const SortingVisualizer = (props) => {
 		let prevColor2 = colors.COLOR_DEFAULT;
 		let count = getRandomNum(0, RANDOM_COLORS.length - 1);
 		let color = RANDOM_COLORS[count];
-		let otherArgs = [prevColor1, prevColor2, count, color];
+		let otherArgs = [prevColor1, prevColor2, count, color, {}];
 
 		for (let i = 0; i < animations.length; i++) {
 			states.push([]);
@@ -416,6 +416,11 @@ const SortingVisualizer = (props) => {
 				setSortingConfig(Configs.quickSortConfigs[0]);
 				setSortingConfigs(Configs.quickSortConfigs);
 				setLegend(Legends.quickSortLegend);
+				break;
+			case "Heap Sort":
+				setSortingConfig(Configs.heapSortConfigs[0]);
+				setSortingConfigs(Configs.heapSortConfigs);
+				setLegend(Legends.heapSortLegend);
 				break;
 			default:
 				break;

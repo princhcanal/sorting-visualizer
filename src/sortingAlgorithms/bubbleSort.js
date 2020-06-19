@@ -7,7 +7,7 @@ export function bubbleSort(arr) {
 		noSwaps = true;
 		for (j = 0; j < i; j++) {
 			if (arr[j] > arr[j + 1]) {
-				swap2(arr, j, j + 1);
+				swap(arr, j, j + 1);
 				noSwaps = false;
 				isSwap = true;
 			}
@@ -39,7 +39,7 @@ export function bubbleSort(arr) {
 	// return arr;
 }
 
-function swap2(arr, ind1, ind2) {
+function swap(arr, ind1, ind2) {
 	[arr[ind1], arr[ind2]] = [arr[ind2], arr[ind1]];
 }
 

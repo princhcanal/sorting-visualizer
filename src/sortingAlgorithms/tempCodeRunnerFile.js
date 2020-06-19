@@ -1,1 +1,1 @@
-pivotLomuto
+Math.floor(n / 2)
