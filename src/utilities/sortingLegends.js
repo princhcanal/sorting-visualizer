@@ -53,6 +53,14 @@ export const heapSortLegend = [
 	{ color: Colors.COLOR_SORTED, desc: "Sorted" },
 ];
 
+export const shellSortLegend = [
+	{ color: Colors.COLOR_DEFAULT, desc: "Not Sorted" },
+	{ color: "", desc: "Gap" },
+	{ color: Colors.COLOR_COMPARING, desc: "Comparing" },
+	{ color: Colors.COLOR_SWAP, desc: "Swap Values" },
+	{ color: Colors.COLOR_SORTED, desc: "Sorted" },
+];
+
 export default {
 	bubbleSortLegend,
 	selectionSortLegend,
@@ -60,4 +68,5 @@ export default {
 	mergeSortLegend,
 	quickSortLegend,
 	heapSortLegend,
+	shellSortLegend,
 };

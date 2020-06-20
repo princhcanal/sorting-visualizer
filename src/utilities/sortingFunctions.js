@@ -5,6 +5,7 @@ const sortingFunctions = [
 	"Merge Sort",
 	"Quick Sort",
 	"Heap Sort",
+	"Shell Sort",
 ];
 
 export default sortingFunctions;

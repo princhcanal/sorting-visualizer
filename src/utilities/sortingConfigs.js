@@ -7,6 +7,7 @@ import {
 } from "../sortingAlgorithms/mergeSort";
 import { quickSortLomuto } from "../sortingAlgorithms/quickSort";
 import { heapSort } from "../sortingAlgorithms/heapSort";
+import { shellSort } from "../sortingAlgorithms/shellSort";
 
 import Manipulations from "./sortingManipulations";
 
@@ -74,6 +75,15 @@ const heapSortConfig = {
 
 export const heapSortConfigs = [heapSortConfig];
 
+const shellSortConfig = {
+	implementation: shellSort,
+	args: [],
+	label: "Iterative",
+	manipulation: Manipulations.shellSortManipulations,
+};
+
+export const shellSortConfigs = [shellSortConfig];
+
 export default {
 	bubbleSortConfigs,
 	selectionSortConfigs,
@@ -81,4 +91,5 @@ export default {
 	mergeSortConfigs,
 	quickSortConfigs,
 	heapSortConfigs,
+	shellSortConfigs,
 };

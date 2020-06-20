@@ -3,8 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import Bars from "./Bars/Bars";
 import Controls from "./Controls/Controls";
 import { getRandomNum } from "../../utilities/numbers";
-import colors, { RANDOM_COLORS } from "../../utilities/colors";
-import Legends from "../../utilities/legends";
+import Colors, { RANDOM_COLORS } from "../../utilities/colors";
+import Legends from "../../utilities/sortingLegends";
 import Configs from "../../utilities/sortingConfigs";
 // import Button from "../../components/UI/Button/Button";
 
@@ -15,7 +15,6 @@ const NUM_BARS = 100;
 
 // TODO: shell sort
 // TODO: radix sort
-// TODO: heap sort
 // TODO: quick sort variations
 const SortingVisualizer = (props) => {
 	const [randomHeights, setRandomHeights] = useState();
@@ -111,7 +110,7 @@ const SortingVisualizer = (props) => {
 		if (changeToDefault && !disableControls) {
 			let bars = barsContainer.current.children;
 			for (let i = 0; i < numBars; i++) {
-				bars[i].style.backgroundColor = colors.COLOR_DEFAULT;
+				bars[i].style.backgroundColor = Colors.COLOR_DEFAULT;
 			}
 		}
 	};
@@ -301,7 +300,7 @@ const SortingVisualizer = (props) => {
 		let bars = barsContainer.current.children;
 		for (let j = 0; j < bars.length; j++) {
 			bars[j].style.height = heights[j] + "px";
-			bars[j].style.backgroundColor = colors.COLOR_DEFAULT;
+			bars[j].style.backgroundColor = Colors.COLOR_DEFAULT;
 			if (bars.length <= 20) bars[j].children[0].innerHTML = heights[j];
 		}
 	};
@@ -358,8 +357,8 @@ const SortingVisualizer = (props) => {
 		setIsSorting(true);
 		barsContainer.current.classList.remove("sorted");
 		let bars = barsContainer.current.children;
-		let prevColor1 = colors.COLOR_DEFAULT;
-		let prevColor2 = colors.COLOR_DEFAULT;
+		let prevColor1 = Colors.COLOR_DEFAULT;
+		let prevColor2 = Colors.COLOR_DEFAULT;
 		let count = getRandomNum(0, RANDOM_COLORS.length - 1);
 		let color = RANDOM_COLORS[count];
 		let otherArgs = [prevColor1, prevColor2, count, color, {}];
@@ -421,6 +420,11 @@ const SortingVisualizer = (props) => {
 				setSortingConfig(Configs.heapSortConfigs[0]);
 				setSortingConfigs(Configs.heapSortConfigs);
 				setLegend(Legends.heapSortLegend);
+				break;
+			case "Shell Sort":
+				setSortingConfig(Configs.shellSortConfigs[0]);
+				setSortingConfigs(Configs.shellSortConfigs);
+				setLegend(Legends.shellSortLegend);
 				break;
 			default:
 				break;

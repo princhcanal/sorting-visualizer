@@ -4,6 +4,7 @@ import { insertionSortManipulations } from "./insertionSortManipulations";
 import { mergeSortManipulations } from "./mergeSortManipulations";
 import { quickSortManipulations } from "./quickSortManipulations";
 import { heapSortManipulations } from "./heapSortManipulations";
+import { shellSortManipulations } from "./shellSortManipulations";
 
 export default {
 	bubbleSortManipulations,
@@ -12,4 +13,5 @@ export default {
 	mergeSortManipulations,
 	quickSortManipulations,
 	heapSortManipulations,
+	shellSortManipulations,
 };
