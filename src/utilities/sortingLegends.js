@@ -63,6 +63,11 @@ export const shellSortLegend = [
 
 export const radixSortLegend = [
 	{ color: Colors.COLOR_DEFAULT, desc: "Not Sorted" },
+	{ color: Colors.COLOR_COMPARING, desc: "Checking Ones Place" },
+	{ color: Colors.COLOR_PIVOT, desc: "Checking Tens Place" },
+	{ color: Colors.COLOR_LESSER, desc: "Checking Hundreds Place" },
+	{ color: "", desc: "Digit Color" },
+	{ color: Colors.COLOR_SWAP, desc: "Place Element to Correct Position" },
 	{ color: Colors.COLOR_SORTED, desc: "Sorted" },
 ];
 

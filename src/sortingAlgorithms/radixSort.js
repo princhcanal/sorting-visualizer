@@ -2,16 +2,14 @@ export const radixSort = (nums) => {
 	let maxDigit = mostDigits(nums);
 	const swapOrderArray = [];
 
-	swapOrderArray.push([0, nums.length, "GET-DIGIT-COLORS"]);
-
 	for (let k = 0; k < maxDigit; k++) {
 		let digitBuckets = Array.from({ length: 10 }, () => []);
 
 		for (let i = 0; i < nums.length; i++) {
-			swapOrderArray.push([i, i, "CURRENT-INIT"]);
+			swapOrderArray.push([i, k, "CURRENT-INIT"]);
 			let digit = getDigit(nums[i], k);
 			digitBuckets[digit].push(nums[i]);
-			swapOrderArray.push([i, digit, "CURRENT-COLOR"]);
+			swapOrderArray.push([i, [digit, k], "CURRENT-COLOR"]);
 		}
 
 		let temp = nums;
