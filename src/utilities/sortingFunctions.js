@@ -6,6 +6,7 @@ const sortingFunctions = [
 	"Quick Sort",
 	"Heap Sort",
 	"Shell Sort",
+	"Radix Sort",
 ];
 
 export default sortingFunctions;

@@ -426,6 +426,11 @@ const SortingVisualizer = (props) => {
 				setSortingConfigs(Configs.shellSortConfigs);
 				setLegend(Legends.shellSortLegend);
 				break;
+			case "Radix Sort":
+				setSortingConfig(Configs.radixSortConfigs[0]);
+				setSortingConfigs(Configs.radixSortConfigs);
+				setLegend(Legends.radixSortLegend);
+				break;
 			default:
 				break;
 		}

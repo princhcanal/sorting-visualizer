@@ -61,6 +61,11 @@ export const shellSortLegend = [
 	{ color: Colors.COLOR_SORTED, desc: "Sorted" },
 ];
 
+export const radixSortLegend = [
+	{ color: Colors.COLOR_DEFAULT, desc: "Not Sorted" },
+	{ color: Colors.COLOR_SORTED, desc: "Sorted" },
+];
+
 export default {
 	bubbleSortLegend,
 	selectionSortLegend,
@@ -69,4 +74,5 @@ export default {
 	quickSortLegend,
 	heapSortLegend,
 	shellSortLegend,
+	radixSortLegend,
 };

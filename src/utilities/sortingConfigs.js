@@ -8,6 +8,7 @@ import {
 import { quickSortLomuto } from "../sortingAlgorithms/quickSort";
 import { heapSort } from "../sortingAlgorithms/heapSort";
 import { shellSort } from "../sortingAlgorithms/shellSort";
+import { radixSort } from "../sortingAlgorithms/radixSort";
 
 import Manipulations from "./sortingManipulations";
 
@@ -84,6 +85,15 @@ const shellSortConfig = {
 
 export const shellSortConfigs = [shellSortConfig];
 
+const radixSortConfig = {
+	implementation: radixSort,
+	args: [],
+	label: "Iterative",
+	manipulation: Manipulations.radixSortManipulations,
+};
+
+export const radixSortConfigs = [radixSortConfig];
+
 export default {
 	bubbleSortConfigs,
 	selectionSortConfigs,
@@ -92,4 +102,5 @@ export default {
 	quickSortConfigs,
 	heapSortConfigs,
 	shellSortConfigs,
+	radixSortConfigs,
 };
