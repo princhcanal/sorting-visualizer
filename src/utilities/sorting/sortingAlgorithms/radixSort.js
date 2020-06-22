@@ -50,5 +50,3 @@ const mostDigits = (nums) => {
 	}
 	return maxDigits;
 };
-
-// console.log(radixSort([3, 235, 3243, 3, 2, 34, 35325]));

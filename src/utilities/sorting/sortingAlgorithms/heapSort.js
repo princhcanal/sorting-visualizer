@@ -79,7 +79,3 @@ const getDepth = (arr, i) => {
 const swap = (arr, idx1, idx2) => {
 	[arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]];
 };
-
-// let arr = [3, 1, 0, 9, 4];
-// heapSort(arr);
-// console.log(arr);

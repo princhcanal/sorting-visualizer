@@ -1,14 +1,14 @@
-import { bubbleSort } from "../sortingAlgorithms/bubbleSort";
-import { selectionSort } from "../sortingAlgorithms/selectionSort";
-import { insertionSort } from "../sortingAlgorithms/insertionSort";
+import { bubbleSort } from "./sortingAlgorithms/bubbleSort";
+import { selectionSort } from "./sortingAlgorithms/selectionSort";
+import { insertionSort } from "./sortingAlgorithms/insertionSort";
 import {
 	mergeSortIterative,
 	mergeSortRecursive,
-} from "../sortingAlgorithms/mergeSort";
-import { quickSortLomuto } from "../sortingAlgorithms/quickSort";
-import { heapSort } from "../sortingAlgorithms/heapSort";
-import { shellSort } from "../sortingAlgorithms/shellSort";
-import { radixSort } from "../sortingAlgorithms/radixSort";
+} from "./sortingAlgorithms/mergeSort";
+import { quickSortLomuto } from "./sortingAlgorithms/quickSort";
+import { heapSort } from "./sortingAlgorithms/heapSort";
+import { shellSort } from "./sortingAlgorithms/shellSort";
+import { radixSort } from "./sortingAlgorithms/radixSort";
 
 import Manipulations from "./sortingManipulations";
 

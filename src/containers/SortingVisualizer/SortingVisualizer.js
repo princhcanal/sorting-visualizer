@@ -4,8 +4,8 @@ import Bars from "./Bars/Bars";
 import Controls from "./Controls/Controls";
 import { getRandomNum } from "../../utilities/numbers";
 import Colors, { RANDOM_COLORS } from "../../utilities/colors";
-import Legends from "../../utilities/sortingLegends";
-import Configs from "../../utilities/sortingConfigs";
+import Legends from "../../utilities/sorting/sortingLegends";
+import Configs from "../../utilities/sorting/sortingConfigs";
 // import Button from "../../components/UI/Button/Button";
 
 const MIN_HEIGHT = 25;
@@ -319,9 +319,11 @@ const SortingVisualizer = (props) => {
 		for (let i = start; i < end; i++) {
 			timeouts.push(
 				setTimeout(() => {
-					if (direction === "+") {
+					if (
+						direction === "+" &&
+						indexPaused.current < allStates.length - 1
+					) {
 						range.current.value = ++indexPaused.current;
-						// range.current.value = indexPaused.current++;
 					}
 					for (let j = 0; j < bars.length; j++) {
 						let height = states[i][j].height;
@@ -361,7 +363,8 @@ const SortingVisualizer = (props) => {
 		let prevColor2 = Colors.COLOR_DEFAULT;
 		let count = getRandomNum(0, RANDOM_COLORS.length - 1);
 		let color = RANDOM_COLORS[count];
-		let otherArgs = [prevColor1, prevColor2, count, color, {}];
+		// let otherArgs = [prevColor1, prevColor2, count, color, {}];
+		let otherArgs = { prevColor1, prevColor2, count, color, obj: {} };
 
 		for (let i = 0; i < animations.length; i++) {
 			states.push([]);

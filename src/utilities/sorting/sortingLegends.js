@@ -1,4 +1,4 @@
-import Colors from "./colors";
+import Colors from "../colors";
 
 export const bubbleSortLegend = [
 	{ color: Colors.COLOR_DEFAULT, desc: "Not Sorted" },

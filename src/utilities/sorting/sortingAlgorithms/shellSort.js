@@ -24,6 +24,7 @@ export const shellSort = (arr) => {
 
 			arr[j] = temp;
 		}
+
 		swapOrderArray.push([0, n, "NEW-INTERVAL"]);
 	}
 
@@ -33,8 +34,3 @@ export const shellSort = (arr) => {
 
 	return swapOrderArray;
 };
-
-// let arr = [4, 2, 3, -2, 9];
-// console.log(arr);
-// shellSort(arr);
-// console.log(arr);

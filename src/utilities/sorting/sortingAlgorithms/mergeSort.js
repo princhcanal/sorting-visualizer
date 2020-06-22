@@ -20,6 +20,7 @@ export function mergeSortIterative(arr) {
 			if (oddNumbered && i === result.length - 3) {
 				let last = result[i + 2][0];
 				let lastIndex = result[i + 2][1] + result[i + 2][0].length - 1;
+
 				b = mergeIterative(
 					arr,
 					b,
@@ -29,10 +30,11 @@ export function mergeSortIterative(arr) {
 					lastIndex,
 					swapOrderArray
 				)[0];
-				// bIndex += lastIndex - aIndex - 1;
+
 				bIndex = lastIndex;
 				i++;
 			}
+
 			// accumulate intermediate result
 			let merged = mergeIterative(
 				arr,
@@ -45,12 +47,11 @@ export function mergeSortIterative(arr) {
 			);
 			temp.push(merged);
 		}
+
 		// current level merged, update result
 		result = temp;
 	}
-	// return result[0];
-	// swapOrderArray.push([[...arr], 0, 0, "ALL-SORTED"]);
-	swapOrderArray.push([0, 0, "ALL-SORTED"]);
+
 	return swapOrderArray;
 }
 
@@ -60,13 +61,9 @@ function mergeIterative(arr, arr1, arr2, start, mid, end, swapOrderArray) {
 	let j = 0;
 	let compIdx1 = start;
 	let compIdx2 = mid;
-	let isLast = false;
 
 	if (start === 0 && end === arr.length - 1) {
-		// swapOrderArray.push([[...arr], start, end, "LAST-MERGED"]);
-		// swapOrderArray.push([start, end, "LAST-MERGED"]);
 		swapOrderArray.push([[start, mid - 1], [mid, end], "MERGING-1-LAST"]);
-		isLast = true;
 	} else {
 		swapOrderArray.push([[start, mid - 1], [mid, end], "MERGING-1"]);
 	}
@@ -74,39 +71,19 @@ function mergeIterative(arr, arr1, arr2, start, mid, end, swapOrderArray) {
 	swapOrderArray.push([[start, mid - 1], [mid, end], "MERGING-2"]);
 
 	while (i < arr1.length && j < arr2.length) {
-		// swapOrderArray.push([[...arr], compIdx1, compIdx2, "COMPARING"]);
 		swapOrderArray.push([compIdx1, compIdx2, "COMPARING"]);
 		if (arr1[i] < arr2[j]) {
-			// swapOrderArray.push([[...arr], compIdx1++, compIdx2, "CASE-LEFT"]);
 			swapOrderArray.push([compIdx1++, compIdx2, "CASE-LEFT"]);
 			res.push(arr1[i]);
 			i++;
 		} else {
-			// swapOrderArray.push([
-			// 	[...arr],
-			// 	compIdx1,
-			// 	compIdx2,
-			// 	"CASE-RIGHT-INIT",
-			// ]);
 			swapOrderArray.push([compIdx1, compIdx2, "CASE-RIGHT-INIT"]);
 			let temp = arr[compIdx2];
 			for (let k = compIdx2; k > compIdx1; k--) {
 				arr[k] = arr[k - 1];
 			}
 			arr[compIdx1] = temp;
-			// swapOrderArray.push([
-			// 	[...arr],
-			// 	compIdx1,
-			// 	compIdx2++,
-			// 	"CASE-RIGHT-SHIFT",
-			// ]);
 			swapOrderArray.push([compIdx1, compIdx2++, "CASE-RIGHT-SHIFT"]);
-			// swapOrderArray.push([
-			// 	[...arr],
-			// 	compIdx1,
-			// 	++compIdx1,
-			// 	"CASE-RIGHT-REVERT",
-			// ]);
 			swapOrderArray.push([compIdx1, ++compIdx1, "CASE-RIGHT-REVERT"]);
 			res.push(arr2[j]);
 			j++;
@@ -114,7 +91,6 @@ function mergeIterative(arr, arr1, arr2, start, mid, end, swapOrderArray) {
 	}
 
 	while (i < arr1.length) {
-		// swapOrderArray.push([[...arr], compIdx1, compIdx2, "ONE-SIDE"]);
 		swapOrderArray.push([compIdx1, compIdx2, "ONE-SIDE"]);
 		res.push(arr1[i]);
 		i++;
@@ -122,16 +98,10 @@ function mergeIterative(arr, arr1, arr2, start, mid, end, swapOrderArray) {
 	}
 
 	while (j < arr2.length) {
-		// swapOrderArray.push([[...arr], compIdx2, compIdx1, "ONE-SIDE"]);
 		swapOrderArray.push([compIdx2, compIdx1, "ONE-SIDE"]);
 		res.push(arr2[j]);
 		j++;
 		compIdx2++;
-	}
-
-	if (!isLast) {
-		// swapOrderArray.push([[...arr], start, end, "MERGED"]);
-		// swapOrderArray.push([start, end, "MERGED"]);
 	}
 
 	return [res, start, end];
@@ -141,8 +111,6 @@ export function mergeSortRecursive(arr) {
 	const swapOrderArray = [];
 	if (arr.length <= 1) return arr;
 	mergeSortHelper(arr, 0, arr.length - 1, swapOrderArray);
-	// swapOrderArray.push([[...arr], 0, arr.length - 1, "ALL-SORTED"]);
-	swapOrderArray.push([0, arr.length - 1, "ALL-SORTED"]);
 	return swapOrderArray;
 }
 
@@ -159,13 +127,9 @@ function mergeRecursive(arr, start, mid, end, swapOrderArray) {
 	let j = mid + 1;
 	let compIdx1 = start;
 	let compIdx2 = mid + 1;
-	let isLast = false;
 
 	if (start === 0 && end === arr.length - 1) {
-		// swapOrderArray.push([[...arr], start, end, "LAST-MERGED"]);
-		// swapOrderArray.push([start, end, "LAST-MERGED"]);
 		swapOrderArray.push([[start, mid], [mid + 1, end], "MERGING-1-LAST"]);
-		isLast = true;
 	} else {
 		swapOrderArray.push([[start, mid], [mid + 1, end], "MERGING-1"]);
 	}
@@ -173,57 +137,31 @@ function mergeRecursive(arr, start, mid, end, swapOrderArray) {
 	swapOrderArray.push([[start, mid], [mid + 1, end], "MERGING-2"]);
 
 	while (i <= mid && j <= end) {
-		// swapOrderArray.push([[...arr], compIdx1, compIdx2, "COMPARING"]);
 		swapOrderArray.push([compIdx1, compIdx2, "COMPARING"]);
 		if (arr[compIdx1] <= arr[compIdx2]) {
-			// swapOrderArray.push([[...arr], compIdx1++, compIdx2, "CASE-LEFT"]);
 			swapOrderArray.push([compIdx1++, compIdx2, "CASE-LEFT"]);
 			i++;
 		} else {
-			// swapOrderArray.push([
-			// 	[...arr],
-			// 	compIdx1,
-			// 	compIdx2,
-			// 	"CASE-RIGHT-INIT",
-			// ]);
 			swapOrderArray.push([compIdx1, compIdx2, "CASE-RIGHT-INIT"]);
 			let temp = arr[compIdx2];
 			for (let g = compIdx2; g > compIdx1; g--) {
 				arr[g] = arr[g - 1];
 			}
 			arr[compIdx1] = temp;
-			// swapOrderArray.push([
-			// 	[...arr],
-			// 	compIdx1,
-			// 	compIdx2++,
-			// 	"CASE-RIGHT-SHIFT",
-			// ]);
 			swapOrderArray.push([compIdx1, compIdx2++, "CASE-RIGHT-SHIFT"]);
-			// swapOrderArray.push([
-			// 	[...arr],
-			// 	compIdx1,
-			// 	++compIdx1,
-			// 	"CASE-RIGHT-REVERT",
-			// ]);
 			swapOrderArray.push([compIdx1, ++compIdx1, "CASE-RIGHT-REVERT"]);
 			j++;
 		}
 	}
+
 	while (i <= mid) {
-		// swapOrderArray.push([[...arr], compIdx1, compIdx1, "ONE-SIDE"]);
 		swapOrderArray.push([compIdx1, compIdx1, "ONE-SIDE"]);
 		compIdx1++;
 		i++;
 	}
 	while (j <= end) {
-		// swapOrderArray.push([[...arr], compIdx2, compIdx2, "ONE-SIDE"]);
 		swapOrderArray.push([compIdx2, compIdx2, "ONE-SIDE"]);
 		compIdx2++;
 		j++;
-	}
-
-	if (!isLast) {
-		// swapOrderArray.push([[...arr], start, end, "MERGED"]);
-		// swapOrderArray.push([start, end, "MERGED"]);
 	}
 }

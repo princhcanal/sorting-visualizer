@@ -10,7 +10,7 @@ import Button from "../../../components/UI/Button/Button";
 import ColorLegend from "../../../components/ColorLegend/ColorLegend";
 import PlayControls from "../../../components/PlayControls/PlayControls";
 import Dropdown from "../../../components/UI/Dropdown/Dropdown";
-import sortingFunctions from "../../../utilities/sortingFunctions";
+import sortingFunctions from "../../../utilities/sorting/sortingFunctions";
 
 let Bars = (props, ref) => {
 	const barsContainer = useRef();
