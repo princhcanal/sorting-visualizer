@@ -16,7 +16,8 @@ export const heapSortManipulations = (
 		case "GET-LEVELS":
 			for (let i = 0; i <= idx1[idx1.length - 1]; i++) {
 				otherArgs[4][i] = otherArgs[3];
-				otherArgs[3] = RANDOM_COLORS[++otherArgs[2]];
+				otherArgs[3] =
+					RANDOM_COLORS[++otherArgs[2] % RANDOM_COLORS.length];
 			}
 			break;
 		case "COLOR-LEVEL":

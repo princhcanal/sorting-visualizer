@@ -13,8 +13,6 @@ const MAX_HEIGHT = 300;
 let SORTING_SPEED = 5;
 const NUM_BARS = 100;
 
-// TODO: shell sort
-// TODO: radix sort
 // TODO: quick sort variations
 const SortingVisualizer = (props) => {
 	const [randomHeights, setRandomHeights] = useState();
@@ -59,15 +57,15 @@ const SortingVisualizer = (props) => {
 
 	useEffect(() => {
 		if (!paused) {
-			let pausedIdxOriginal = indexPaused.current;
-			if (pausedIdxOriginal < 0) {
-				pausedIdxOriginal = 0;
+			let pausedIdx = indexPaused.current;
+			if (pausedIdx < 0) {
+				pausedIdx = 0;
 			}
 
 			if (allStates.length === 0) {
 				handleRevertState(randomHeights);
 				handleAnimations(
-					swapOrder.slice(pausedIdxOriginal),
+					swapOrder.slice(pausedIdx),
 					randomHeights,
 					sortingSpeed,
 					setTimeouts,
@@ -75,7 +73,7 @@ const SortingVisualizer = (props) => {
 				);
 			} else {
 				handleAnimateStates(
-					pausedIdxOriginal,
+					pausedIdx,
 					allStates.length,
 					sortingSpeed,
 					setTimeouts,
@@ -103,7 +101,7 @@ const SortingVisualizer = (props) => {
 		setAllStates([]);
 		indexPaused.current = 0;
 		indexPaused.current = -1;
-		range.current.value = 0;
+		range.current.value = indexPaused.current;
 	};
 
 	const handleColorNewBars = () => {
@@ -166,7 +164,7 @@ const SortingVisualizer = (props) => {
 		setAllStates([]);
 		indexPaused.current = 0;
 		indexPaused.current = -1;
-		range.current.value = 0;
+		range.current.value = indexPaused.current;
 	};
 
 	const handleChangeSortingSpeed = (event) => {
@@ -179,8 +177,8 @@ const SortingVisualizer = (props) => {
 	};
 
 	const handlePause = (timeouts) => {
-		let pausedIdxOriginal = indexPaused.current;
-		for (let i = pausedIdxOriginal; i < timeouts.length; i++) {
+		let pausedIdx = indexPaused.current;
+		for (let i = pausedIdx; i < timeouts.length; i++) {
 			clearTimeout(timeouts[i]);
 		}
 		setIsSorting(false);
@@ -204,7 +202,7 @@ const SortingVisualizer = (props) => {
 			idx1 = pausedIdx - 1;
 			idx2 = pausedIdx;
 			indexPaused.current = pausedIdx - 1;
-			range.current.value = pausedIdx - 1;
+			range.current.value = indexPaused.current;
 		} else {
 			barsContainer.current.playControls.classList.remove("shake");
 			range.current.classList.remove("shake");
@@ -251,7 +249,8 @@ const SortingVisualizer = (props) => {
 				0,
 				setTimeouts,
 				randomHeights,
-				allStates
+				allStates,
+				"clicked-slider"
 			);
 		}
 	};
@@ -264,7 +263,7 @@ const SortingVisualizer = (props) => {
 			setAllStates([]);
 			indexPaused.current = 0;
 			indexPaused.current = -1;
-			range.current.value = 0;
+			range.current.value = indexPaused.current;
 			let swapOrderArray = config.implementation(
 				[...heights],
 				...config.args
@@ -322,6 +321,7 @@ const SortingVisualizer = (props) => {
 				setTimeout(() => {
 					if (direction === "+") {
 						range.current.value = ++indexPaused.current;
+						// range.current.value = indexPaused.current++;
 					}
 					for (let j = 0; j < bars.length; j++) {
 						let height = states[i][j].height;
@@ -446,7 +446,7 @@ const SortingVisualizer = (props) => {
 		setAllStates([]);
 		indexPaused.current = 0;
 		indexPaused.current = -1;
-		range.current.value = 0;
+		range.current.value = indexPaused.current;
 	};
 
 	const handleChangeSortingConfig = (config) => {
@@ -459,13 +459,13 @@ const SortingVisualizer = (props) => {
 				setPaused(true);
 				setAllStates([]);
 				indexPaused.current = -1;
-				range.current.value = 0;
+				range.current.value = indexPaused.current;
 			}
 			return config;
 		});
 	};
 
-	// const handleTestAlgorithms = () => {
+	// const handleTest = () => {
 	// 	/* CHECKS IF DOM HEIGHTS MATCH SORTED RANDOM HEIGHTS*/
 	// 	// const sortedRandomHeights = [...randomHeights].sort((a, b) => a - b);
 	// 	// const barsDOM = document.getElementsByClassName("bar");
@@ -474,8 +474,11 @@ const SortingVisualizer = (props) => {
 	// 	// 		barsDOM[i].style.height === sortedRandomHeights[i] + "px"
 	// 	// 	);
 	// 	// }
-	// 	// console.log("Sorting Function:", sortingFunction);
-	// 	// console.log("Sorting Config:", sortingConfig);
+	// 	console.log(
+	// 		indexPaused.current,
+	// 		allStates.length - 1,
+	// 		Number(range.current.value)
+	// 	);
 	// };
 
 	return (
@@ -497,7 +500,6 @@ const SortingVisualizer = (props) => {
 					changedSortingFunction={handleChangeSortingFunction}
 					generateNewArray={handleGenerateNewArray}
 					sort={handleSort}
-					sliderChanged={handleSliderChange}
 					index={indexPaused.current}
 				></Bars>
 				<input
@@ -524,7 +526,7 @@ const SortingVisualizer = (props) => {
 					changedSortingConfig={handleChangeSortingConfig}
 				/>
 			</div>
-			{/* <Button clicked={handleTestAlgorithms}>Test</Button> */}
+			{/* <Button clicked={handleTest}>Test</Button> */}
 		</div>
 	);
 };

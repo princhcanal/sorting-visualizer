@@ -242,7 +242,6 @@ let Bars = (props, ref) => {
 				playText="Sort"
 				pauseText="Pause"
 				states={props.states}
-				sliderChanged={props.sliderChanged}
 				index={props.index}
 				isSorting={props.isSorting}
 			/>
