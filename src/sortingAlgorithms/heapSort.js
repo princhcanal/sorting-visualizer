@@ -3,9 +3,8 @@ export const heapSort = (arr) => {
 	let n = arr.length;
 	let depths = getDepths(arr);
 
-	swapOrderArray.push([depths, n, "GET-LEVELS"]);
 	for (let i = 0; i < n; i++) {
-		swapOrderArray.push([i, depths[i], "COLOR-LEVEL"]);
+		swapOrderArray.push([i, depths, "COLOR-LEVEL"]);
 	}
 
 	for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {

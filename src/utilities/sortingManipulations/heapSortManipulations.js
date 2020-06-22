@@ -13,15 +13,15 @@ export const heapSortManipulations = (
 	otherArgs
 ) => {
 	switch (state) {
-		case "GET-LEVELS":
-			for (let i = 0; i <= idx1[idx1.length - 1]; i++) {
-				otherArgs[4][i] = otherArgs[3];
-				otherArgs[3] =
-					RANDOM_COLORS[++otherArgs[2] % RANDOM_COLORS.length];
-			}
-			break;
 		case "COLOR-LEVEL":
-			handleColorChange(ref, idx1, otherArgs[4][idx2]);
+			if (idx1 === 0) {
+				for (let i = 0; i <= idx2[idx2.length - 1]; i++) {
+					otherArgs[4][i] = otherArgs[3];
+					otherArgs[3] =
+						RANDOM_COLORS[++otherArgs[2] % RANDOM_COLORS.length];
+				}
+			}
+			handleColorChange(ref, idx1, otherArgs[4][idx2[idx1]]);
 			break;
 		case "SUB-HEAP":
 			otherArgs[0] = bars[idx1].style.backgroundColor;

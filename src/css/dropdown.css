@@ -53,10 +53,10 @@ label {
 
 .dropdown.small ul {
 	background-color: #fa9f42;
-	transform: scaleY(1);
-	transform-origin: bottom;
-	top: -280%;
-	transition: transform 0.3s ease-out;
+	/* transform: scaleY(1); */
+	/* transform-origin: bottom; */
+	/* top: -280%; */
+	/* transition: transform 0.3s ease-out; */
 }
 
 @media (hover: none) {
@@ -118,8 +118,4 @@ label {
 
 .dropdown .collapsed {
 	height: 0;
-}
-
-.dropdown.small .collapsed {
-	transform: scaleY(0);
 }

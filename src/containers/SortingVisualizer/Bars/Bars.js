@@ -62,7 +62,7 @@ let Bars = (props, ref) => {
 	return (
 		<div className="bars-container">
 			<Dropdown
-				height={sortingFunctions.length * 3.27 + "rem"}
+				height={sortingFunctions.length * 3.3 + "rem"}
 				ref={dropdown}
 				defaultValue={"Merge Sort"}
 				options={sortingOptions}
