@@ -1,4 +1,5 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![Run on Repl.it](https://repl.it/badge/github/princhcanal/sorting-visualizer)](https://repl.it/github/princhcanal/sorting-visualizer)
 
 ## Available Scripts
 
