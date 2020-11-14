@@ -1,5 +1,7 @@
 # Sorting Visualizer
 
+![From Live Demo](https://github.com/princhcanal/sorting-visualizer/sorting_visualizer.png)
+
 This is my take on the sorting visualization project. Like many others, I was inspired by [Clement Mihailescu](https://github.com/clementmihailescu) to make this project.
 
 The sorting algorithms implemented include Merge Sort, Quick Sort, Heap Sort, Shell Sort, Radix Sort, Bubble Sort, Insertion Sort, and Selection Sort.
